@@ -111,43 +111,50 @@ const Tutorial = ({ visible, onComplete }) => {
     {
       title: "🌟 Welcome to DateUnveil! 🌟",
       message: "Your magical journey to discover 100 amazing date ideas starts here! Let's explore together! ✨",
-      icon: "💫",
+      iconSet: 'FontAwesome5',
+      icon: 'heart',
       color: "#FF6B9D"
     },
     {
       title: "🎴 Meet Your Date Cards",
       message: "Each card hides a special date idea! Click any card to reveal the magic inside! ✨",
-      icon: "💎",
+      iconSet: 'MaterialCommunityIcons',
+      icon: 'cards',
       color: "#4ECDC4"
     },
     {
       title: "🏷️ Category Magic",
       message: "Use the filter bar to find exactly what you're looking for! Romantic, adventurous, or maybe something cozy? 🎯",
-      icon: "🎨",
+      iconSet: 'MaterialCommunityIcons',
+      icon: 'palette',
       color: "#45B7D1"
     },
     {
       title: "💰 Budget & Location",
-      message: "See budget levels (💎 to 💎💎💎) and location (🏠 indoor or 🌳 outdoor) at a glance!",
-      icon: "💎",
+      message: "See budget levels ($ to $$$) and location (🏠 indoor or 🌳 outdoor) at a glance!",
+      iconSet: 'FontAwesome5',
+      icon: 'dollar-sign',
       color: "#96CEB4"
     },
     {
       title: "📱 Share the Love",
       message: "Found the perfect date? Share it via email, message, add to calendar, or set a reminder! 💌",
-      icon: "📤",
+      iconSet: 'MaterialCommunityIcons',
+      icon: 'share-variant',
       color: "#DDA0DD"
     },
     {
       title: "📚 Your Date History",
       message: "Keep track of all your revealed ideas in the history section! Your romantic journey awaits! 📖",
-      icon: "💝",
+      iconSet: 'MaterialCommunityIcons',
+      icon: 'book-open-variant',
       color: "#FF8E8E"
     },
     {
       title: "🚀 You're All Set!",
       message: "Ready to discover your perfect date? Let the adventure begin! 💕✨",
-      icon: "🌟",
+      iconSet: 'MaterialCommunityIcons',
+      icon: 'rocket-launch',
       color: "#FFB347"
     }
   ];
@@ -199,7 +206,13 @@ const Tutorial = ({ visible, onComplete }) => {
         >
           <View style={[styles.tutorialHeader, { backgroundColor: currentTutorial.color + '10' }]}>
             <View style={[styles.tutorialIconContainer, { backgroundColor: currentTutorial.color }]}>
-              <Text style={styles.tutorialIcon}>{currentTutorial.icon}</Text>
+              {currentTutorial.iconSet === 'MaterialCommunityIcons' ? (
+                <MaterialCommunityIcons name={currentTutorial.icon} size={32} color="#fff" />
+              ) : currentTutorial.iconSet === 'FontAwesome5' ? (
+                <FontAwesome5 name={currentTutorial.icon} size={28} color="#fff" />
+              ) : (
+                <Feather name={currentTutorial.icon} size={28} color="#fff" />
+              )}
             </View>
             <Text style={styles.tutorialTitle}>{currentTutorial.title}</Text>
           </View>
@@ -2118,9 +2131,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 6,
   },
-  tutorialIcon: {
-    fontSize: 32,
-  },
+
   tutorialTitle: {
     fontSize: 26,
     fontWeight: 'bold',
