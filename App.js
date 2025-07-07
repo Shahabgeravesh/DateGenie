@@ -21,12 +21,13 @@ import * as Notifications from 'expo-notifications';
 
 const { width, height } = Dimensions.get('window');
 
-// Reusable Button component with modern design
-const ModernButton = ({ title, onPress, variant = 'primary', style, disabled = false }) => {
+// Reusable Button component with romantic design
+const RomanticButton = ({ title, onPress, variant = 'primary', style, disabled = false }) => {
   const buttonStyle = [
     styles.button,
     variant === 'secondary' && styles.buttonSecondary,
     variant === 'outline' && styles.buttonOutline,
+    variant === 'heart' && styles.buttonHeart,
     disabled && styles.buttonDisabled,
     style
   ];
@@ -35,6 +36,7 @@ const ModernButton = ({ title, onPress, variant = 'primary', style, disabled = f
     styles.buttonText,
     variant === 'secondary' && styles.buttonTextSecondary,
     variant === 'outline' && styles.buttonTextOutline,
+    variant === 'heart' && styles.buttonTextHeart,
     disabled && styles.buttonTextDisabled
   ];
 
@@ -50,20 +52,20 @@ const ModernButton = ({ title, onPress, variant = 'primary', style, disabled = f
   );
 };
 
-// Action Button component for sharing and calendar
-const ActionButton = ({ icon, title, onPress, color }) => (
+// Action Button component for sharing and calendar with romantic icons
+const RomanticActionButton = ({ icon, title, onPress, color }) => (
   <TouchableOpacity style={[styles.actionButton, { backgroundColor: color }]} onPress={onPress} activeOpacity={0.8}>
     <Text style={styles.actionButtonIcon}>{icon}</Text>
     <Text style={styles.actionButtonText}>{title}</Text>
   </TouchableOpacity>
 );
 
-// Main Date Card component with stunning design
+// Main Date Card component with romantic design
 const DateCard = ({ idea, isRevealed, onReveal, onShareEmail, onShareSMS, onAddToCalendar, onSetReminder, revealAnimation }) => (
   <Animated.View style={[styles.card, { transform: [{ scale: revealAnimation }] }]}>
     <View style={styles.cardHeader}>
-      <Text style={styles.cardTitle}>DateUnveil</Text>
-      <Text style={styles.cardSubtitle}>Discover Amazing Date Ideas</Text>
+      <Text style={styles.cardTitle}>💕 DateUnveil 💕</Text>
+      <Text style={styles.cardSubtitle}>Discover Your Perfect Date</Text>
     </View>
     
     <View style={styles.cardContent}>
@@ -72,41 +74,42 @@ const DateCard = ({ idea, isRevealed, onReveal, onShareEmail, onShareSMS, onAddT
       </Text>
     </View>
 
-    <ModernButton 
-      title={isRevealed ? 'Next Idea' : 'Reveal Date Idea'} 
+    <RomanticButton 
+      title={isRevealed ? '💝 Next Date Idea' : '💖 Reveal Date Idea'} 
       onPress={onReveal}
+      variant="heart"
       style={styles.revealButton}
     />
 
     {isRevealed && idea && idea !== 'No more new ideas!' && (
       <View style={styles.actionsContainer}>
-        <Text style={styles.actionsTitle}>Share & Plan</Text>
+        <Text style={styles.actionsTitle}>💌 Share & Plan Your Date</Text>
         <View style={styles.actionButtonsRow}>
-          <ActionButton 
-            icon="📧" 
+          <RomanticActionButton 
+            icon="💌" 
             title="Email" 
             onPress={onShareEmail}
-            color="#FF6B6B"
+            color="#FF6B9D"
           />
-          <ActionButton 
+          <RomanticActionButton 
             icon="💬" 
-            title="SMS" 
+            title="Message" 
             onPress={onShareSMS}
-            color="#4ECDC4"
+            color="#FF8E8E"
           />
         </View>
         <View style={styles.actionButtonsRow}>
-          <ActionButton 
+          <RomanticActionButton 
             icon="📅" 
             title="Calendar" 
             onPress={onAddToCalendar}
-            color="#45B7D1"
+            color="#FFB3D9"
           />
-          <ActionButton 
+          <RomanticActionButton 
             icon="⏰" 
             title="Reminder" 
             onPress={onSetReminder}
-            color="#96CEB4"
+            color="#FFC0CB"
           />
         </View>
       </View>
@@ -114,7 +117,7 @@ const DateCard = ({ idea, isRevealed, onReveal, onShareEmail, onShareSMS, onAddT
   </Animated.View>
 );
 
-// History Modal component
+// History Modal component with romantic styling
 const HistoryModal = ({ visible, history, onClose }) => {
   if (!visible) return null;
 
@@ -122,18 +125,18 @@ const HistoryModal = ({ visible, history, onClose }) => {
     <View style={styles.modalOverlay}>
       <View style={styles.modalContent}>
         <View style={styles.modalHeader}>
-          <Text style={styles.modalTitle}>Your Date History</Text>
+          <Text style={styles.modalTitle}>💕 Your Date History 💕</Text>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>✕</Text>
           </TouchableOpacity>
         </View>
         <ScrollView style={styles.historyList}>
           {history.length === 0 ? (
-            <Text style={styles.emptyHistoryText}>No date ideas revealed yet. Start exploring!</Text>
+            <Text style={styles.emptyHistoryText}>No date ideas revealed yet. Start your romantic journey! 💕</Text>
           ) : (
             history.map((idea, index) => (
               <View key={index} style={styles.historyItem}>
-                <Text style={styles.historyNumber}>#{index + 1}</Text>
+                <Text style={styles.historyNumber}>💕 #{index + 1}</Text>
                 <Text style={styles.historyText}>{idea}</Text>
               </View>
             ))
@@ -151,33 +154,33 @@ export default function App() {
   const [showHistory, setShowHistory] = useState(false);
   const [revealAnimation] = useState(new Animated.Value(1));
 
-  // Expanded date ideas with more variety
+  // Romantic and diverse date ideas
   const dateIdeas = [
-    'Sunset picnic at the beach',
-    'Cooking class together',
-    'Stargazing with hot chocolate',
-    'Board game night with snacks',
-    'Hiking adventure in nature',
-    'Wine tasting experience',
-    'Dance lesson for two',
-    'Art gallery exploration',
-    'Karaoke night at home',
-    'Bike ride through the city',
-    'Pottery making workshop',
-    'Movie marathon with popcorn',
-    'Spa day at home',
-    'Photography walk',
-    'Bookstore date with coffee',
-    'Mini golf challenge',
-    'Farmers market visit',
-    'DIY pizza night',
-    'Sunrise breakfast',
-    'Escape room adventure',
-    'Concert under the stars',
-    'Baking cookies together',
-    'Park bench people watching',
-    'Thrift store treasure hunt',
-    'Sunset rooftop dinner'
+    'Sunset picnic with champagne and strawberries',
+    'Cooking class for two - learn to make pasta together',
+    'Stargazing with hot chocolate and blankets',
+    'Board game night with wine and cheese',
+    'Hiking adventure to a beautiful viewpoint',
+    'Wine tasting at a local vineyard',
+    'Dance lesson - salsa or tango for beginners',
+    'Art gallery exploration with coffee afterwards',
+    'Karaoke night at home with cocktails',
+    'Bike ride through the city with ice cream stops',
+    'Pottery making workshop - create something together',
+    'Movie marathon with popcorn and cuddles',
+    'Spa day at home with face masks and massages',
+    'Photography walk - capture beautiful moments',
+    'Bookstore date with coffee and deep conversations',
+    'Mini golf challenge with playful betting',
+    'Farmers market visit and cooking together',
+    'DIY pizza night with wine and music',
+    'Sunrise breakfast in bed',
+    'Escape room adventure - solve puzzles together',
+    'Concert under the stars with a blanket',
+    'Baking cookies together with Christmas music',
+    'Park bench people watching with coffee',
+    'Thrift store treasure hunt for unique finds',
+    'Sunset rooftop dinner with city views'
   ];
 
   useEffect(() => {
@@ -208,7 +211,7 @@ export default function App() {
       // First click - reveal the idea
       const unrevealed = dateIdeas.filter(idea => !history.includes(idea));
       if (unrevealed.length === 0) {
-        setCurrentIdea('No more new ideas!');
+        setCurrentIdea('No more new ideas! 💕');
         setIsRevealed(true);
         return;
       }
@@ -228,8 +231,8 @@ export default function App() {
   const shareByEmail = () => {
     if (!currentIdea) return;
     MailComposer.composeAsync({
-      subject: 'DateUnveil: Amazing Date Idea',
-      body: `I just discovered this amazing date idea: ${currentIdea}\n\nShared via DateUnveil ❤️`,
+      subject: '💕 DateUnveil: Amazing Date Idea 💕',
+      body: `I just discovered this amazing date idea: ${currentIdea}\n\nShared via DateUnveil 💕\n\nLet\'s make it happen! 💖`,
     }).catch(() => Alert.alert('Error', 'Unable to open email composer.'));
   };
 
@@ -237,9 +240,9 @@ export default function App() {
     if (!currentIdea) return;
     let smsUrl = '';
     if (Platform.OS === 'ios') {
-      smsUrl = `sms:&body=I%20just%20discovered%20this%20amazing%20date%20idea:%20${encodeURIComponent(currentIdea)}%20%0A%0AShared%20via%20DateUnveil%20❤️`;
+      smsUrl = `sms:&body=I%20just%20discovered%20this%20amazing%20date%20idea:%20${encodeURIComponent(currentIdea)}%20%0A%0AShared%20via%20DateUnveil%20💕%20%0A%0ALet\'s%20make%20it%20happen!%20💖`;
     } else {
-      smsUrl = `sms:?body=I just discovered this amazing date idea: ${encodeURIComponent(currentIdea)}\n\nShared via DateUnveil ❤️`;
+      smsUrl = `sms:?body=I just discovered this amazing date idea: ${encodeURIComponent(currentIdea)}\n\nShared via DateUnveil 💕\n\nLet's make it happen! 💖`;
     }
     Linking.openURL(smsUrl).catch(() => Alert.alert('Error', 'Unable to open SMS app.'));
   };
@@ -260,14 +263,14 @@ export default function App() {
       }
       const now = new Date();
       const eventId = await Calendar.createEventAsync(defaultCalendar.id, {
-        title: `DateUnveil: ${currentIdea}`,
+        title: `💕 DateUnveil: ${currentIdea}`,
         startDate: now,
         endDate: new Date(now.getTime() + 2 * 60 * 60 * 1000), // 2 hours
         timeZone: undefined,
-        notes: 'Planned with DateUnveil ❤️',
+        notes: 'Planned with DateUnveil 💕',
       });
       if (eventId) {
-        Alert.alert('Success', 'Date idea added to your calendar! 📅');
+        Alert.alert('Success', 'Date idea added to your calendar! 📅💕');
       }
     } catch (e) {
       Alert.alert('Error', 'Could not add event to calendar.');
@@ -287,12 +290,12 @@ export default function App() {
     try {
       await Notifications.scheduleNotificationAsync({
         content: {
-          title: 'DateUnveil Reminder',
-          body: `Don't forget your date: ${currentIdea}`,
+          title: '💕 DateUnveil Reminder 💕',
+          body: `Don't forget your romantic date: ${currentIdea}`,
         },
         trigger: { seconds: minutes * 60 },
       });
-      Alert.alert('Reminder set!', `You will be reminded in ${minutes} minutes. ⏰`);
+      Alert.alert('Reminder set!', `You will be reminded in ${minutes} minutes. ⏰💕`);
     } catch (e) {
       Alert.alert('Error', 'Could not schedule notification.');
     }
@@ -300,12 +303,12 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <RNStatusBar barStyle="light-content" backgroundColor="#667eea" />
+      <RNStatusBar barStyle="light-content" backgroundColor="#FF6B9D" />
       <StatusBar style="light" />
       
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>DateUnveil</Text>
-        <Text style={styles.headerSubtitle}>Discover Amazing Date Ideas</Text>
+        <Text style={styles.headerTitle}>💕 DateUnveil 💕</Text>
+        <Text style={styles.headerSubtitle}>Discover Your Perfect Date</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -322,8 +325,8 @@ export default function App() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <ModernButton 
-          title="View History" 
+        <RomanticButton 
+          title="💕 View Date History 💕" 
           onPress={() => setShowHistory(true)}
           variant="outline"
           style={styles.historyButton}
@@ -342,10 +345,10 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#FFF0F5',
   },
   header: {
-    backgroundColor: '#667eea',
+    backgroundColor: '#FF6B9D',
     paddingTop: 20,
     paddingBottom: 30,
     paddingHorizontal: 20,
@@ -359,7 +362,7 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     fontSize: 16,
-    color: '#e2e8f0',
+    color: '#FFE4E1',
     fontWeight: '500',
   },
   scrollContent: {
@@ -373,14 +376,16 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     padding: 32,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: '#FF6B9D',
     shadowOffset: {
       width: 0,
       height: 8,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.15,
     shadowRadius: 24,
     elevation: 8,
+    borderWidth: 2,
+    borderColor: '#FFE4E1',
   },
   cardHeader: {
     alignItems: 'center',
@@ -389,12 +394,12 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#1a202c',
+    color: '#FF6B9D',
     marginBottom: 4,
   },
   cardSubtitle: {
     fontSize: 16,
-    color: '#718096',
+    color: '#FF8E8E',
     fontWeight: '500',
   },
   cardContent: {
@@ -405,7 +410,7 @@ const styles = StyleSheet.create({
   },
   cardText: {
     fontSize: 20,
-    color: '#2d3748',
+    color: '#FF6B9D',
     textAlign: 'center',
     lineHeight: 28,
     fontWeight: '600',
@@ -414,12 +419,12 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   button: {
-    backgroundColor: '#667eea',
+    backgroundColor: '#FF6B9D',
     paddingVertical: 16,
     paddingHorizontal: 32,
     borderRadius: 16,
     alignItems: 'center',
-    shadowColor: '#667eea',
+    shadowColor: '#FF6B9D',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -429,15 +434,20 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   buttonSecondary: {
-    backgroundColor: '#f7fafc',
+    backgroundColor: '#FFF0F5',
   },
   buttonOutline: {
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: '#667eea',
+    borderColor: '#FF6B9D',
+  },
+  buttonHeart: {
+    backgroundColor: '#FF1493',
+    borderWidth: 2,
+    borderColor: '#FF69B4',
   },
   buttonDisabled: {
-    backgroundColor: '#cbd5e0',
+    backgroundColor: '#FFC0CB',
     shadowOpacity: 0,
     elevation: 0,
   },
@@ -447,23 +457,28 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttonTextSecondary: {
-    color: '#2d3748',
+    color: '#FF6B9D',
   },
   buttonTextOutline: {
-    color: '#667eea',
+    color: '#FF6B9D',
+  },
+  buttonTextHeart: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   buttonTextDisabled: {
-    color: '#a0aec0',
+    color: '#FFB6C1',
   },
   actionsContainer: {
     borderTopWidth: 1,
-    borderTopColor: '#e2e8f0',
+    borderTopColor: '#FFE4E1',
     paddingTop: 24,
   },
   actionsTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2d3748',
+    color: '#FF6B9D',
     textAlign: 'center',
     marginBottom: 16,
   },
@@ -512,7 +527,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(255, 107, 157, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1000,
@@ -522,7 +537,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     width: width - 40,
     maxHeight: height * 0.7,
-    shadowColor: '#000',
+    shadowColor: '#FF6B9D',
     shadowOffset: {
       width: 0,
       height: 10,
@@ -530,6 +545,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 20,
     elevation: 10,
+    borderWidth: 2,
+    borderColor: '#FFE4E1',
   },
   modalHeader: {
     flexDirection: 'row',
@@ -537,24 +554,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 24,
     borderBottomWidth: 1,
-    borderBottomColor: '#e2e8f0',
+    borderBottomColor: '#FFE4E1',
   },
   modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#2d3748',
+    color: '#FF6B9D',
   },
   closeButton: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#f7fafc',
+    backgroundColor: '#FFF0F5',
     alignItems: 'center',
     justifyContent: 'center',
   },
   closeButtonText: {
     fontSize: 18,
-    color: '#718096',
+    color: '#FF8E8E',
     fontWeight: 'bold',
   },
   historyList: {
@@ -562,7 +579,7 @@ const styles = StyleSheet.create({
   },
   emptyHistoryText: {
     fontSize: 16,
-    color: '#718096',
+    color: '#FF8E8E',
     textAlign: 'center',
     fontStyle: 'italic',
   },
@@ -571,18 +588,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f7fafc',
+    borderBottomColor: '#FFF0F5',
   },
   historyNumber: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#667eea',
+    color: '#FF6B9D',
     marginRight: 12,
     minWidth: 30,
   },
   historyText: {
     fontSize: 16,
-    color: '#2d3748',
+    color: '#FF6B9D',
     flex: 1,
     lineHeight: 22,
   },
