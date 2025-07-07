@@ -1467,6 +1467,18 @@ export default function App() {
     }
   };
 
+  const resetAppData = async () => {
+    try {
+      await AsyncStorage.multiRemove(['revealedCards', 'tutorialShown']);
+      setRevealedCards(new Set());
+      setShowTutorial(true);
+      Alert.alert('Success', 'App data has been reset! The tutorial will appear again.');
+    } catch (error) {
+      console.error('Reset app data error:', error);
+      Alert.alert('Error', 'Unable to reset app data.');
+    }
+  };
+
   // Filter data based on selected category and budget
   const filteredData = dateIdeasData.filter(item => {
     const categoryMatch = !selectedCategory || item.category === selectedCategory;
@@ -1529,6 +1541,12 @@ export default function App() {
           onPress={() => setShowHistory(true)}
         >
           <Text style={styles.historyButtonText}>💕 View Date History 💕</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.resetButton}
+          onPress={resetAppData}
+        >
+          <Text style={styles.resetButtonText}>🔄 Reset App Data</Text>
         </TouchableOpacity>
       </View>
 
@@ -1994,6 +2012,29 @@ const styles = StyleSheet.create({
   historyButtonText: {
     color: '#FF6B9D',
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  resetButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: '#FF8E8E',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    alignItems: 'center',
+    marginTop: 10,
+    shadowColor: '#FF8E8E',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  resetButtonText: {
+    color: '#FF8E8E',
+    fontSize: 14,
     fontWeight: 'bold',
   },
   modalOverlay: {
