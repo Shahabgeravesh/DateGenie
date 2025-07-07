@@ -515,6 +515,19 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect, selectedBudget, on
 
 // Enhanced Expanded Card Component
 const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar, onSetReminder }) => {
+  const categories = {
+    romantic: { name: 'Romantic', icon: '💕', color: '#FF6B9D', description: 'Perfect for couples in love' },
+    adventurous: { name: 'Adventurous', icon: '🏔️', color: '#4CAF50', description: 'For thrill-seekers and explorers' },
+    creative: { name: 'Creative', icon: '🎨', color: '#9C27B0', description: 'Express your artistic side together' },
+    active: { name: 'Active', icon: '⚡', color: '#FF9800', description: 'Get moving and stay energized' },
+    cozy: { name: 'Cozy', icon: '🏠', color: '#795548', description: 'Comfortable and intimate moments' },
+    fun: { name: 'Fun', icon: '🎉', color: '#E91E63', description: 'Laugh and enjoy together' },
+    foodie: { name: 'Foodie', icon: '🍕', color: '#FF5722', description: 'Culinary adventures for food lovers' },
+    chill: { name: 'Chill', icon: '😌', color: '#607D8B', description: 'Relaxed and laid-back vibes' },
+    cultural: { name: 'Cultural', icon: '🏛️', color: '#3F51B5', description: 'Explore art, history, and culture' },
+    intellectual: { name: 'Intellectual', icon: '🧠', color: '#673AB7', description: 'Stimulate your minds together' },
+    spontaneous: { name: 'Spontaneous', icon: '🎲', color: '#00BCD4', description: 'Go with the flow and surprise each other' },
+  };
   const categoryInfo = categories[item.category];
   
   return (
@@ -592,6 +605,19 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
 
 // Advanced Calendar Modal Component
 const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
+  const categories = {
+    romantic: { name: 'Romantic', icon: '💕', color: '#FF6B9D' },
+    adventurous: { name: 'Adventurous', icon: '🏔️', color: '#4CAF50' },
+    creative: { name: 'Creative', icon: '🎨', color: '#9C27B0' },
+    active: { name: 'Active', icon: '⚡', color: '#FF9800' },
+    cozy: { name: 'Cozy', icon: '🏠', color: '#795548' },
+    fun: { name: 'Fun', icon: '🎉', color: '#E91E63' },
+    foodie: { name: 'Foodie', icon: '🍕', color: '#FF5722' },
+    chill: { name: 'Chill', icon: '😌', color: '#607D8B' },
+    cultural: { name: 'Cultural', icon: '🏛️', color: '#3F51B5' },
+    intellectual: { name: 'Intellectual', icon: '🧠', color: '#673AB7' },
+    spontaneous: { name: 'Spontaneous', icon: '🎲', color: '#00BCD4' },
+  };
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [customTitle, setCustomTitle] = useState('');
@@ -1223,6 +1249,20 @@ const ReminderModal = ({ visible, onClose, onSchedule, dateIdea }) => {
 };
 
 export default function App() {
+  const categories = {
+    romantic: { name: 'Romantic', icon: '💕', color: '#FF6B9D' },
+    adventurous: { name: 'Adventurous', icon: '🏔️', color: '#4CAF50' },
+    creative: { name: 'Creative', icon: '🎨', color: '#9C27B0' },
+    active: { name: 'Active', icon: '⚡', color: '#FF9800' },
+    cozy: { name: 'Cozy', icon: '🏠', color: '#795548' },
+    fun: { name: 'Fun', icon: '🎉', color: '#E91E63' },
+    foodie: { name: 'Foodie', icon: '🍕', color: '#FF5722' },
+    chill: { name: 'Chill', icon: '😌', color: '#607D8B' },
+    cultural: { name: 'Cultural', icon: '🏛️', color: '#3F51B5' },
+    intellectual: { name: 'Intellectual', icon: '🧠', color: '#673AB7' },
+    spontaneous: { name: 'Spontaneous', icon: '🎲', color: '#00BCD4' },
+  };
+  
   const [revealedCards, setRevealedCards] = useState(new Set());
   const [expandedCard, setExpandedCard] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
