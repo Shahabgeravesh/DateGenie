@@ -59,7 +59,7 @@ const ActionButton = ({ icon, title, onPress, color }) => (
 );
 
 // Main Date Card component with stunning design
-const DateCard = ({ idea, onReveal, onShareEmail, onShareSMS, onAddToCalendar, onSetReminder, revealAnimation }) => (
+const DateCard = ({ idea, isRevealed, onReveal, onShareEmail, onShareSMS, onAddToCalendar, onSetReminder, revealAnimation }) => (
   <Animated.View style={[styles.card, { transform: [{ scale: revealAnimation }] }]}>
     <View style={styles.cardHeader}>
       <Text style={styles.cardTitle}>DateUnveil</Text>
@@ -68,17 +68,17 @@ const DateCard = ({ idea, onReveal, onShareEmail, onShareSMS, onAddToCalendar, o
     
     <View style={styles.cardContent}>
       <Text style={styles.cardText}>
-        {idea ? idea : 'Ready to discover your next adventure?'}
+        {isRevealed ? (idea ? idea : 'Ready to discover your next adventure?') : 'Ready to discover your next adventure?'}
       </Text>
     </View>
 
     <ModernButton 
-      title={idea ? 'Next Idea' : 'Reveal Date Idea'} 
+      title={isRevealed ? 'Next Idea' : 'Reveal Date Idea'} 
       onPress={onReveal}
       style={styles.revealButton}
     />
 
-    {idea && idea !== 'No more new ideas!' && (
+    {isRevealed && idea && idea !== 'No more new ideas!' && (
       <View style={styles.actionsContainer}>
         <Text style={styles.actionsTitle}>Share & Plan</Text>
         <View style={styles.actionButtonsRow}>
@@ -146,6 +146,7 @@ const HistoryModal = ({ visible, history, onClose }) => {
 
 export default function App() {
   const [currentIdea, setCurrentIdea] = useState(null);
+  const [isRevealed, setIsRevealed] = useState(false);
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [revealAnimation] = useState(new Animated.Value(1));
@@ -203,17 +204,30 @@ export default function App() {
       }),
     ]).start();
 
-    // Filter out already revealed ideas
-    const unrevealed = dateIdeas.filter(idea => !history.includes(idea));
-    if (unrevealed.length === 0) {
-      setCurrentIdea('No more new ideas!');
-      return;
+    if (!isRevealed) {
+      // First click - reveal the idea
+      const unrevealed = dateIdeas.filter(idea => !history.includes(idea));
+      if (unrevealed.length === 0) {
+        setCurrentIdea('No more new ideas!');
+        setIsRevealed(true);
+        return;
+      }
+      const random = unrevealed[Math.floor(Math.random() * unrevealed.length)];
+      setCurrentIdea(random);
+      setIsRevealed(true);
+    } else {
+      // Second click - get next idea
+      const unrevealed = dateIdeas.filter(idea => !history.includes(idea));
+      if (unrevealed.length === 0) {
+        setCurrentIdea('No more new ideas!');
+        return;
+      }
+      const random = unrevealed[Math.floor(Math.random() * unrevealed.length)];
+      setCurrentIdea(random);
+      const newHistory = [...history, random];
+      setHistory(newHistory);
+      AsyncStorage.setItem('history', JSON.stringify(newHistory));
     }
-    const random = unrevealed[Math.floor(Math.random() * unrevealed.length)];
-    setCurrentIdea(random);
-    const newHistory = [...history, random];
-    setHistory(newHistory);
-    AsyncStorage.setItem('history', JSON.stringify(newHistory));
   };
 
   const shareByEmail = () => {
@@ -302,6 +316,7 @@ export default function App() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <DateCard
           idea={currentIdea}
+          isRevealed={isRevealed}
           onReveal={revealIdea}
           onShareEmail={shareByEmail}
           onShareSMS={shareBySMS}
