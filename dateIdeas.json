@@ -1,0 +1,702 @@
+[
+  {
+    "id": 1,
+    "idea": "Sunset picnic with champagne and strawberries",
+    "category": "romantic",
+    "budget": "medium",
+    "location": "outdoor"
+  },
+  {
+    "id": 2,
+    "idea": "Cooking class for two - learn to make pasta together",
+    "category": "creative",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 3,
+    "idea": "Stargazing with hot chocolate and blankets",
+    "category": "romantic",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 4,
+    "idea": "Board game night with wine and cheese",
+    "category": "cozy",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 5,
+    "idea": "Hiking adventure to a beautiful viewpoint",
+    "category": "adventurous",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 6,
+    "idea": "Wine tasting at a local vineyard",
+    "category": "romantic",
+    "budget": "medium",
+    "location": "outdoor"
+  },
+  {
+    "id": 7,
+    "idea": "Dance lesson - salsa or tango for beginners",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 8,
+    "idea": "Art gallery exploration with coffee afterwards",
+    "category": "cultural",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 9,
+    "idea": "Karaoke night at home with cocktails",
+    "category": "fun",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 10,
+    "idea": "Bike ride through the city with ice cream stops",
+    "category": "active",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 11,
+    "idea": "Pottery making workshop - create something together",
+    "category": "creative",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 12,
+    "idea": "Movie marathon with popcorn and cuddles",
+    "category": "cozy",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 13,
+    "idea": "Spa day at home with face masks and massages",
+    "category": "romantic",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 14,
+    "idea": "Photography walk - capture beautiful moments",
+    "category": "creative",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 15,
+    "idea": "Bookstore date with coffee and deep conversations",
+    "category": "intellectual",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 16,
+    "idea": "Mini golf challenge with playful betting",
+    "category": "fun",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 17,
+    "idea": "Farmers market visit and cooking together",
+    "category": "foodie",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 18,
+    "idea": "DIY pizza night with wine and music",
+    "category": "foodie",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 19,
+    "idea": "Sunrise breakfast in bed",
+    "category": "romantic",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 20,
+    "idea": "Escape room adventure - solve puzzles together",
+    "category": "adventurous",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 21,
+    "idea": "Concert under the stars with a blanket",
+    "category": "romantic",
+    "budget": "medium",
+    "location": "outdoor"
+  },
+  {
+    "id": 22,
+    "idea": "Baking cookies together with Christmas music",
+    "category": "cozy",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 23,
+    "idea": "Park bench people watching with coffee",
+    "category": "chill",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 24,
+    "idea": "Thrift store treasure hunt for unique finds",
+    "category": "adventurous",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 25,
+    "idea": "Sunset rooftop dinner with city views",
+    "category": "romantic",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 26,
+    "idea": "Beach bonfire with s'mores and stories",
+    "category": "romantic",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 27,
+    "idea": "Indoor rock climbing challenge",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 28,
+    "idea": "Candlelit dinner at home with homemade pasta",
+    "category": "romantic",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 29,
+    "idea": "Sunrise yoga session in the park",
+    "category": "active",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 30,
+    "idea": "Arcade night with retro games and prizes",
+    "category": "fun",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 31,
+    "idea": "Botanical garden stroll with tea ceremony",
+    "category": "chill",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 32,
+    "idea": "DIY candle making workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 33,
+    "idea": "Sunset kayaking adventure",
+    "category": "adventurous",
+    "budget": "medium",
+    "location": "outdoor"
+  },
+  {
+    "id": 34,
+    "idea": "Wine and paint night at home",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 35,
+    "idea": "Midnight snack run to 24-hour diner",
+    "category": "spontaneous",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 36,
+    "idea": "Horseback riding through scenic trails",
+    "category": "adventurous",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 37,
+    "idea": "DIY terrarium building workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 38,
+    "idea": "Sunset sailing lesson",
+    "category": "adventurous",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 39,
+    "idea": "Indoor camping with tent and fairy lights",
+    "category": "cozy",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 40,
+    "idea": "Cooking competition - mystery basket challenge",
+    "category": "foodie",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 41,
+    "idea": "Sunrise hot air balloon ride",
+    "category": "romantic",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 42,
+    "idea": "DIY soap making workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 43,
+    "idea": "Moonlight beach walk with sparklers",
+    "category": "romantic",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 44,
+    "idea": "Indoor ice skating at local rink",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 45,
+    "idea": "Sunset photography session with props",
+    "category": "creative",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 46,
+    "idea": "DIY jewelry making workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 47,
+    "idea": "Midnight movie screening under the stars",
+    "category": "romantic",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 48,
+    "idea": "Sunrise meditation by the lake",
+    "category": "chill",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 49,
+    "idea": "DIY flower arrangement workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 50,
+    "idea": "Sunset horseback riding on the beach",
+    "category": "romantic",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 51,
+    "idea": "Indoor trampoline park adventure",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 52,
+    "idea": "DIY chocolate making workshop",
+    "category": "foodie",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 53,
+    "idea": "Sunrise fishing trip with breakfast",
+    "category": "chill",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 54,
+    "idea": "Indoor laser tag battle",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 55,
+    "idea": "DIY bath bomb making workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 56,
+    "idea": "Sunset helicopter tour of the city",
+    "category": "romantic",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 57,
+    "idea": "Indoor go-kart racing challenge",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 58,
+    "idea": "DIY dreamcatcher making workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 59,
+    "idea": "Sunrise paddleboarding lesson",
+    "category": "active",
+    "budget": "medium",
+    "location": "outdoor"
+  },
+  {
+    "id": 60,
+    "idea": "Indoor bowling tournament",
+    "category": "fun",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 61,
+    "idea": "DIY macrame plant hanger workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 62,
+    "idea": "Sunset zip-lining adventure",
+    "category": "adventurous",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 63,
+    "idea": "Indoor escape room challenge",
+    "category": "adventurous",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 64,
+    "idea": "DIY tie-dye shirt making workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 65,
+    "idea": "Sunrise surfing lesson",
+    "category": "active",
+    "budget": "medium",
+    "location": "outdoor"
+  },
+  {
+    "id": 66,
+    "idea": "Indoor rock climbing competition",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 67,
+    "idea": "DIY wind chime making workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 68,
+    "idea": "Sunset parasailing adventure",
+    "category": "adventurous",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 69,
+    "idea": "Indoor mini golf tournament",
+    "category": "fun",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 70,
+    "idea": "DIY birdhouse building workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 71,
+    "idea": "Sunrise hot springs visit",
+    "category": "romantic",
+    "budget": "medium",
+    "location": "outdoor"
+  },
+  {
+    "id": 72,
+    "idea": "Indoor paintball battle",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 73,
+    "idea": "DIY mosaic art workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 74,
+    "idea": "Sunset whale watching tour",
+    "category": "adventurous",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 75,
+    "idea": "Indoor ice hockey game",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 76,
+    "idea": "DIY leather wallet making workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 77,
+    "idea": "Sunrise mountain biking adventure",
+    "category": "active",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 78,
+    "idea": "Indoor basketball tournament",
+    "category": "active",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 79,
+    "idea": "DIY stained glass workshop",
+    "category": "creative",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 80,
+    "idea": "Sunset snorkeling adventure",
+    "category": "adventurous",
+    "budget": "medium",
+    "location": "outdoor"
+  },
+  {
+    "id": 81,
+    "idea": "Indoor volleyball tournament",
+    "category": "active",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 82,
+    "idea": "DIY woodworking workshop",
+    "category": "creative",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 83,
+    "idea": "Sunrise rock climbing adventure",
+    "category": "adventurous",
+    "budget": "medium",
+    "location": "outdoor"
+  },
+  {
+    "id": 84,
+    "idea": "Indoor tennis tournament",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 85,
+    "idea": "DIY pottery painting workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 86,
+    "idea": "Sunset jet skiing adventure",
+    "category": "adventurous",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 87,
+    "idea": "Indoor badminton tournament",
+    "category": "active",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 88,
+    "idea": "DIY candle painting workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 89,
+    "idea": "Sunrise paragliding adventure",
+    "category": "adventurous",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 90,
+    "idea": "Indoor table tennis tournament",
+    "category": "active",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 91,
+    "idea": "DIY paper flower making workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 92,
+    "idea": "Sunset scuba diving adventure",
+    "category": "adventurous",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 93,
+    "idea": "Indoor dodgeball tournament",
+    "category": "active",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 94,
+    "idea": "DIY origami workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 95,
+    "idea": "Sunrise hang gliding adventure",
+    "category": "adventurous",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 96,
+    "idea": "Indoor kickboxing class",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 97,
+    "idea": "DIY calligraphy workshop",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 98,
+    "idea": "Sunset bungee jumping adventure",
+    "category": "adventurous",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 99,
+    "idea": "Indoor martial arts class",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 100,
+    "idea": "DIY candlelit dinner cooking class",
+    "category": "romantic",
+    "budget": "low",
+    "location": "indoor"
+  }
+] 
