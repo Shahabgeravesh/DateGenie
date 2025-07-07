@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8fafc',
   },
   header: {
-    backgroundColor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    backgroundColor: '#667eea',
     paddingTop: 20,
     paddingBottom: 30,
     paddingHorizontal: 20,
