@@ -12,7 +12,9 @@ import {
   ScrollView,
   StatusBar as RNStatusBar,
   FlatList,
-  LinearGradient
+  LinearGradient,
+  Modal,
+  TextInput
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
@@ -588,6 +590,638 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
   );
 };
 
+// Advanced Calendar Modal Component
+const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState(new Date());
+  const [customTitle, setCustomTitle] = useState('');
+  const [customLocation, setCustomLocation] = useState('');
+  const [customNotes, setCustomNotes] = useState('');
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  useEffect(() => {
+    if (visible && dateIdea) {
+      setCustomTitle(`DateUnveil: ${dateIdea.idea}`);
+      setCustomLocation('Your chosen location');
+      setCustomNotes(`Category: ${categories[dateIdea.category].name}\nBudget: ${dateIdea.budget === 'low' ? '$' : dateIdea.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${dateIdea.location}`);
+    }
+  }, [visible, dateIdea]);
+
+  const formatDate = (date) => {
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
+
+  const formatTime = (date) => {
+    return date.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    });
+  };
+
+  const handleSchedule = () => {
+    const scheduledDateTime = new Date(selectedDate);
+    scheduledDateTime.setHours(selectedTime.getHours());
+    scheduledDateTime.setMinutes(selectedTime.getMinutes());
+    
+    onSchedule({
+      title: customTitle,
+      location: customLocation,
+      notes: customNotes,
+      startDate: scheduledDateTime,
+      endDate: new Date(scheduledDateTime.getTime() + 2 * 60 * 60 * 1000), // 2 hours later
+    });
+  };
+
+  const handleDateChange = (event, date) => {
+    setShowDatePicker(false);
+    if (date) {
+      setSelectedDate(date);
+    }
+  };
+
+  const handleTimeChange = (event, time) => {
+    setShowTimePicker(false);
+    if (time) {
+      setSelectedTime(time);
+    }
+  };
+
+  if (!visible) return null;
+
+  return (
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={onClose}
+    >
+      <View style={styles.calendarModalOverlay}>
+        <View style={styles.calendarModalContent}>
+          <View style={styles.calendarModalHeader}>
+            <Text style={styles.calendarModalTitle}>Schedule Your Date</Text>
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>✕</Text>
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView style={styles.calendarModalBody}>
+            <View style={styles.dateTimeSection}>
+              <Text style={styles.sectionTitle}>📅 Date & Time</Text>
+              
+              <TouchableOpacity 
+                style={styles.dateTimeButton}
+                onPress={() => setShowDatePicker(true)}
+              >
+                <Text style={styles.dateTimeLabel}>Date:</Text>
+                <Text style={styles.dateTimeValue}>{formatDate(selectedDate)}</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={styles.dateTimeButton}
+                onPress={() => setShowTimePicker(true)}
+              >
+                <Text style={styles.dateTimeLabel}>Time:</Text>
+                <Text style={styles.dateTimeValue}>{formatTime(selectedTime)}</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.detailsSection}>
+              <Text style={styles.sectionTitle}>📝 Event Details</Text>
+              
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>Title:</Text>
+                <TextInput
+                  style={styles.textInput}
+                  value={customTitle}
+                  onChangeText={setCustomTitle}
+                  placeholder="Enter event title"
+                  multiline
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>Location:</Text>
+                <TextInput
+                  style={styles.textInput}
+                  value={customLocation}
+                  onChangeText={setCustomLocation}
+                  placeholder="Enter location"
+                  multiline
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>Notes:</Text>
+                <TextInput
+                  style={styles.textInput}
+                  value={customNotes}
+                  onChangeText={setCustomNotes}
+                  placeholder="Add any additional notes"
+                  multiline
+                  numberOfLines={4}
+                />
+              </View>
+            </View>
+          </ScrollView>
+
+          <View style={styles.calendarModalActions}>
+            <TouchableOpacity onPress={onClose} style={styles.cancelButton}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleSchedule} style={styles.scheduleButton}>
+              <Text style={styles.scheduleButtonText}>Schedule Date</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Date Picker Modal */}
+        {showDatePicker && (
+          <Modal
+            visible={showDatePicker}
+            transparent={true}
+            animationType="fade"
+          >
+            <View style={styles.pickerOverlay}>
+              <View style={styles.pickerContainer}>
+                <Text style={styles.pickerTitle}>Select Date</Text>
+                <View style={styles.pickerContent}>
+                  {/* Simple date picker - in a real app you'd use a proper date picker library */}
+                  <Text style={styles.pickerText}>Date: {formatDate(selectedDate)}</Text>
+                  <Text style={styles.pickerNote}>(Date picker would be implemented here)</Text>
+                </View>
+                <TouchableOpacity onPress={() => setShowDatePicker(false)} style={styles.pickerButton}>
+                  <Text style={styles.pickerButtonText}>OK</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        )}
+
+        {/* Time Picker Modal */}
+        {showTimePicker && (
+          <Modal
+            visible={showTimePicker}
+            transparent={true}
+            animationType="fade"
+          >
+            <View style={styles.pickerOverlay}>
+              <View style={styles.pickerContainer}>
+                <Text style={styles.pickerTitle}>Select Time</Text>
+                <View style={styles.pickerContent}>
+                  <Text style={styles.pickerText}>Time: {formatTime(selectedTime)}</Text>
+                  <Text style={styles.pickerNote}>(Time picker would be implemented here)</Text>
+                </View>
+                <TouchableOpacity onPress={() => setShowTimePicker(false)} style={styles.pickerButton}>
+                  <Text style={styles.pickerButtonText}>OK</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        )}
+      </View>
+    </Modal>
+  );
+};
+
+// Invitation Modal Component
+const InvitationModal = ({ visible, onClose, invitationData }) => {
+  const [recipientEmail, setRecipientEmail] = useState('');
+  const [recipientPhone, setRecipientPhone] = useState('');
+  const [personalMessage, setPersonalMessage] = useState('');
+
+  const sendEmailInvitation = () => {
+    if (!recipientEmail.trim()) {
+      Alert.alert('Error', 'Please enter a valid email address.');
+      return;
+    }
+
+    const subject = `Date Invitation: ${invitationData.title}`;
+    const body = `Hi there!
+
+I'd love to invite you on a special date:
+
+${invitationData.title}
+Date: ${invitationData.startDate.toLocaleDateString('en-US', { 
+  weekday: 'long', 
+  year: 'numeric', 
+  month: 'long', 
+  day: 'numeric' 
+})}
+Time: ${invitationData.startDate.toLocaleTimeString('en-US', { 
+  hour: 'numeric', 
+  minute: '2-digit',
+  hour12: true 
+})}
+Location: ${invitationData.location}
+
+${personalMessage ? `\nPersonal Message:\n${personalMessage}\n` : ''}
+
+${invitationData.notes}
+
+I'm looking forward to spending time with you!
+
+Best regards,
+[Your name]
+
+---
+Sent via DateUnveil`;
+
+    MailComposer.composeAsync({
+      recipients: [recipientEmail],
+      subject: subject,
+      body: body,
+    }).catch(() => Alert.alert('Error', 'Unable to open email composer.'));
+  };
+
+  const sendSMSInvitation = () => {
+    if (!recipientPhone.trim()) {
+      Alert.alert('Error', 'Please enter a valid phone number.');
+      return;
+    }
+
+    const message = `Hi! I'd love to invite you on a special date:
+
+${invitationData.title}
+Date: ${invitationData.startDate.toLocaleDateString('en-US', { 
+  weekday: 'long', 
+  year: 'numeric', 
+  month: 'long', 
+  day: 'numeric' 
+})}
+Time: ${invitationData.startDate.toLocaleTimeString('en-US', { 
+  hour: 'numeric', 
+  minute: '2-digit',
+  hour12: true 
+})}
+Location: ${invitationData.location}
+
+${personalMessage ? `\nPersonal Message:\n${personalMessage}\n` : ''}
+
+${invitationData.notes}
+
+Looking forward to it!
+
+---
+Sent via DateUnveil`;
+
+    let smsUrl = '';
+    if (Platform.OS === 'ios') {
+      smsUrl = `sms:${recipientPhone}&body=${encodeURIComponent(message)}`;
+    } else {
+      smsUrl = `sms:${recipientPhone}?body=${encodeURIComponent(message)}`;
+    }
+    Linking.openURL(smsUrl).catch(() => Alert.alert('Error', 'Unable to open SMS app.'));
+  };
+
+  if (!visible) return null;
+
+  return (
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={onClose}
+    >
+      <View style={styles.invitationModalOverlay}>
+        <View style={styles.invitationModalContent}>
+          <View style={styles.invitationModalHeader}>
+            <Text style={styles.invitationModalTitle}>Send Invitation</Text>
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>✕</Text>
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView style={styles.invitationModalBody}>
+            <View style={styles.invitationPreview}>
+              <Text style={styles.invitationPreviewTitle}>Preview:</Text>
+              <Text style={styles.invitationPreviewText}>{invitationData.title}</Text>
+              <Text style={styles.invitationPreviewText}>
+                {invitationData.startDate.toLocaleDateString('en-US', { 
+                  weekday: 'long', 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </Text>
+              <Text style={styles.invitationPreviewText}>
+                {invitationData.startDate.toLocaleTimeString('en-US', { 
+                  hour: 'numeric', 
+                  minute: '2-digit',
+                  hour12: true 
+                })}
+              </Text>
+              <Text style={styles.invitationPreviewText}>{invitationData.location}</Text>
+            </View>
+
+            <View style={styles.recipientSection}>
+              <Text style={styles.sectionTitle}>📧 Recipient Details</Text>
+              
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>Email Address:</Text>
+                <TextInput
+                  style={styles.textInput}
+                  value={recipientEmail}
+                  onChangeText={setRecipientEmail}
+                  placeholder="Enter email address"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>Phone Number:</Text>
+                <TextInput
+                  style={styles.textInput}
+                  value={recipientPhone}
+                  onChangeText={setRecipientPhone}
+                  placeholder="Enter phone number"
+                  keyboardType="phone-pad"
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>Personal Message (Optional):</Text>
+                <TextInput
+                  style={styles.textInput}
+                  value={personalMessage}
+                  onChangeText={setPersonalMessage}
+                  placeholder="Add a personal touch to your invitation"
+                  multiline
+                  numberOfLines={3}
+                />
+              </View>
+            </View>
+          </ScrollView>
+
+          <View style={styles.invitationModalActions}>
+            <TouchableOpacity onPress={onClose} style={styles.cancelButton}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={sendEmailInvitation} style={styles.emailButton}>
+              <Text style={styles.emailButtonText}>Send Email</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={sendSMSInvitation} style={styles.smsButton}>
+              <Text style={styles.smsButtonText}>Send SMS</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+// Advanced Reminder Modal Component
+const ReminderModal = ({ visible, onClose, onSchedule, dateIdea }) => {
+  const [selectedReminderType, setSelectedReminderType] = useState('quick');
+  const [quickMinutes, setQuickMinutes] = useState(30);
+  const [customDate, setCustomDate] = useState(new Date());
+  const [customTime, setCustomTime] = useState(new Date());
+  const [customMessage, setCustomMessage] = useState('');
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+
+  useEffect(() => {
+    if (visible && dateIdea) {
+      setCustomMessage(`Don't forget your romantic date: ${dateIdea.idea}`);
+    }
+  }, [visible, dateIdea]);
+
+  const formatDate = (date) => {
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
+
+  const formatTime = (date) => {
+    return date.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    });
+  };
+
+  const handleScheduleReminder = () => {
+    let reminderConfig = {
+      message: customMessage
+    };
+
+    switch (selectedReminderType) {
+      case 'quick':
+        reminderConfig = {
+          ...reminderConfig,
+          type: 'quick',
+          value: quickMinutes
+        };
+        break;
+      case 'custom':
+        reminderConfig = {
+          ...reminderConfig,
+          type: 'custom',
+          customDate: customDate,
+          customTime: customTime
+        };
+        break;
+      case 'smart':
+        reminderConfig = {
+          ...reminderConfig,
+          type: 'smart'
+        };
+        break;
+    }
+
+    onSchedule(reminderConfig);
+  };
+
+  if (!visible) return null;
+
+  return (
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={onClose}
+    >
+      <View style={styles.reminderModalOverlay}>
+        <View style={styles.reminderModalContent}>
+          <View style={styles.reminderModalHeader}>
+            <Text style={styles.reminderModalTitle}>Advanced Reminder</Text>
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>✕</Text>
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView style={styles.reminderModalBody}>
+            <View style={styles.reminderTypeSection}>
+              <Text style={styles.sectionTitle}>⏰ Reminder Type</Text>
+              
+              <TouchableOpacity 
+                style={[
+                  styles.reminderTypeButton,
+                  selectedReminderType === 'quick' && styles.reminderTypeButtonActive
+                ]}
+                onPress={() => setSelectedReminderType('quick')}
+              >
+                <Text style={styles.reminderTypeIcon}>⚡</Text>
+                <View style={styles.reminderTypeContent}>
+                  <Text style={styles.reminderTypeTitle}>Quick Reminder</Text>
+                  <Text style={styles.reminderTypeDescription}>Remind me in a few minutes</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={[
+                  styles.reminderTypeButton,
+                  selectedReminderType === 'custom' && styles.reminderTypeButtonActive
+                ]}
+                onPress={() => setSelectedReminderType('custom')}
+              >
+                <Text style={styles.reminderTypeIcon}>📅</Text>
+                <View style={styles.reminderTypeContent}>
+                  <Text style={styles.reminderTypeTitle}>Custom Date & Time</Text>
+                  <Text style={styles.reminderTypeDescription}>Choose specific date and time</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={[
+                  styles.reminderTypeButton,
+                  selectedReminderType === 'smart' && styles.reminderTypeButtonActive
+                ]}
+                onPress={() => setSelectedReminderType('smart')}
+              >
+                <Text style={styles.reminderTypeIcon}>🧠</Text>
+                <View style={styles.reminderTypeContent}>
+                  <Text style={styles.reminderTypeTitle}>Smart Reminder</Text>
+                  <Text style={styles.reminderTypeDescription}>Tomorrow at 6 PM (recommended)</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            {selectedReminderType === 'quick' && (
+              <View style={styles.quickReminderSection}>
+                <Text style={styles.sectionTitle}>⚡ Quick Options</Text>
+                <View style={styles.quickOptions}>
+                  {[15, 30, 60, 120, 240].map(minutes => (
+                    <TouchableOpacity
+                      key={minutes}
+                      style={[
+                        styles.quickOptionButton,
+                        quickMinutes === minutes && styles.quickOptionButtonActive
+                      ]}
+                      onPress={() => setQuickMinutes(minutes)}
+                    >
+                      <Text style={styles.quickOptionText}>
+                        {minutes < 60 ? `${minutes}m` : `${minutes/60}h`}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            )}
+
+            {selectedReminderType === 'custom' && (
+              <View style={styles.customReminderSection}>
+                <Text style={styles.sectionTitle}>📅 Custom Date & Time</Text>
+                
+                <TouchableOpacity 
+                  style={styles.dateTimeButton}
+                  onPress={() => setShowDatePicker(true)}
+                >
+                  <Text style={styles.dateTimeLabel}>Date:</Text>
+                  <Text style={styles.dateTimeValue}>{formatDate(customDate)}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity 
+                  style={styles.dateTimeButton}
+                  onPress={() => setShowTimePicker(true)}
+                >
+                  <Text style={styles.dateTimeLabel}>Time:</Text>
+                  <Text style={styles.dateTimeValue}>{formatTime(customTime)}</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            <View style={styles.messageSection}>
+              <Text style={styles.sectionTitle}>💬 Custom Message</Text>
+              <TextInput
+                style={styles.messageInput}
+                value={customMessage}
+                onChangeText={setCustomMessage}
+                placeholder="Enter your reminder message"
+                multiline
+                numberOfLines={3}
+              />
+            </View>
+          </ScrollView>
+
+          <View style={styles.reminderModalActions}>
+            <TouchableOpacity onPress={onClose} style={styles.cancelButton}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleScheduleReminder} style={styles.scheduleButton}>
+              <Text style={styles.scheduleButtonText}>Set Reminder</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Date Picker Modal */}
+        {showDatePicker && (
+          <Modal
+            visible={showDatePicker}
+            transparent={true}
+            animationType="fade"
+          >
+            <View style={styles.pickerOverlay}>
+              <View style={styles.pickerContainer}>
+                <Text style={styles.pickerTitle}>Select Date</Text>
+                <View style={styles.pickerContent}>
+                  <Text style={styles.pickerText}>Date: {formatDate(customDate)}</Text>
+                  <Text style={styles.pickerNote}>(Date picker would be implemented here)</Text>
+                </View>
+                <TouchableOpacity onPress={() => setShowDatePicker(false)} style={styles.pickerButton}>
+                  <Text style={styles.pickerButtonText}>OK</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        )}
+
+        {/* Time Picker Modal */}
+        {showTimePicker && (
+          <Modal
+            visible={showTimePicker}
+            transparent={true}
+            animationType="fade"
+          >
+            <View style={styles.pickerOverlay}>
+              <View style={styles.pickerContainer}>
+                <Text style={styles.pickerTitle}>Select Time</Text>
+                <View style={styles.pickerContent}>
+                  <Text style={styles.pickerText}>Time: {formatTime(customTime)}</Text>
+                  <Text style={styles.pickerNote}>(Time picker would be implemented here)</Text>
+                </View>
+                <TouchableOpacity onPress={() => setShowTimePicker(false)} style={styles.pickerButton}>
+                  <Text style={styles.pickerButtonText}>OK</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        )}
+      </View>
+    </Modal>
+  );
+};
+
 export default function App() {
   const [revealedCards, setRevealedCards] = useState(new Set());
   const [expandedCard, setExpandedCard] = useState(null);
@@ -595,6 +1229,10 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedBudget, setSelectedBudget] = useState(null);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
+  const [showInvitationModal, setShowInvitationModal] = useState(false);
+  const [showReminderModal, setShowReminderModal] = useState(false);
+  const [invitationData, setInvitationData] = useState(null);
 
   useEffect(() => {
     // Load revealed cards from AsyncStorage on mount
@@ -657,9 +1295,7 @@ export default function App() {
     Linking.openURL(smsUrl).catch(() => Alert.alert('Error', 'Unable to open SMS app.'));
   };
 
-  const addToCalendar = async () => {
-    if (!expandedCard) return;
-    
+  const addToCalendar = async (eventDetails) => {
     try {
       // Check if calendar permissions are already granted
       const { status: existingStatus } = await Calendar.getCalendarPermissionsAsync();
@@ -695,33 +1331,28 @@ export default function App() {
       // Use the first writable calendar (usually the default)
       const selectedCalendar = writableCalendars[0];
       
-      // Create event for tomorrow at 7 PM
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(19, 0, 0, 0); // 7 PM
-      
-      const endTime = new Date(tomorrow);
-      endTime.setHours(21, 0, 0, 0); // 9 PM (2 hours later)
-      
-      const eventDetails = {
-        title: `DateUnveil: ${expandedCard.idea}`,
-        startDate: tomorrow,
-        endDate: endTime,
+      const eventDetailsForCalendar = {
+        title: eventDetails.title,
+        startDate: eventDetails.startDate,
+        endDate: eventDetails.endDate,
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        location: 'Your chosen location',
-        notes: `Planned with DateUnveil\n\nCategory: ${categories[expandedCard.category].name}\nBudget: ${expandedCard.budget === 'low' ? '$' : expandedCard.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${expandedCard.location}`,
+        location: eventDetails.location,
+        notes: eventDetails.notes,
         alarms: [{ relativeOffset: -60 }], // Reminder 1 hour before
       };
       
-      const eventId = await Calendar.createEventAsync(selectedCalendar.id, eventDetails);
+      const eventId = await Calendar.createEventAsync(selectedCalendar.id, eventDetailsForCalendar);
       
       if (eventId) {
         Alert.alert(
-          'Date Added to Calendar!', 
-          `"${expandedCard.idea}" has been scheduled for tomorrow at 7 PM with a 1-hour reminder.`,
+          'Date Scheduled Successfully!', 
+          `"${eventDetails.title}" has been added to your calendar.`,
           [
             { text: 'Great!', style: 'default' },
-            { text: 'View Calendar', onPress: () => Linking.openURL('calshow://') }
+            { text: 'Send Invitation', onPress: () => {
+              setInvitationData(eventDetails);
+              setShowInvitationModal(true);
+            }}
           ]
         );
       } else {
@@ -739,6 +1370,11 @@ export default function App() {
         ]
       );
     }
+  };
+
+  const handleScheduleDate = (eventDetails) => {
+    setShowCalendarModal(false);
+    addToCalendar(eventDetails);
   };
 
   const setReminder = async () => {
@@ -766,30 +1402,8 @@ export default function App() {
         return;
       }
       
-      // Show reminder options
-      Alert.alert(
-        '⏰ Set Reminder',
-        'When would you like to be reminded about this date?',
-        [
-          { text: 'Cancel', style: 'cancel' },
-          { 
-            text: '30 minutes', 
-            onPress: () => scheduleReminder(30, '30 minutes') 
-          },
-          { 
-            text: '1 hour', 
-            onPress: () => scheduleReminder(60, '1 hour') 
-          },
-          { 
-            text: '2 hours', 
-            onPress: () => scheduleReminder(120, '2 hours') 
-          },
-          { 
-            text: 'Tomorrow', 
-            onPress: () => scheduleReminder(24 * 60, 'tomorrow') 
-          },
-        ]
-      );
+      // Show advanced reminder options
+      setShowReminderModal(true);
       
     } catch (error) {
       console.error('Reminder error:', error);
@@ -797,29 +1411,119 @@ export default function App() {
     }
   };
   
-  const scheduleReminder = async (minutes, timeText) => {
+  const scheduleAdvancedReminder = async (reminderConfig) => {
     try {
+      const { type, value, customDate, customTime, message } = reminderConfig;
+      let triggerTime;
+      let reminderText;
+      
+      switch (type) {
+        case 'quick':
+          triggerTime = new Date(Date.now() + value * 60 * 1000);
+          reminderText = `in ${value} minutes`;
+          break;
+        case 'custom':
+          const scheduledDate = new Date(customDate);
+          scheduledDate.setHours(customTime.getHours());
+          scheduledDate.setMinutes(customTime.getMinutes());
+          triggerTime = scheduledDate;
+          reminderText = `on ${scheduledDate.toLocaleDateString()} at ${customTime.toLocaleTimeString()}`;
+          break;
+        case 'smart':
+          // Smart reminders based on date type
+          const now = new Date();
+          const tomorrow = new Date(now);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          tomorrow.setHours(18, 0, 0, 0); // 6 PM tomorrow
+          triggerTime = tomorrow;
+          reminderText = 'tomorrow at 6 PM';
+          break;
+        default:
+          throw new Error('Invalid reminder type');
+      }
+      
       const notificationId = await Notifications.scheduleNotificationAsync({
         content: {
           title: 'DateUnveil Reminder',
-          body: `Don't forget your romantic date: ${expandedCard.idea}`,
-          data: { dateIdea: expandedCard.idea },
+          body: message || `Don't forget your romantic date: ${expandedCard.idea}`,
+          data: { 
+            dateIdea: expandedCard.idea,
+            category: expandedCard.category,
+            budget: expandedCard.budget,
+            location: expandedCard.location
+          },
+          sound: 'default',
+          priority: 'high',
         },
-        trigger: { seconds: minutes * 60 },
+        trigger: { date: triggerTime },
       });
       
       Alert.alert(
-        'Reminder Set!', 
-        `You'll be reminded about "${expandedCard.idea}" in ${timeText}.`,
+        'Advanced Reminder Set!', 
+        `You'll be reminded about "${expandedCard.idea}" ${reminderText}.`,
         [
           { text: 'Great!', style: 'default' },
-          { text: 'View Reminders', onPress: () => Linking.openURL('x-apple-reminder://') }
+          { text: 'Set Another', onPress: () => setShowReminderModal(true) },
+          { text: 'View All', onPress: () => viewAllReminders() }
         ]
       );
       
     } catch (error) {
       console.error('Schedule reminder error:', error);
       Alert.alert('Error', 'Could not schedule reminder. Please try again.');
+    }
+  };
+  
+  const viewAllReminders = async () => {
+    try {
+      const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
+      if (scheduledNotifications.length === 0) {
+        Alert.alert('No Reminders', 'You have no scheduled reminders.');
+        return;
+      }
+      
+      const reminderList = scheduledNotifications
+        .filter(notification => notification.content.data?.dateIdea)
+        .map(notification => ({
+          id: notification.identifier,
+          title: notification.content.title,
+          body: notification.content.body,
+          date: new Date(notification.trigger.date),
+          dateIdea: notification.content.data.dateIdea
+        }))
+        .sort((a, b) => a.date - b.date);
+      
+      if (reminderList.length === 0) {
+        Alert.alert('No Date Reminders', 'You have no date-related reminders scheduled.');
+        return;
+      }
+      
+      const reminderText = reminderList.map(reminder => 
+        `• ${reminder.dateIdea}\n  ${reminder.date.toLocaleDateString()} at ${reminder.date.toLocaleTimeString()}`
+      ).join('\n\n');
+      
+      Alert.alert(
+        'Your Date Reminders',
+        reminderText,
+        [
+          { text: 'OK', style: 'default' },
+          { text: 'Clear All', onPress: () => clearAllReminders() }
+        ]
+      );
+      
+    } catch (error) {
+      console.error('View reminders error:', error);
+      Alert.alert('Error', 'Unable to view reminders.');
+    }
+  };
+  
+  const clearAllReminders = async () => {
+    try {
+      await Notifications.cancelAllScheduledNotificationsAsync();
+      Alert.alert('Success', 'All reminders have been cleared.');
+    } catch (error) {
+      console.error('Clear reminders error:', error);
+      Alert.alert('Error', 'Unable to clear reminders.');
     }
   };
 
@@ -894,7 +1598,7 @@ export default function App() {
           onClose={closeExpandedCard}
           onShareEmail={shareByEmail}
           onShareSMS={shareBySMS}
-          onAddToCalendar={addToCalendar}
+          onAddToCalendar={() => setShowCalendarModal(true)}
           onSetReminder={setReminder}
         />
       )}
@@ -923,6 +1627,25 @@ export default function App() {
           </View>
         </View>
       )}
+
+      <CalendarModal
+        visible={showCalendarModal}
+        onClose={() => setShowCalendarModal(false)}
+        onSchedule={handleScheduleDate}
+        dateIdea={expandedCard}
+      />
+
+      <InvitationModal
+        visible={showInvitationModal}
+        onClose={() => setShowInvitationModal(false)}
+        invitationData={invitationData}
+      />
+      <ReminderModal
+        visible={showReminderModal}
+        onClose={() => setShowReminderModal(false)}
+        onSchedule={scheduleAdvancedReminder}
+        dateIdea={expandedCard}
+      />
 
       <Tutorial 
         visible={showTutorial}
@@ -1522,5 +2245,494 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  // Calendar Modal Styles
+  calendarModalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 107, 157, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2000,
+  },
+  calendarModalContent: {
+    backgroundColor: '#ffffff',
+    borderRadius: 24,
+    width: width - 40,
+    maxHeight: height * 0.8,
+    shadowColor: '#FF6B9D',
+    shadowOffset: {
+      width: 0,
+      height: 20,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 30,
+    elevation: 20,
+    borderWidth: 3,
+    borderColor: '#FFE4E1',
+  },
+  calendarModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: '#FFE4E1',
+  },
+  calendarModalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FF6B9D',
+  },
+  calendarModalBody: {
+    padding: 24,
+  },
+  dateTimeSection: {
+    marginBottom: 24,
+  },
+  detailsSection: {
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FF6B9D',
+    marginBottom: 16,
+  },
+  dateTimeButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: '#FFF8FA',
+    borderRadius: 12,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: '#FFE4E1',
+  },
+  dateTimeLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FF6B9D',
+  },
+  dateTimeValue: {
+    fontSize: 16,
+    color: '#FF6B9D',
+  },
+  inputGroup: {
+    marginBottom: 16,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FF6B9D',
+    marginBottom: 8,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: '#FFE4E1',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    backgroundColor: '#FFF8FA',
+    color: '#FF6B9D',
+  },
+  calendarModalActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 24,
+    borderTopWidth: 1,
+    borderTopColor: '#FFE4E1',
+  },
+  cancelButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#FF8E8E',
+    backgroundColor: 'transparent',
+  },
+  cancelButtonText: {
+    color: '#FF8E8E',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  scheduleButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+    backgroundColor: '#FF6B9D',
+    shadowColor: '#FF6B9D',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  scheduleButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  // Picker Styles
+  pickerOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 3000,
+  },
+  pickerContainer: {
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 24,
+    width: width - 80,
+    alignItems: 'center',
+  },
+  pickerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FF6B9D',
+    marginBottom: 16,
+  },
+  pickerContent: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  pickerText: {
+    fontSize: 18,
+    color: '#FF6B9D',
+    marginBottom: 8,
+  },
+  pickerNote: {
+    fontSize: 12,
+    color: '#FF8E8E',
+    fontStyle: 'italic',
+  },
+  pickerButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 16,
+    backgroundColor: '#FF6B9D',
+  },
+  pickerButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
+  // Invitation Modal Styles
+  invitationModalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 107, 157, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2000,
+  },
+  invitationModalContent: {
+    backgroundColor: '#ffffff',
+    borderRadius: 24,
+    width: width - 40,
+    maxHeight: height * 0.8,
+    shadowColor: '#FF6B9D',
+    shadowOffset: {
+      width: 0,
+      height: 20,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 30,
+    elevation: 20,
+    borderWidth: 3,
+    borderColor: '#FFE4E1',
+  },
+  invitationModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: '#FFE4E1',
+  },
+  invitationModalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FF6B9D',
+  },
+  invitationModalBody: {
+    padding: 24,
+  },
+  invitationPreview: {
+    backgroundColor: '#FFF8FA',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: '#FFE4E1',
+  },
+  invitationPreviewTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FF6B9D',
+    marginBottom: 8,
+  },
+  invitationPreviewText: {
+    fontSize: 14,
+    color: '#FF6B9D',
+    marginBottom: 4,
+  },
+  recipientSection: {
+    marginBottom: 24,
+  },
+  invitationModalActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 24,
+    borderTopWidth: 1,
+    borderTopColor: '#FFE4E1',
+  },
+  emailButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    backgroundColor: '#4CAF50',
+    shadowColor: '#4CAF50',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  emailButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  smsButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    backgroundColor: '#2196F3',
+    shadowColor: '#2196F3',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  smsButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+
+  // Reminder Modal Styles
+  reminderModalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 107, 157, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2000,
+  },
+  reminderModalContent: {
+    backgroundColor: '#ffffff',
+    borderRadius: 24,
+    width: width - 40,
+    maxHeight: height * 0.8,
+    shadowColor: '#FF6B9D',
+    shadowOffset: {
+      width: 0,
+      height: 20,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 30,
+    elevation: 20,
+    borderWidth: 3,
+    borderColor: '#FFE4E1',
+  },
+  reminderModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: '#FFE4E1',
+  },
+  reminderModalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FF6B9D',
+  },
+  reminderModalBody: {
+    padding: 24,
+  },
+  reminderTypeSection: {
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FF6B9D',
+    marginBottom: 16,
+  },
+  reminderTypeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    marginBottom: 12,
+    borderRadius: 16,
+    backgroundColor: '#FFF8FA',
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  reminderTypeButtonActive: {
+    backgroundColor: '#FFE4E1',
+    borderColor: '#FF6B9D',
+  },
+  reminderTypeIcon: {
+    fontSize: 28,
+    marginRight: 16,
+  },
+  reminderTypeContent: {
+    flex: 1,
+  },
+  reminderTypeTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FF6B9D',
+    marginBottom: 4,
+  },
+  reminderTypeDescription: {
+    fontSize: 14,
+    color: '#FF8E8E',
+  },
+  quickReminderSection: {
+    marginBottom: 24,
+  },
+  quickOptions: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  quickOptionButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 20,
+    backgroundColor: '#FFF8FA',
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  quickOptionButtonActive: {
+    backgroundColor: '#FF6B9D',
+    borderColor: '#FF6B9D',
+  },
+  quickOptionText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#FF6B9D',
+  },
+  customReminderSection: {
+    marginBottom: 24,
+  },
+  dateTimeButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginBottom: 12,
+    borderRadius: 12,
+    backgroundColor: '#FFF8FA',
+    borderWidth: 1,
+    borderColor: '#FFE4E1',
+  },
+  dateTimeLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FF6B9D',
+  },
+  dateTimeValue: {
+    fontSize: 16,
+    color: '#FF8E8E',
+  },
+  messageSection: {
+    marginBottom: 24,
+  },
+  messageInput: {
+    borderWidth: 1,
+    borderColor: '#FFE4E1',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontSize: 16,
+    minHeight: 80,
+    textAlignVertical: 'top',
+    backgroundColor: '#FFF8FA',
+  },
+  reminderModalActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 24,
+    borderTopWidth: 1,
+    borderTopColor: '#FFE4E1',
+  },
+  cancelButton: {
+    flex: 1,
+    paddingVertical: 12,
+    marginRight: 12,
+    borderRadius: 20,
+    backgroundColor: '#FFF8FA',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#FF8E8E',
+  },
+  cancelButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FF8E8E',
+  },
+  scheduleButton: {
+    flex: 1,
+    paddingVertical: 12,
+    marginLeft: 12,
+    borderRadius: 20,
+    backgroundColor: '#FF6B9D',
+    alignItems: 'center',
+    shadowColor: '#FF6B9D',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  scheduleButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#ffffff',
   },
 });
