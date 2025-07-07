@@ -216,17 +216,12 @@ export default function App() {
       setCurrentIdea(random);
       setIsRevealed(true);
     } else {
-      // Second click - get next idea
-      const unrevealed = dateIdeas.filter(idea => !history.includes(idea));
-      if (unrevealed.length === 0) {
-        setCurrentIdea('No more new ideas!');
-        return;
-      }
-      const random = unrevealed[Math.floor(Math.random() * unrevealed.length)];
-      setCurrentIdea(random);
-      const newHistory = [...history, random];
+      // Second click - hide current idea and prepare for next reveal
+      const newHistory = [...history, currentIdea];
       setHistory(newHistory);
       AsyncStorage.setItem('history', JSON.stringify(newHistory));
+      setCurrentIdea(null);
+      setIsRevealed(false);
     }
   };
 
