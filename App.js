@@ -20,6 +20,7 @@ import * as MailComposer from 'expo-mail-composer';
 import * as Linking from 'expo-linking';
 import * as Calendar from 'expo-calendar';
 import * as Notifications from 'expo-notifications';
+import { MaterialCommunityIcons, Feather, FontAwesome5 } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window');
 
@@ -108,61 +109,42 @@ const categories = {
 };
 
 // Advanced Icon Components
-const CategoryIcon = ({ category, size = 'medium' }) => {
-  const categoryInfo = categories[category];
-  const iconSizes = {
-    small: 16,
-    medium: 24,
-    large: 32
+const CategoryIcon = ({ category, size = 32 }) => {
+  const iconMap = {
+    romantic: <MaterialCommunityIcons name="heart" size={size} color="#FF6B9D" />,
+    adventurous: <MaterialCommunityIcons name="hiking" size={size} color="#4ECDC4" />,
+    creative: <Feather name="feather" size={size} color="#45B7D1" />,
+    active: <MaterialCommunityIcons name="run-fast" size={size} color="#96CEB4" />,
+    cozy: <MaterialCommunityIcons name="sofa" size={size} color="#FFEAA7" />,
+    fun: <MaterialCommunityIcons name="emoticon-excited-outline" size={size} color="#DDA0DD" />,
+    foodie: <MaterialCommunityIcons name="food" size={size} color="#FF8E8E" />,
+    chill: <Feather name="coffee" size={size} color="#87CEEB" />,
+    cultural: <MaterialCommunityIcons name="bank" size={size} color="#DDA0DD" />,
+    intellectual: <FontAwesome5 name="brain" size={size} color="#98D8C8" />,
+    spontaneous: <Feather name="zap" size={size} color="#FFB347" />,
   };
-  
   return (
-    <View style={[
-      styles.categoryIconContainer,
-      { 
-        width: iconSizes[size] + 8,
-        height: iconSizes[size] + 8,
-        backgroundColor: categoryInfo.color + '20'
-      }
-    ]}>
-      <Text style={[styles.categoryIcon, { fontSize: iconSizes[size] }]}>
-        {categoryInfo.icon}
-      </Text>
+    <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', borderRadius: size, width: size + 12, height: size + 12 }}>
+      {iconMap[category]}
     </View>
   );
 };
 
-const BudgetIcon = ({ budget }) => {
-  const budgetConfig = {
-    low: { icon: '💎', color: '#4CAF50', label: 'Budget' },
-    medium: { icon: '💎💎', color: '#FF9800', label: 'Mid-Range' },
-    high: { icon: '💎💎💎', color: '#E91E63', label: 'Premium' }
+const BudgetIcon = ({ budget, size = 20 }) => {
+  const iconMap = {
+    low: <FontAwesome5 name="gem" size={size} color="#4CAF50" />, // green
+    medium: <FontAwesome5 name="gem" size={size} color="#FF9800" />, // orange
+    high: <FontAwesome5 name="gem" size={size} color="#E91E63" />, // pink
   };
-  
-  const config = budgetConfig[budget];
-  
-  return (
-    <View style={[styles.budgetContainer, { backgroundColor: config.color + '15' }]}>
-      <Text style={[styles.budgetIcon, { color: config.color }]}>{config.icon}</Text>
-      <Text style={[styles.budgetLabel, { color: config.color }]}>{config.label}</Text>
-    </View>
-  );
+  return iconMap[budget];
 };
 
-const LocationIcon = ({ location }) => {
-  const locationConfig = {
-    indoor: { icon: '🏠', color: '#9C27B0', label: 'Indoor' },
-    outdoor: { icon: '🌳', color: '#4CAF50', label: 'Outdoor' }
+const LocationIcon = ({ location, size = 20 }) => {
+  const iconMap = {
+    indoor: <MaterialCommunityIcons name="home" size={size} color="#9C27B0" />,
+    outdoor: <MaterialCommunityIcons name="tree" size={size} color="#4CAF50" />,
   };
-  
-  const config = locationConfig[location];
-  
-  return (
-    <View style={[styles.locationContainer, { backgroundColor: config.color + '15' }]}>
-      <Text style={[styles.locationIcon, { color: config.color }]}>{config.icon}</Text>
-      <Text style={[styles.locationLabel, { color: config.color }]}>{config.label}</Text>
-    </View>
-  );
+  return iconMap[location];
 };
 
 // Tutorial Component
@@ -300,45 +282,18 @@ const Tutorial = ({ visible, onComplete }) => {
 };
 
 // Enhanced Small Card Component
-const SmallCard = ({ item, isRevealed, onPress, isExpanded }) => {
-  const cardStyle = [
-    styles.smallCard,
-    isRevealed && styles.revealedCard,
-    isExpanded && styles.expandedCard
-  ];
-
-  const categoryInfo = categories[item.category];
-
+const SmallCard = ({ item, isRevealed, onPress }) => {
   return (
-    <TouchableOpacity 
-      style={cardStyle} 
-      onPress={onPress}
-      activeOpacity={0.8}
-    >
-      <View style={styles.cardHeader}>
-        <View style={styles.cardNumberContainer}>
-          <Text style={styles.smallCardNumber}>#{item.id}</Text>
-        </View>
-        <CategoryIcon category={item.category} size="small" />
+    <TouchableOpacity style={styles.smallCard} onPress={onPress} activeOpacity={0.85}>
+      <View style={styles.cardIconContainer}>
+        <CategoryIcon category={item.category} size={36} />
       </View>
-      
       <View style={styles.cardContent}>
-        {isRevealed && (
-          <Text style={styles.smallCardText} numberOfLines={2}>
-            {item.idea}
-          </Text>
+        {!isRevealed ? (
+          <Text style={styles.tapToReveal}>Tap to reveal</Text>
+        ) : (
+          <Animated.Text style={styles.ideaText}>{item.idea}</Animated.Text>
         )}
-        {!isRevealed && (
-          <View style={styles.mysteryContainer}>
-            <Text style={styles.mysteryIcon}>💫</Text>
-            <Text style={styles.mysteryText}>Tap to reveal</Text>
-          </View>
-        )}
-      </View>
-      
-      <View style={styles.cardFooter}>
-        <BudgetIcon budget={item.budget} />
-        <LocationIcon location={item.location} />
       </View>
     </TouchableOpacity>
   );
@@ -361,7 +316,7 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect }) => {
           ]}
           onPress={() => onCategorySelect(null)}
         >
-          <Text style={styles.categoryFilterIcon}>💕</Text>
+          <MaterialCommunityIcons name="heart-multiple" size={20} color="#FF6B9D" />
           <Text style={styles.categoryFilterText}>All</Text>
         </TouchableOpacity>
         
@@ -374,7 +329,17 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect }) => {
             ]}
             onPress={() => onCategorySelect(key)}
           >
-            <Text style={styles.categoryFilterIcon}>{category.icon}</Text>
+            {key === 'romantic' && <MaterialCommunityIcons name="heart" size={20} color={selectedCategory === key ? "#fff" : "#FF6B9D"} />}
+            {key === 'adventurous' && <MaterialCommunityIcons name="hiking" size={20} color={selectedCategory === key ? "#fff" : "#4ECDC4"} />}
+            {key === 'creative' && <Feather name="feather" size={20} color={selectedCategory === key ? "#fff" : "#45B7D1"} />}
+            {key === 'active' && <MaterialCommunityIcons name="run-fast" size={20} color={selectedCategory === key ? "#fff" : "#96CEB4"} />}
+            {key === 'cozy' && <MaterialCommunityIcons name="sofa" size={20} color={selectedCategory === key ? "#fff" : "#FFEAA7"} />}
+            {key === 'fun' && <MaterialCommunityIcons name="emoticon-excited-outline" size={20} color={selectedCategory === key ? "#fff" : "#DDA0DD"} />}
+            {key === 'foodie' && <MaterialCommunityIcons name="food" size={20} color={selectedCategory === key ? "#fff" : "#FF8E8E"} />}
+            {key === 'chill' && <Feather name="coffee" size={20} color={selectedCategory === key ? "#fff" : "#87CEEB"} />}
+            {key === 'cultural' && <MaterialCommunityIcons name="bank" size={20} color={selectedCategory === key ? "#fff" : "#DDA0DD"} />}
+            {key === 'intellectual' && <FontAwesome5 name="brain" size={20} color={selectedCategory === key ? "#fff" : "#98D8C8"} />}
+            {key === 'spontaneous' && <Feather name="zap" size={20} color={selectedCategory === key ? "#fff" : "#FFB347"} />}
             <Text style={styles.categoryFilterText}>{category.name}</Text>
           </TouchableOpacity>
         ))}
@@ -590,7 +555,6 @@ export default function App() {
       item={item}
       isRevealed={revealedCards.has(item.id)}
       onPress={() => handleCardPress(item)}
-      isExpanded={expandedCard?.id === item.id}
     />
   );
 
@@ -627,7 +591,8 @@ export default function App() {
         data={filteredData}
         renderItem={renderCard}
         keyExtractor={(item) => item.id.toString()}
-        numColumns={3}
+        numColumns={2}
+        key="2-column-grid"
         contentContainerStyle={styles.gridContainer}
         showsVerticalScrollIndicator={false}
       />
@@ -688,7 +653,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8FA',
+    backgroundColor: '#FDF6F0',
+    paddingTop: 10,
   },
   header: {
     backgroundColor: '#FF6B9D',
@@ -768,107 +734,50 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF6B9D',
     borderColor: '#FF6B9D',
   },
-  categoryFilterIcon: {
-    fontSize: 16,
-    marginBottom: 2,
-  },
+
   categoryFilterText: {
     fontSize: 11,
     fontWeight: '600',
     color: '#FF6B9D',
   },
   gridContainer: {
-    padding: 10,
+    padding: 16,
+    paddingBottom: 32,
   },
   smallCard: {
-    width: (width - 40) / 3,
-    height: 140,
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    margin: 5,
-    padding: 12,
-    shadowColor: '#FF6B9D',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 5,
-    borderWidth: 1,
-    borderColor: '#FFE4E1',
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  cardNumberContainer: {
-    backgroundColor: '#FF6B9D',
-    borderRadius: 12,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-  },
-  categoryIconContainer: {
-    borderRadius: 12,
+    flex: 1,
+    margin: 12,
+    backgroundColor: '#FFF',
+    borderRadius: 20,
+    minHeight: 180,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#FF6B9D',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 6,
   },
-  categoryIcon: {
-    textAlign: 'center',
+  cardIconContainer: {
+    marginBottom: 16,
   },
   cardContent: {
-    flex: 1,
+    alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
   },
-  mysteryContainer: {
-    alignItems: 'center',
+  tapToReveal: {
+    fontSize: 16,
+    color: '#B0A8B9',
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
-  mysteryIcon: {
-    fontSize: 24,
-    marginBottom: 4,
-  },
-  mysteryText: {
-    fontSize: 10,
+  ideaText: {
+    fontSize: 18,
     color: '#FF6B9D',
-    fontWeight: '600',
-  },
-  cardFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    fontWeight: '700',
+    textAlign: 'center',
     marginTop: 8,
-  },
-  budgetContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    borderRadius: 10,
-  },
-  budgetIcon: {
-    fontSize: 10,
-    marginRight: 2,
-  },
-  budgetLabel: {
-    fontSize: 8,
-    fontWeight: '600',
-  },
-  locationContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    borderRadius: 10,
-  },
-  locationIcon: {
-    fontSize: 10,
-    marginRight: 2,
-  },
-  locationLabel: {
-    fontSize: 8,
-    fontWeight: '600',
+    lineHeight: 24,
   },
   revealedCard: {
     backgroundColor: '#FFF0F5',
