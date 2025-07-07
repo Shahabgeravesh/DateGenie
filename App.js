@@ -111,43 +111,50 @@ const Tutorial = ({ visible, onComplete }) => {
     {
       title: "🌟 Welcome to DateUnveil! 🌟",
       message: "Your magical journey to discover 100 amazing date ideas starts here! Let's explore together! ✨",
-      icon: "💫",
+      iconSet: 'FontAwesome5',
+      icon: 'heart',
       color: "#FF6B9D"
     },
     {
       title: "🎴 Meet Your Date Cards",
       message: "Each card hides a special date idea! Click any card to reveal the magic inside! ✨",
-      icon: "💎",
+      iconSet: 'MaterialCommunityIcons',
+      icon: 'cards',
       color: "#4ECDC4"
     },
     {
       title: "🏷️ Category Magic",
       message: "Use the filter bar to find exactly what you're looking for! Romantic, adventurous, or maybe something cozy? 🎯",
-      icon: "🎨",
+      iconSet: 'MaterialCommunityIcons',
+      icon: 'palette',
       color: "#45B7D1"
     },
     {
       title: "💰 Budget & Location",
-      message: "See budget levels (💎 to 💎💎💎) and location (🏠 indoor or 🌳 outdoor) at a glance!",
-      icon: "💎",
+      message: "See budget levels ($ to $$$) and location (🏠 indoor or 🌳 outdoor) at a glance!",
+      iconSet: 'FontAwesome5',
+      icon: 'dollar-sign',
       color: "#96CEB4"
     },
     {
       title: "📱 Share the Love",
       message: "Found the perfect date? Share it via email, message, add to calendar, or set a reminder! 💌",
-      icon: "📤",
+      iconSet: 'MaterialCommunityIcons',
+      icon: 'share-variant',
       color: "#DDA0DD"
     },
     {
       title: "📚 Your Date History",
       message: "Keep track of all your revealed ideas in the history section! Your romantic journey awaits! 📖",
-      icon: "💝",
+      iconSet: 'MaterialCommunityIcons',
+      icon: 'book-open-variant',
       color: "#FF8E8E"
     },
     {
       title: "🚀 You're All Set!",
       message: "Ready to discover your perfect date? Let the adventure begin! 💕✨",
-      icon: "🌟",
+      iconSet: 'MaterialCommunityIcons',
+      icon: 'rocket-launch',
       color: "#FFB347"
     }
   ];
@@ -197,32 +204,36 @@ const Tutorial = ({ visible, onComplete }) => {
             }
           ]}
         >
-          <View style={[styles.tutorialHeader, { backgroundColor: currentTutorial.color + '10' }]}>
-            <View style={[styles.tutorialIconContainer, { backgroundColor: currentTutorial.color }]}>
-              <Text style={styles.tutorialIcon}>{currentTutorial.icon}</Text>
+          <View style={{flex: 1, minHeight: 320}}>
+            <View style={[styles.tutorialHeader, { backgroundColor: currentTutorial.color + '15' }]}> 
+              <View style={[styles.tutorialIconContainer, { backgroundColor: currentTutorial.color }]}> 
+                {currentTutorial.iconSet === 'MaterialCommunityIcons' ? ( 
+                  <MaterialCommunityIcons name={currentTutorial.icon} size={32} color="#fff" /> 
+                ) : currentTutorial.iconSet === 'FontAwesome5' ? ( 
+                  <FontAwesome5 name={currentTutorial.icon} size={28} color="#fff" /> 
+                ) : ( 
+                  <Feather name={currentTutorial.icon} size={28} color="#fff" /> 
+                )} 
+              </View> 
+              <Text style={styles.tutorialTitle}>{currentTutorial.title}</Text> 
             </View>
-            <Text style={styles.tutorialTitle}>{currentTutorial.title}</Text>
+            <Text style={styles.tutorialMessage}>{currentTutorial.message}</Text>
+            <View style={styles.tutorialProgress}>
+              {tutorialSteps.map((_, index) => (
+                <View 
+                  key={index} 
+                  style={[
+                    styles.progressDot,
+                    index === currentStep && [styles.progressDotActive, { backgroundColor: currentTutorial.color }]
+                  ]} 
+                />
+              ))}
+            </View>
           </View>
-          
-          <Text style={styles.tutorialMessage}>{currentTutorial.message}</Text>
-          
-          <View style={styles.tutorialProgress}>
-            {tutorialSteps.map((_, index) => (
-              <View 
-                key={index} 
-                style={[
-                  styles.progressDot,
-                  index === currentStep && [styles.progressDotActive, { backgroundColor: currentTutorial.color }]
-                ]} 
-              />
-            ))}
-          </View>
-          
-          <View style={styles.tutorialButtons}>
-            <TouchableOpacity onPress={skipTutorial} style={styles.skipButton}>
-              <Text style={styles.skipButtonText}>Skip Tutorial</Text>
+                    <View style={styles.tutorialButtons}>
+            <TouchableOpacity onPress={skipTutorial} style={[styles.nextButton, { backgroundColor: currentTutorial.color }]}>
+              <Text style={styles.nextButtonText}>Skip Tutorial</Text>
             </TouchableOpacity>
-            
             <TouchableOpacity onPress={nextStep} style={[styles.nextButton, { backgroundColor: currentTutorial.color }]}>
               <Text style={styles.nextButtonText}>
                 {currentStep === tutorialSteps.length - 1 ? "Let's Start! 🚀" : "Next ✨"}
@@ -1173,6 +1184,7 @@ export default function App() {
   const [showInvitationModal, setShowInvitationModal] = useState(false);
   const [showReminderModal, setShowReminderModal] = useState(false);
   const [invitationData, setInvitationData] = useState(null);
+  const [tutorialKey, setTutorialKey] = useState(0);
 
   useEffect(() => {
     // Load revealed cards from AsyncStorage on mount
@@ -1472,6 +1484,7 @@ export default function App() {
       await AsyncStorage.multiRemove(['revealedCards', 'tutorialShown']);
       setRevealedCards(new Set());
       setShowTutorial(true);
+      setTutorialKey(k => k + 1); // force remount Tutorial
       Alert.alert('Success', 'App data has been reset! The tutorial will appear again.');
     } catch (error) {
       console.error('Reset app data error:', error);
@@ -1606,6 +1619,7 @@ export default function App() {
       />
 
       <Tutorial 
+        key={tutorialKey}
         visible={showTutorial}
         onComplete={completeTutorial}
       />
@@ -2125,7 +2139,9 @@ const styles = StyleSheet.create({
   tutorialContent: {
     backgroundColor: '#ffffff',
     borderRadius: 28,
-    padding: 32,
+    padding: 24,
+    maxHeight: height * 0.8,
+    minHeight: 340,
     shadowColor: '#FF6B9D',
     shadowOffset: {
       width: 0,
@@ -2136,11 +2152,13 @@ const styles = StyleSheet.create({
     elevation: 20,
     borderWidth: 3,
     borderColor: '#FFE4E1',
+    marginBottom: 16,
+    justifyContent: 'space-between',
   },
   tutorialHeader: {
     alignItems: 'center',
-    marginBottom: 24,
-    padding: 20,
+    marginBottom: 20,
+    padding: 16,
     borderRadius: 20,
   },
   tutorialIconContainer: {
@@ -2159,9 +2177,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 6,
   },
-  tutorialIcon: {
-    fontSize: 32,
-  },
+
   tutorialTitle: {
     fontSize: 26,
     fontWeight: 'bold',
@@ -2170,16 +2186,16 @@ const styles = StyleSheet.create({
     lineHeight: 32,
   },
   tutorialMessage: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#FF6B9D',
     textAlign: 'center',
-    lineHeight: 26,
-    marginBottom: 28,
+    lineHeight: 24,
+    marginBottom: 20,
   },
   tutorialProgress: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 28,
+    marginBottom: 20,
   },
   progressDot: {
     width: 10,
@@ -2196,6 +2212,10 @@ const styles = StyleSheet.create({
   tutorialButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 24,
+    gap: 12,
+    alignSelf: 'stretch',
   },
   skipButton: {
     paddingVertical: 14,
@@ -2210,21 +2230,21 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   nextButton: {
-    paddingVertical: 14,
-    paddingHorizontal: 28,
-    borderRadius: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 18,
     shadowColor: '#FF6B9D',
     shadowOffset: {
       width: 0,
-      height: 6,
+      height: 4,
     },
     shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 6,
+    shadowRadius: 8,
+    elevation: 4,
   },
   nextButtonText: {
     color: '#ffffff',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   // Calendar Modal Styles
