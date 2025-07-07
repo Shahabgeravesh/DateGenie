@@ -160,12 +160,49 @@ const CategoryIcon = ({ category, size = 32, color = null, isSelected = false })
 };
 
 const BudgetIcon = ({ budget, size = 20 }) => {
-  const iconMap = {
-    low: <FontAwesome5 name="gem" size={size} color="#4CAF50" />, // green
-    medium: <FontAwesome5 name="gem" size={size} color="#FF9800" />, // orange
-    high: <FontAwesome5 name="gem" size={size} color="#E91E63" />, // pink
+  const budgetConfig = {
+    low: { 
+      icon: <FontAwesome5 name="dollar-sign" size={size} color="#4CAF50" />,
+      label: "$",
+      color: "#4CAF50",
+      description: "Budget Friendly"
+    },
+    medium: { 
+      icon: <FontAwesome5 name="dollar-sign" size={size} color="#FF9800" />,
+      label: "$$",
+      color: "#FF9800", 
+      description: "Mid-Range"
+    },
+    high: { 
+      icon: <FontAwesome5 name="dollar-sign" size={size} color="#E91E63" />,
+      label: "$$$",
+      color: "#E91E63",
+      description: "Premium"
+    }
   };
-  return iconMap[budget];
+  
+  const config = budgetConfig[budget];
+  
+  return (
+    <View style={{
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: config.color + '15',
+      paddingHorizontal: 6,
+      paddingVertical: 3,
+      borderRadius: 8,
+    }}>
+      {config.icon}
+      <Text style={{
+        fontSize: size * 0.6,
+        fontWeight: 'bold',
+        color: config.color,
+        marginLeft: 2,
+      }}>
+        {config.label}
+      </Text>
+    </View>
+  );
 };
 
 const LocationIcon = ({ location, size = 20 }) => {
@@ -341,7 +378,7 @@ const SmallCard = ({ item, isRevealed, onPress }) => {
 };
 
 // Enhanced Category Filter Component
-const CategoryFilter = ({ selectedCategory, onCategorySelect }) => {
+const CategoryFilter = ({ selectedCategory, onCategorySelect, selectedBudget, onBudgetSelect }) => {
   return (
     <View style={styles.categoryFilterContainer}>
       <ScrollView 
@@ -409,6 +446,67 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect }) => {
           </TouchableOpacity>
         ))}
       </ScrollView>
+      
+      {/* Budget Filter */}
+      <View style={styles.budgetFilterContainer}>
+        <Text style={styles.budgetFilterTitle}>💰 Budget Filter:</Text>
+        <View style={styles.budgetFilterButtons}>
+          <TouchableOpacity 
+            style={[
+              styles.budgetFilterButton,
+              !selectedBudget && styles.budgetFilterButtonActive
+            ]}
+            onPress={() => onBudgetSelect(null)}
+          >
+            <Text style={[
+              styles.budgetFilterText,
+              !selectedBudget && { color: '#ffffff' }
+            ]}>All Budgets</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[
+              styles.budgetFilterButton,
+              selectedBudget === 'low' && [styles.budgetFilterButtonActive, { backgroundColor: '#4CAF50' }]
+            ]}
+            onPress={() => onBudgetSelect('low')}
+          >
+            <FontAwesome5 name="dollar-sign" size={16} color={selectedBudget === 'low' ? "#fff" : "#4CAF50"} />
+            <Text style={[
+              styles.budgetFilterText,
+              selectedBudget === 'low' && { color: '#ffffff' }
+            ]}>Budget ($)</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[
+              styles.budgetFilterButton,
+              selectedBudget === 'medium' && [styles.budgetFilterButtonActive, { backgroundColor: '#FF9800' }]
+            ]}
+            onPress={() => onBudgetSelect('medium')}
+          >
+            <FontAwesome5 name="dollar-sign" size={16} color={selectedBudget === 'medium' ? "#fff" : "#FF9800"} />
+            <Text style={[
+              styles.budgetFilterText,
+              selectedBudget === 'medium' && { color: '#ffffff' }
+            ]}>Mid-Range ($$)</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[
+              styles.budgetFilterButton,
+              selectedBudget === 'high' && [styles.budgetFilterButtonActive, { backgroundColor: '#E91E63' }]
+            ]}
+            onPress={() => onBudgetSelect('high')}
+          >
+            <FontAwesome5 name="dollar-sign" size={16} color={selectedBudget === 'high' ? "#fff" : "#E91E63"} />
+            <Text style={[
+              styles.budgetFilterText,
+              selectedBudget === 'high' && { color: '#ffffff' }
+            ]}>Premium ($$$)</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
@@ -495,6 +593,7 @@ export default function App() {
   const [expandedCard, setExpandedCard] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedBudget, setSelectedBudget] = useState(null);
   const [showTutorial, setShowTutorial] = useState(false);
 
   useEffect(() => {
@@ -540,80 +639,196 @@ export default function App() {
   const shareByEmail = () => {
     if (!expandedCard) return;
     MailComposer.composeAsync({
-      subject: '💕 DateUnveil: Amazing Date Idea 💕',
-      body: `I just discovered this amazing date idea: ${expandedCard.idea}\n\nShared via DateUnveil 💕\n\nLet's make it happen! 💖`,
+      subject: 'DateUnveil: Amazing Date Idea',
+      body: `I just discovered this amazing date idea: ${expandedCard.idea}\n\nCategory: ${categories[expandedCard.category].name}\nBudget: ${expandedCard.budget === 'low' ? '$' : expandedCard.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${expandedCard.location}\n\nShared via DateUnveil\n\nLet's make it happen!`,
     }).catch(() => Alert.alert('Error', 'Unable to open email composer.'));
   };
 
   const shareBySMS = () => {
     if (!expandedCard) return;
     let smsUrl = '';
+    const message = `I just discovered this amazing date idea: ${expandedCard.idea}\n\nCategory: ${categories[expandedCard.category].name}\nBudget: ${expandedCard.budget === 'low' ? '$' : expandedCard.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${expandedCard.location}\n\nShared via DateUnveil\n\nLet's make it happen!`;
+    
     if (Platform.OS === 'ios') {
-      smsUrl = `sms:&body=I%20just%20discovered%20this%20amazing%20date%20idea:%20${encodeURIComponent(expandedCard.idea)}%20%0A%0AShared%20via%20DateUnveil%20💕%20%0A%0ALet's%20make%20it%20happen!%20💖`;
+      smsUrl = `sms:&body=${encodeURIComponent(message)}`;
     } else {
-      smsUrl = `sms:?body=I just discovered this amazing date idea: ${encodeURIComponent(expandedCard.idea)}\n\nShared via DateUnveil 💕\n\nLet's make it happen! 💖`;
+      smsUrl = `sms:?body=${encodeURIComponent(message)}`;
     }
     Linking.openURL(smsUrl).catch(() => Alert.alert('Error', 'Unable to open SMS app.'));
   };
 
   const addToCalendar = async () => {
     if (!expandedCard) return;
+    
     try {
-      const { status } = await Calendar.requestCalendarPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission required', 'Calendar permission is required to add events.');
+      // Check if calendar permissions are already granted
+      const { status: existingStatus } = await Calendar.getCalendarPermissionsAsync();
+      let finalStatus = existingStatus;
+      
+      // If permissions not granted, request them
+      if (existingStatus !== 'granted') {
+        const { status } = await Calendar.requestCalendarPermissionsAsync();
+        finalStatus = status;
+      }
+      
+      if (finalStatus !== 'granted') {
+        Alert.alert(
+          'Calendar Permission Required', 
+          'Please enable calendar access in your device settings to add date ideas to your calendar.',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Open Settings', onPress: () => Linking.openSettings() }
+          ]
+        );
         return;
       }
+      
+      // Get available calendars
       const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
-      const defaultCalendar = calendars.find(cal => cal.allowsModifications) || calendars[0];
-      if (!defaultCalendar) {
-        Alert.alert('No calendar found', 'No modifiable calendar found on this device.');
+      const writableCalendars = calendars.filter(cal => cal.allowsModifications);
+      
+      if (writableCalendars.length === 0) {
+        Alert.alert('No Writable Calendar', 'No calendar found that allows adding events. Please check your calendar settings.');
         return;
       }
-      const now = new Date();
-      const eventId = await Calendar.createEventAsync(defaultCalendar.id, {
-        title: `💕 DateUnveil: ${expandedCard.idea}`,
-        startDate: now,
-        endDate: new Date(now.getTime() + 2 * 60 * 60 * 1000), // 2 hours
-        timeZone: undefined,
-        notes: 'Planned with DateUnveil 💕',
-      });
+      
+      // Use the first writable calendar (usually the default)
+      const selectedCalendar = writableCalendars[0];
+      
+      // Create event for tomorrow at 7 PM
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(19, 0, 0, 0); // 7 PM
+      
+      const endTime = new Date(tomorrow);
+      endTime.setHours(21, 0, 0, 0); // 9 PM (2 hours later)
+      
+      const eventDetails = {
+        title: `DateUnveil: ${expandedCard.idea}`,
+        startDate: tomorrow,
+        endDate: endTime,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        location: 'Your chosen location',
+        notes: `Planned with DateUnveil\n\nCategory: ${categories[expandedCard.category].name}\nBudget: ${expandedCard.budget === 'low' ? '$' : expandedCard.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${expandedCard.location}`,
+        alarms: [{ relativeOffset: -60 }], // Reminder 1 hour before
+      };
+      
+      const eventId = await Calendar.createEventAsync(selectedCalendar.id, eventDetails);
+      
       if (eventId) {
-        Alert.alert('Success', 'Date idea added to your calendar! 📅💕');
+        Alert.alert(
+          'Date Added to Calendar!', 
+          `"${expandedCard.idea}" has been scheduled for tomorrow at 7 PM with a 1-hour reminder.`,
+          [
+            { text: 'Great!', style: 'default' },
+            { text: 'View Calendar', onPress: () => Linking.openURL('calshow://') }
+          ]
+        );
+      } else {
+        throw new Error('Failed to create event');
       }
-    } catch (e) {
-      Alert.alert('Error', 'Could not add event to calendar.');
+      
+    } catch (error) {
+      console.error('Calendar error:', error);
+      Alert.alert(
+        'Calendar Error', 
+        'Unable to add to calendar. Please check your calendar app and try again.',
+        [
+          { text: 'OK', style: 'default' },
+          { text: 'Open Calendar', onPress: () => Linking.openURL('calshow://') }
+        ]
+      );
     }
   };
 
   const setReminder = async () => {
     if (!expandedCard) return;
-    let minutes = 0;
-    const input = prompt('Remind me in how many minutes? (e.g., 10)');
-    if (!input) return;
-    minutes = parseInt(input, 10);
-    if (isNaN(minutes) || minutes <= 0) {
-      Alert.alert('Invalid input', 'Please enter a valid number of minutes.');
-      return;
-    }
+    
     try {
-      await Notifications.scheduleNotificationAsync({
+      // Request notification permissions
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      
+      if (finalStatus !== 'granted') {
+        Alert.alert(
+          'Notification Permission Required',
+          'Please enable notifications in your device settings to set reminders.',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Open Settings', onPress: () => Linking.openSettings() }
+          ]
+        );
+        return;
+      }
+      
+      // Show reminder options
+      Alert.alert(
+        '⏰ Set Reminder',
+        'When would you like to be reminded about this date?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { 
+            text: '30 minutes', 
+            onPress: () => scheduleReminder(30, '30 minutes') 
+          },
+          { 
+            text: '1 hour', 
+            onPress: () => scheduleReminder(60, '1 hour') 
+          },
+          { 
+            text: '2 hours', 
+            onPress: () => scheduleReminder(120, '2 hours') 
+          },
+          { 
+            text: 'Tomorrow', 
+            onPress: () => scheduleReminder(24 * 60, 'tomorrow') 
+          },
+        ]
+      );
+      
+    } catch (error) {
+      console.error('Reminder error:', error);
+      Alert.alert('Error', 'Unable to set reminder. Please try again.');
+    }
+  };
+  
+  const scheduleReminder = async (minutes, timeText) => {
+    try {
+      const notificationId = await Notifications.scheduleNotificationAsync({
         content: {
-          title: '💕 DateUnveil Reminder 💕',
+          title: 'DateUnveil Reminder',
           body: `Don't forget your romantic date: ${expandedCard.idea}`,
+          data: { dateIdea: expandedCard.idea },
         },
         trigger: { seconds: minutes * 60 },
       });
-      Alert.alert('Reminder set!', `You will be reminded in ${minutes} minutes. ⏰💕`);
-    } catch (e) {
-      Alert.alert('Error', 'Could not schedule notification.');
+      
+      Alert.alert(
+        'Reminder Set!', 
+        `You'll be reminded about "${expandedCard.idea}" in ${timeText}.`,
+        [
+          { text: 'Great!', style: 'default' },
+          { text: 'View Reminders', onPress: () => Linking.openURL('x-apple-reminder://') }
+        ]
+      );
+      
+    } catch (error) {
+      console.error('Schedule reminder error:', error);
+      Alert.alert('Error', 'Could not schedule reminder. Please try again.');
     }
   };
 
-  // Filter data based on selected category
-  const filteredData = selectedCategory 
-    ? dateIdeasData.filter(item => item.category === selectedCategory)
-    : dateIdeasData;
+  // Filter data based on selected category and budget
+  const filteredData = dateIdeasData.filter(item => {
+    const categoryMatch = !selectedCategory || item.category === selectedCategory;
+    const budgetMatch = !selectedBudget || item.budget === selectedBudget;
+    return categoryMatch && budgetMatch;
+  });
 
   const renderCard = ({ item }) => (
     <SmallCard
@@ -650,6 +865,8 @@ export default function App() {
       <CategoryFilter 
         selectedCategory={selectedCategory}
         onCategorySelect={setSelectedCategory}
+        selectedBudget={selectedBudget}
+        onBudgetSelect={setSelectedBudget}
       />
 
       <FlatList
@@ -804,6 +1021,46 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
     color: '#FF6B9D',
+  },
+  budgetFilterContainer: {
+    backgroundColor: '#FFF8FA',
+    borderTopWidth: 1,
+    borderTopColor: '#FFE4E1',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+  },
+  budgetFilterTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#FF6B9D',
+    marginBottom: 8,
+  },
+  budgetFilterButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  budgetFilterButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#FFE4E1',
+    backgroundColor: '#FFF',
+    marginHorizontal: 4,
+  },
+  budgetFilterButtonActive: {
+    backgroundColor: '#FF6B9D',
+    borderColor: '#FF6B9D',
+  },
+  budgetFilterText: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: '#FF6B9D',
+    marginLeft: 4,
   },
   gridContainer: {
     padding: 16,
