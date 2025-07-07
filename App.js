@@ -1494,7 +1494,7 @@ export default function App() {
       <View style={styles.header}>
         <View style={styles.headerContent}>
           <Text style={styles.headerTitle}>💕 DateUnveil 💕</Text>
-          <Text style={styles.headerSubtitle}>Discover Your Perfect Date</Text>
+          <Text style={styles.headerSubtitle}>Discover Your Perfect Date Idea</Text>
           <View style={styles.progressContainer}>
             <Text style={styles.progressText}>
               {revealedCards.size} / 100 Cards Revealed
