@@ -22,169 +22,61 @@ import * as MailComposer from 'expo-mail-composer';
 import * as Linking from 'expo-linking';
 import * as Calendar from 'expo-calendar';
 import * as Notifications from 'expo-notifications';
-import { MaterialCommunityIcons, Feather, FontAwesome5 } from '@expo/vector-icons';
+import { MaterialCommunityIcons, FontAwesome5, Feather } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window');
 
 // Import date ideas from JSON file
 import dateIdeasData from './dateIdeas.json';
 
-// Advanced Category configuration with sophisticated icons and colors
+// Modern, stylish category configuration
 const categories = {
-  romantic: { 
-    icon: '💝', 
-    color: '#FF6B9D', 
-    gradient: ['#FF6B9D', '#FF8E8E'],
-    name: 'Romantic',
-    description: 'Sweet & Intimate'
-  },
-  adventurous: { 
-    icon: '🏔️', 
-    color: '#4ECDC4', 
-    gradient: ['#4ECDC4', '#44A08D'],
-    name: 'Adventurous',
-    description: 'Thrilling & Bold'
-  },
-  creative: { 
-    icon: '🎨', 
-    color: '#45B7D1', 
-    gradient: ['#45B7D1', '#96C93D'],
-    name: 'Creative',
-    description: 'Artsy & Crafty'
-  },
-  active: { 
-    icon: '⚡', 
-    color: '#96CEB4', 
-    gradient: ['#96CEB4', '#FFEAA7'],
-    name: 'Active',
-    description: 'Energetic & Sporty'
-  },
-  cozy: { 
-    icon: '🛋️', 
-    color: '#FFEAA7', 
-    gradient: ['#FFEAA7', '#DDA0DD'],
-    name: 'Cozy',
-    description: 'Comfortable & Warm'
-  },
-  fun: { 
-    icon: '🎉', 
-    color: '#DDA0DD', 
-    gradient: ['#DDA0DD', '#87CEEB'],
-    name: 'Fun',
-    description: 'Playful & Entertaining'
-  },
-  foodie: { 
-    icon: '🍽️', 
-    color: '#FF8E8E', 
-    gradient: ['#FF8E8E', '#FFB347'],
-    name: 'Foodie',
-    description: 'Culinary & Delicious'
-  },
-  chill: { 
-    icon: '😌', 
-    color: '#87CEEB', 
-    gradient: ['#87CEEB', '#98D8C8'],
-    name: 'Chill',
-    description: 'Relaxed & Peaceful'
-  },
-  cultural: { 
-    icon: '🏛️', 
-    color: '#DDA0DD', 
-    gradient: ['#DDA0DD', '#FFB6C1'],
-    name: 'Cultural',
-    description: 'Educational & Enriching'
-  },
-  intellectual: { 
-    icon: '🧠', 
-    color: '#98D8C8', 
-    gradient: ['#98D8C8', '#FFD93D'],
-    name: 'Intellectual',
-    description: 'Thoughtful & Engaging'
-  },
-  spontaneous: { 
-    icon: '⚡', 
-    color: '#FFB347', 
-    gradient: ['#FFB347', '#FF6B6B'],
-    name: 'Spontaneous',
-    description: 'Impulsive & Exciting'
-  }
+  romantic: { iconSet: 'FontAwesome5', icon: 'heart', color: '#FF6B9D', name: 'Romantic', description: 'Sweet & Intimate' },
+  adventurous: { iconSet: 'MaterialCommunityIcons', icon: 'hiking', color: '#4ECDC4', name: 'Adventurous', description: 'Thrilling & Bold' },
+  creative: { iconSet: 'MaterialCommunityIcons', icon: 'palette', color: '#45B7D1', name: 'Creative', description: 'Artsy & Crafty' },
+  active: { iconSet: 'MaterialCommunityIcons', icon: 'run', color: '#96CEB4', name: 'Active', description: 'Energetic & Sporty' },
+  cozy: { iconSet: 'MaterialCommunityIcons', icon: 'home-heart', color: '#FFEAA7', name: 'Cozy', description: 'Comfortable & Warm' },
+  fun: { iconSet: 'MaterialCommunityIcons', icon: 'party-popper', color: '#DDA0DD', name: 'Fun', description: 'Playful & Entertaining' },
+  foodie: { iconSet: 'MaterialCommunityIcons', icon: 'food', color: '#FF8E8E', name: 'Foodie', description: 'Culinary & Delicious' },
+  chill: { iconSet: 'Feather', icon: 'coffee', color: '#87CEEB', name: 'Chill', description: 'Relaxed & Peaceful' },
+  cultural: { iconSet: 'MaterialCommunityIcons', icon: 'bank', color: '#DDA0DD', name: 'Cultural', description: 'Educational & Enriching' },
+  intellectual: { iconSet: 'MaterialCommunityIcons', icon: 'brain', color: '#98D8C8', name: 'Intellectual', description: 'Thoughtful & Engaging' },
+  spontaneous: { iconSet: 'MaterialCommunityIcons', icon: 'dice-multiple', color: '#FFB347', name: 'Spontaneous', description: 'Impulsive & Exciting' },
 };
 
-// Advanced Icon Components
+// Modern CategoryIcon
 const CategoryIcon = ({ category, size = 32, color = null, isSelected = false }) => {
-  const categoryColors = {
-    romantic: "#FF6B9D",
-    adventurous: "#4ECDC4", 
-    creative: "#45B7D1",
-    active: "#96CEB4",
-    cozy: "#FFEAA7",
-    fun: "#DDA0DD",
-    foodie: "#FF8E8E",
-    chill: "#87CEEB",
-    cultural: "#DDA0DD",
-    intellectual: "#98D8C8",
-    spontaneous: "#FFB347",
-  };
-  
-  const iconMap = {
-    romantic: <MaterialCommunityIcons name="heart" size={size} color={color || categoryColors.romantic} />,
-    adventurous: <MaterialCommunityIcons name="hiking" size={size} color={color || categoryColors.adventurous} />,
-    creative: <Feather name="feather" size={size} color={color || categoryColors.creative} />,
-    active: <MaterialCommunityIcons name="run-fast" size={size} color={color || categoryColors.active} />,
-    cozy: <MaterialCommunityIcons name="sofa" size={size} color={color || categoryColors.cozy} />,
-    fun: <MaterialCommunityIcons name="emoticon-excited-outline" size={size} color={color || categoryColors.fun} />,
-    foodie: <MaterialCommunityIcons name="food" size={size} color={color || categoryColors.foodie} />,
-    chill: <Feather name="coffee" size={size} color={color || categoryColors.chill} />,
-    cultural: <MaterialCommunityIcons name="bank" size={size} color={color || categoryColors.cultural} />,
-    intellectual: <FontAwesome5 name="brain" size={size} color={color || categoryColors.intellectual} />,
-    spontaneous: <Feather name="zap" size={size} color={color || categoryColors.spontaneous} />,
-  };
-  
+  const { iconSet, icon, color: defaultColor } = categories[category] || {};
+  const IconComponent = iconSet === 'FontAwesome5' ? FontAwesome5 : iconSet === 'Feather' ? Feather : MaterialCommunityIcons;
   return (
-    <View style={{ 
-      alignItems: 'center', 
-      justifyContent: 'center', 
-      backgroundColor: isSelected ? 'rgba(255,255,255,0.2)' : '#fff', 
-      borderRadius: size/2, 
-      width: size + 8, 
+    <View style={{
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: isSelected ? 'rgba(255,255,255,0.2)' : '#fff',
+      borderRadius: size / 2,
+      width: size + 8,
       height: size + 8,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: isSelected ? 0.2 : 0.1,
-      shadowRadius: isSelected ? 3 : 2,
-      elevation: isSelected ? 3 : 2,
+      shadowColor: color || defaultColor,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.15,
+      shadowRadius: 6,
+      elevation: 3,
       borderWidth: isSelected ? 1 : 0,
       borderColor: isSelected ? 'rgba(255,255,255,0.3)' : 'transparent',
     }}>
-      {iconMap[category]}
+      <IconComponent name={icon} size={size} color={color || defaultColor} />
     </View>
   );
 };
 
+// Modern BudgetIcon
 const BudgetIcon = ({ budget, size = 20 }) => {
   const budgetConfig = {
-    low: { 
-      icon: <FontAwesome5 name="dollar-sign" size={size} color="#4CAF50" />,
-      label: "$",
-      color: "#4CAF50",
-      description: "Budget Friendly"
-    },
-    medium: { 
-      icon: <FontAwesome5 name="dollar-sign" size={size} color="#FF9800" />,
-      label: "$$",
-      color: "#FF9800", 
-      description: "Mid-Range"
-    },
-    high: { 
-      icon: <FontAwesome5 name="dollar-sign" size={size} color="#E91E63" />,
-      label: "$$$",
-      color: "#E91E63",
-      description: "Premium"
-    }
+    low: { icon: <FontAwesome5 name="dollar-sign" size={size} color="#4CAF50" />, label: "$", color: "#4CAF50", description: "Budget Friendly" },
+    medium: { icon: <FontAwesome5 name="dollar-sign" size={size} color="#FF9800" />, label: "$$", color: "#FF9800", description: "Mid-Range" },
+    high: { icon: <FontAwesome5 name="dollar-sign" size={size} color="#E91E63" />, label: "$$$", color: "#E91E63", description: "Premium" }
   };
-  
   const config = budgetConfig[budget];
-  
   return (
     <View style={{
       flexDirection: 'row',
@@ -195,18 +87,12 @@ const BudgetIcon = ({ budget, size = 20 }) => {
       borderRadius: 8,
     }}>
       {config.icon}
-      <Text style={{
-        fontSize: size * 0.6,
-        fontWeight: 'bold',
-        color: config.color,
-        marginLeft: 2,
-      }}>
-        {config.label}
-      </Text>
+      <Text style={{ fontSize: size * 0.6, fontWeight: 'bold', color: config.color, marginLeft: 2 }}>{config.label}</Text>
     </View>
   );
 };
 
+// Modern LocationIcon
 const LocationIcon = ({ location, size = 20 }) => {
   const iconMap = {
     indoor: <MaterialCommunityIcons name="home" size={size} color="#9C27B0" />,
@@ -545,7 +431,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
             <Text style={styles.categoryDescription}>{categoryInfo.description}</Text>
           </View>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>✕</Text>
+            <Feather name="x" size={16} color="#FF8E8E" />
           </TouchableOpacity>
         </View>
         
@@ -570,14 +456,14 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
               style={[styles.actionButton, { backgroundColor: '#FF6B9D' }]} 
               onPress={onShareEmail}
             >
-              <Text style={styles.actionButtonIcon}>💌</Text>
+              <MaterialCommunityIcons name="email-send" size={18} color="#ffffff" style={{ marginRight: 8 }} />
               <Text style={styles.actionButtonText}>Email</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               style={[styles.actionButton, { backgroundColor: '#FF8E8E' }]} 
               onPress={onShareSMS}
             >
-              <Text style={styles.actionButtonIcon}>💬</Text>
+              <MaterialCommunityIcons name="message-text" size={18} color="#ffffff" style={{ marginRight: 8 }} />
               <Text style={styles.actionButtonText}>Message</Text>
             </TouchableOpacity>
           </View>
@@ -586,14 +472,14 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
               style={[styles.actionButton, { backgroundColor: '#FFB3D9' }]} 
               onPress={onAddToCalendar}
             >
-              <Text style={styles.actionButtonIcon}>📅</Text>
+              <Feather name="calendar" size={18} color="#ffffff" style={{ marginRight: 8 }} />
               <Text style={styles.actionButtonText}>Calendar</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               style={[styles.actionButton, { backgroundColor: '#FFC0CB' }]} 
               onPress={onSetReminder}
             >
-              <Text style={styles.actionButtonIcon}>⏰</Text>
+              <Feather name="bell" size={18} color="#ffffff" style={{ marginRight: 8 }} />
               <Text style={styles.actionButtonText}>Reminder</Text>
             </TouchableOpacity>
           </View>
@@ -693,7 +579,7 @@ const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
           <View style={styles.calendarModalHeader}>
             <Text style={styles.calendarModalTitle}>Schedule Your Date</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>✕</Text>
+              <Feather name="x" size={16} color="#FF8E8E" />
             </TouchableOpacity>
           </View>
 
@@ -920,7 +806,7 @@ Sent via DateUnveil`;
           <View style={styles.invitationModalHeader}>
             <Text style={styles.invitationModalTitle}>Send Invitation</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>✕</Text>
+              <Feather name="x" size={16} color="#FF8E8E" />
             </TouchableOpacity>
           </View>
 
@@ -991,9 +877,11 @@ Sent via DateUnveil`;
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={sendEmailInvitation} style={styles.emailButton}>
+              <MaterialCommunityIcons name="email-send" size={16} color="#ffffff" style={{ marginRight: 8 }} />
               <Text style={styles.emailButtonText}>Send Email</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={sendSMSInvitation} style={styles.smsButton}>
+              <MaterialCommunityIcons name="message-text" size={16} color="#ffffff" style={{ marginRight: 8 }} />
               <Text style={styles.smsButtonText}>Send SMS</Text>
             </TouchableOpacity>
           </View>
@@ -1082,13 +970,16 @@ const ReminderModal = ({ visible, onClose, onSchedule, dateIdea }) => {
           <View style={styles.reminderModalHeader}>
             <Text style={styles.reminderModalTitle}>Advanced Reminder</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>✕</Text>
+              <Feather name="x" size={16} color="#FF8E8E" />
             </TouchableOpacity>
           </View>
 
           <ScrollView style={styles.reminderModalBody}>
             <View style={styles.reminderTypeSection}>
-              <Text style={styles.sectionTitle}>⏰ Reminder Type</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                <Feather name="bell" size={18} color="#FF6B9D" style={{ marginRight: 8 }} />
+                <Text style={styles.sectionTitle}>Reminder Type</Text>
+              </View>
               
               <TouchableOpacity 
                 style={[
@@ -1097,7 +988,7 @@ const ReminderModal = ({ visible, onClose, onSchedule, dateIdea }) => {
                 ]}
                 onPress={() => setSelectedReminderType('quick')}
               >
-                <Text style={styles.reminderTypeIcon}>⚡</Text>
+                <Feather name="zap" size={28} color="#FF6B9D" style={{ marginRight: 16 }} />
                 <View style={styles.reminderTypeContent}>
                   <Text style={styles.reminderTypeTitle}>Quick Reminder</Text>
                   <Text style={styles.reminderTypeDescription}>Remind me in a few minutes</Text>
@@ -1111,7 +1002,7 @@ const ReminderModal = ({ visible, onClose, onSchedule, dateIdea }) => {
                 ]}
                 onPress={() => setSelectedReminderType('custom')}
               >
-                <Text style={styles.reminderTypeIcon}>📅</Text>
+                <Feather name="calendar" size={28} color="#FF6B9D" style={{ marginRight: 16 }} />
                 <View style={styles.reminderTypeContent}>
                   <Text style={styles.reminderTypeTitle}>Custom Date & Time</Text>
                   <Text style={styles.reminderTypeDescription}>Choose specific date and time</Text>
@@ -1125,7 +1016,7 @@ const ReminderModal = ({ visible, onClose, onSchedule, dateIdea }) => {
                 ]}
                 onPress={() => setSelectedReminderType('smart')}
               >
-                <Text style={styles.reminderTypeIcon}>🧠</Text>
+                <MaterialCommunityIcons name="brain" size={28} color="#FF6B9D" style={{ marginRight: 16 }} />
                 <View style={styles.reminderTypeContent}>
                   <Text style={styles.reminderTypeTitle}>Smart Reminder</Text>
                   <Text style={styles.reminderTypeDescription}>Tomorrow at 6 PM (recommended)</Text>
@@ -1135,7 +1026,10 @@ const ReminderModal = ({ visible, onClose, onSchedule, dateIdea }) => {
 
             {selectedReminderType === 'quick' && (
               <View style={styles.quickReminderSection}>
-                <Text style={styles.sectionTitle}>⚡ Quick Options</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                  <Feather name="zap" size={18} color="#FF6B9D" style={{ marginRight: 8 }} />
+                  <Text style={styles.sectionTitle}>Quick Options</Text>
+                </View>
                 <View style={styles.quickOptions}>
                   {[15, 30, 60, 120, 240].map(minutes => (
                     <TouchableOpacity
@@ -1157,7 +1051,10 @@ const ReminderModal = ({ visible, onClose, onSchedule, dateIdea }) => {
 
             {selectedReminderType === 'custom' && (
               <View style={styles.customReminderSection}>
-                <Text style={styles.sectionTitle}>📅 Custom Date & Time</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                  <Feather name="calendar" size={18} color="#FF6B9D" style={{ marginRight: 8 }} />
+                  <Text style={styles.sectionTitle}>Custom Date & Time</Text>
+                </View>
                 
                 <TouchableOpacity 
                   style={styles.dateTimeButton}
@@ -1178,7 +1075,10 @@ const ReminderModal = ({ visible, onClose, onSchedule, dateIdea }) => {
             )}
 
             <View style={styles.messageSection}>
-              <Text style={styles.sectionTitle}>💬 Custom Message</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                <Feather name="message-circle" size={18} color="#FF6B9D" style={{ marginRight: 8 }} />
+                <Text style={styles.sectionTitle}>Custom Message</Text>
+              </View>
               <TextInput
                 style={styles.messageInput}
                 value={customMessage}
