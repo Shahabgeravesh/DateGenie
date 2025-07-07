@@ -109,22 +109,49 @@ const categories = {
 };
 
 // Advanced Icon Components
-const CategoryIcon = ({ category, size = 32 }) => {
-  const iconMap = {
-    romantic: <MaterialCommunityIcons name="heart" size={size} color="#FF6B9D" />,
-    adventurous: <MaterialCommunityIcons name="hiking" size={size} color="#4ECDC4" />,
-    creative: <Feather name="feather" size={size} color="#45B7D1" />,
-    active: <MaterialCommunityIcons name="run-fast" size={size} color="#96CEB4" />,
-    cozy: <MaterialCommunityIcons name="sofa" size={size} color="#FFEAA7" />,
-    fun: <MaterialCommunityIcons name="emoticon-excited-outline" size={size} color="#DDA0DD" />,
-    foodie: <MaterialCommunityIcons name="food" size={size} color="#FF8E8E" />,
-    chill: <Feather name="coffee" size={size} color="#87CEEB" />,
-    cultural: <MaterialCommunityIcons name="bank" size={size} color="#DDA0DD" />,
-    intellectual: <FontAwesome5 name="brain" size={size} color="#98D8C8" />,
-    spontaneous: <Feather name="zap" size={size} color="#FFB347" />,
+const CategoryIcon = ({ category, size = 32, color = null }) => {
+  const categoryColors = {
+    romantic: "#FF6B9D",
+    adventurous: "#4ECDC4", 
+    creative: "#45B7D1",
+    active: "#96CEB4",
+    cozy: "#FFEAA7",
+    fun: "#DDA0DD",
+    foodie: "#FF8E8E",
+    chill: "#87CEEB",
+    cultural: "#DDA0DD",
+    intellectual: "#98D8C8",
+    spontaneous: "#FFB347",
   };
+  
+  const iconMap = {
+    romantic: <MaterialCommunityIcons name="heart" size={size} color={color || categoryColors.romantic} />,
+    adventurous: <MaterialCommunityIcons name="hiking" size={size} color={color || categoryColors.adventurous} />,
+    creative: <Feather name="feather" size={size} color={color || categoryColors.creative} />,
+    active: <MaterialCommunityIcons name="run-fast" size={size} color={color || categoryColors.active} />,
+    cozy: <MaterialCommunityIcons name="sofa" size={size} color={color || categoryColors.cozy} />,
+    fun: <MaterialCommunityIcons name="emoticon-excited-outline" size={size} color={color || categoryColors.fun} />,
+    foodie: <MaterialCommunityIcons name="food" size={size} color={color || categoryColors.foodie} />,
+    chill: <Feather name="coffee" size={size} color={color || categoryColors.chill} />,
+    cultural: <MaterialCommunityIcons name="bank" size={size} color={color || categoryColors.cultural} />,
+    intellectual: <FontAwesome5 name="brain" size={size} color={color || categoryColors.intellectual} />,
+    spontaneous: <Feather name="zap" size={size} color={color || categoryColors.spontaneous} />,
+  };
+  
   return (
-    <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', borderRadius: size, width: size + 12, height: size + 12 }}>
+    <View style={{ 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      backgroundColor: '#fff', 
+      borderRadius: size/2, 
+      width: size + 8, 
+      height: size + 8,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 2,
+      elevation: 2,
+    }}>
       {iconMap[category]}
     </View>
   );
@@ -285,16 +312,28 @@ const Tutorial = ({ visible, onComplete }) => {
 const SmallCard = ({ item, isRevealed, onPress }) => {
   return (
     <TouchableOpacity style={styles.smallCard} onPress={onPress} activeOpacity={0.85}>
-      <View style={styles.cardIconContainer}>
-        <CategoryIcon category={item.category} size={36} />
+      <View style={styles.cardHeader}>
+        <Text style={styles.cardNumber}>#{item.id}</Text>
+        <CategoryIcon category={item.category} size={20} />
       </View>
       <View style={styles.cardContent}>
         {!isRevealed ? (
-          <Text style={styles.tapToReveal}>Tap to reveal</Text>
+          <View style={styles.mysteryContainer}>
+            <Text style={styles.mysteryIcon}>💫</Text>
+            <Text style={styles.tapToReveal}>Tap to reveal</Text>
+          </View>
         ) : (
-          <Animated.Text style={styles.ideaText}>{item.idea}</Animated.Text>
+          <Text style={styles.ideaText} numberOfLines={3}>
+            {item.idea}
+          </Text>
         )}
       </View>
+      {isRevealed && (
+        <View style={styles.cardFooter}>
+          <BudgetIcon budget={item.budget} size={14} />
+          <LocationIcon location={item.location} size={14} />
+        </View>
+      )}
     </TouchableOpacity>
   );
 };
@@ -316,8 +355,15 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect }) => {
           ]}
           onPress={() => onCategorySelect(null)}
         >
-          <MaterialCommunityIcons name="heart-multiple" size={20} color="#FF6B9D" />
-          <Text style={styles.categoryFilterText}>All</Text>
+          <MaterialCommunityIcons 
+            name="heart-multiple" 
+            size={20} 
+            color={!selectedCategory ? "#fff" : "#FF6B9D"} 
+          />
+          <Text style={[
+            styles.categoryFilterText,
+            !selectedCategory && { color: '#ffffff' }
+          ]}>All</Text>
         </TouchableOpacity>
         
         {Object.entries(categories).map(([key, category]) => (
@@ -329,18 +375,17 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect }) => {
             ]}
             onPress={() => onCategorySelect(key)}
           >
-            {key === 'romantic' && <MaterialCommunityIcons name="heart" size={20} color={selectedCategory === key ? "#fff" : "#FF6B9D"} />}
-            {key === 'adventurous' && <MaterialCommunityIcons name="hiking" size={20} color={selectedCategory === key ? "#fff" : "#4ECDC4"} />}
-            {key === 'creative' && <Feather name="feather" size={20} color={selectedCategory === key ? "#fff" : "#45B7D1"} />}
-            {key === 'active' && <MaterialCommunityIcons name="run-fast" size={20} color={selectedCategory === key ? "#fff" : "#96CEB4"} />}
-            {key === 'cozy' && <MaterialCommunityIcons name="sofa" size={20} color={selectedCategory === key ? "#fff" : "#FFEAA7"} />}
-            {key === 'fun' && <MaterialCommunityIcons name="emoticon-excited-outline" size={20} color={selectedCategory === key ? "#fff" : "#DDA0DD"} />}
-            {key === 'foodie' && <MaterialCommunityIcons name="food" size={20} color={selectedCategory === key ? "#fff" : "#FF8E8E"} />}
-            {key === 'chill' && <Feather name="coffee" size={20} color={selectedCategory === key ? "#fff" : "#87CEEB"} />}
-            {key === 'cultural' && <MaterialCommunityIcons name="bank" size={20} color={selectedCategory === key ? "#fff" : "#DDA0DD"} />}
-            {key === 'intellectual' && <FontAwesome5 name="brain" size={20} color={selectedCategory === key ? "#fff" : "#98D8C8"} />}
-            {key === 'spontaneous' && <Feather name="zap" size={20} color={selectedCategory === key ? "#fff" : "#FFB347"} />}
-            <Text style={styles.categoryFilterText}>{category.name}</Text>
+            <View style={{ marginBottom: 4 }}>
+              <CategoryIcon 
+                category={key} 
+                size={20} 
+                color={selectedCategory === key ? "#fff" : category.color}
+              />
+            </View>
+            <Text style={[
+              styles.categoryFilterText,
+              selectedCategory === key && { color: '#ffffff' }
+            ]}>{category.name}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -591,8 +636,8 @@ export default function App() {
         data={filteredData}
         renderItem={renderCard}
         keyExtractor={(item) => item.id.toString()}
-        numColumns={2}
-        key="2-column-grid"
+        numColumns={3}
+        key="3-column-grid"
         contentContainerStyle={styles.gridContainer}
         showsVerticalScrollIndicator={false}
       />
@@ -745,39 +790,62 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   smallCard: {
-    flex: 1,
-    margin: 12,
+    width: (width - 60) / 3,
+    height: 140,
     backgroundColor: '#FFF',
-    borderRadius: 20,
-    minHeight: 180,
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderRadius: 16,
+    margin: 6,
+    padding: 12,
     shadowColor: '#FF6B9D',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    elevation: 6,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: '#FFE4E1',
+    overflow: 'hidden',
   },
-  cardIconContainer: {
-    marginBottom: 16,
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+    width: '100%',
+  },
+  cardNumber: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#FF6B9D',
   },
   cardContent: {
-    alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  mysteryContainer: {
+    alignItems: 'center',
+  },
+  mysteryIcon: {
+    fontSize: 20,
+    marginBottom: 4,
   },
   tapToReveal: {
-    fontSize: 16,
+    fontSize: 10,
     color: '#B0A8B9',
     fontWeight: '600',
-    letterSpacing: 0.5,
+    textAlign: 'center',
   },
   ideaText: {
-    fontSize: 18,
+    fontSize: 11,
     color: '#FF6B9D',
-    fontWeight: '700',
+    fontWeight: '600',
     textAlign: 'center',
-    marginTop: 8,
-    lineHeight: 24,
+    lineHeight: 14,
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 6,
   },
   revealedCard: {
     backgroundColor: '#FFF0F5',
