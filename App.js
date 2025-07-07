@@ -2097,7 +2097,8 @@ const styles = StyleSheet.create({
   tutorialContent: {
     backgroundColor: '#ffffff',
     borderRadius: 28,
-    padding: 32,
+    padding: 24,
+    maxHeight: height * 0.8,
     shadowColor: '#FF6B9D',
     shadowOffset: {
       width: 0,
@@ -2111,8 +2112,8 @@ const styles = StyleSheet.create({
   },
   tutorialHeader: {
     alignItems: 'center',
-    marginBottom: 24,
-    padding: 20,
+    marginBottom: 20,
+    padding: 16,
     borderRadius: 20,
   },
   tutorialIconContainer: {
@@ -2140,16 +2141,16 @@ const styles = StyleSheet.create({
     lineHeight: 32,
   },
   tutorialMessage: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#FF6B9D',
     textAlign: 'center',
-    lineHeight: 26,
-    marginBottom: 28,
+    lineHeight: 24,
+    marginBottom: 20,
   },
   tutorialProgress: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 28,
+    marginBottom: 20,
   },
   progressDot: {
     width: 10,
