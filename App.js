@@ -109,7 +109,7 @@ const categories = {
 };
 
 // Advanced Icon Components
-const CategoryIcon = ({ category, size = 32, color = null }) => {
+const CategoryIcon = ({ category, size = 32, color = null, isSelected = false }) => {
   const categoryColors = {
     romantic: "#FF6B9D",
     adventurous: "#4ECDC4", 
@@ -142,15 +142,17 @@ const CategoryIcon = ({ category, size = 32, color = null }) => {
     <View style={{ 
       alignItems: 'center', 
       justifyContent: 'center', 
-      backgroundColor: '#fff', 
+      backgroundColor: isSelected ? 'rgba(255,255,255,0.2)' : '#fff', 
       borderRadius: size/2, 
       width: size + 8, 
       height: size + 8,
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.1,
-      shadowRadius: 2,
-      elevation: 2,
+      shadowOpacity: isSelected ? 0.2 : 0.1,
+      shadowRadius: isSelected ? 3 : 2,
+      elevation: isSelected ? 3 : 2,
+      borderWidth: isSelected ? 1 : 0,
+      borderColor: isSelected ? 'rgba(255,255,255,0.3)' : 'transparent',
     }}>
       {iconMap[category]}
     </View>
@@ -355,11 +357,28 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect }) => {
           ]}
           onPress={() => onCategorySelect(null)}
         >
-          <MaterialCommunityIcons 
-            name="heart-multiple" 
-            size={20} 
-            color={!selectedCategory ? "#fff" : "#FF6B9D"} 
-          />
+          <View style={{ 
+            marginBottom: 4,
+            backgroundColor: !selectedCategory ? 'rgba(255,255,255,0.2)' : '#fff',
+            borderRadius: 14,
+            width: 28,
+            height: 28,
+            alignItems: 'center',
+            justifyContent: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: !selectedCategory ? 0.2 : 0.1,
+            shadowRadius: !selectedCategory ? 3 : 2,
+            elevation: !selectedCategory ? 3 : 2,
+            borderWidth: !selectedCategory ? 1 : 0,
+            borderColor: !selectedCategory ? 'rgba(255,255,255,0.3)' : 'transparent',
+          }}>
+            <MaterialCommunityIcons 
+              name="heart-multiple" 
+              size={20} 
+              color={!selectedCategory ? "#fff" : "#FF6B9D"} 
+            />
+          </View>
           <Text style={[
             styles.categoryFilterText,
             !selectedCategory && { color: '#ffffff' }
@@ -380,6 +399,7 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect }) => {
                 category={key} 
                 size={20} 
                 color={selectedCategory === key ? "#fff" : category.color}
+                isSelected={selectedCategory === key}
               />
             </View>
             <Text style={[
