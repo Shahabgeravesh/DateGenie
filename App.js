@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   StyleSheet, 
   View, 
@@ -14,9 +14,12 @@ import {
   FlatList,
   LinearGradient,
   Modal,
-  TextInput
+  TextInput,
+  Easing
 } from 'react-native';
+import { PanGestureHandler } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { StatusBar } from 'expo-status-bar';
 import * as MailComposer from 'expo-mail-composer';
 import * as Linking from 'expo-linking';
@@ -29,19 +32,19 @@ const { width, height } = Dimensions.get('window');
 // Import date ideas from JSON file
 import dateIdeasData from './dateIdeas.json';
 
-// Modern, stylish category configuration
+// Date-friendly, cohesive color scheme
 const categories = {
-  romantic: { iconSet: 'FontAwesome5', icon: 'heart', color: '#FF6B9D', name: 'Romantic', description: 'Sweet & Intimate' },
-  adventurous: { iconSet: 'MaterialCommunityIcons', icon: 'hiking', color: '#4ECDC4', name: 'Adventurous', description: 'Thrilling & Bold' },
-  creative: { iconSet: 'MaterialCommunityIcons', icon: 'palette', color: '#45B7D1', name: 'Creative', description: 'Artsy & Crafty' },
-  active: { iconSet: 'MaterialCommunityIcons', icon: 'run', color: '#96CEB4', name: 'Active', description: 'Energetic & Sporty' },
-  cozy: { iconSet: 'MaterialCommunityIcons', icon: 'home-heart', color: '#FFEAA7', name: 'Cozy', description: 'Comfortable & Warm' },
-  fun: { iconSet: 'MaterialCommunityIcons', icon: 'party-popper', color: '#DDA0DD', name: 'Fun', description: 'Playful & Entertaining' },
-  foodie: { iconSet: 'MaterialCommunityIcons', icon: 'food', color: '#FF8E8E', name: 'Foodie', description: 'Culinary & Delicious' },
-  chill: { iconSet: 'Feather', icon: 'coffee', color: '#87CEEB', name: 'Chill', description: 'Relaxed & Peaceful' },
-  cultural: { iconSet: 'MaterialCommunityIcons', icon: 'bank', color: '#DDA0DD', name: 'Cultural', description: 'Educational & Enriching' },
-  intellectual: { iconSet: 'MaterialCommunityIcons', icon: 'brain', color: '#98D8C8', name: 'Intellectual', description: 'Thoughtful & Engaging' },
-  spontaneous: { iconSet: 'MaterialCommunityIcons', icon: 'dice-multiple', color: '#FFB347', name: 'Spontaneous', description: 'Impulsive & Exciting' },
+  romantic: { iconSet: 'FontAwesome5', icon: 'heart', color: '#FF6B8A', name: 'Romantic', description: 'Sweet & Intimate' },
+  adventurous: { iconSet: 'MaterialCommunityIcons', icon: 'hiking', color: '#7FB069', name: 'Adventurous', description: 'Thrilling & Bold' },
+  active: { iconSet: 'MaterialCommunityIcons', icon: 'run', color: '#5B9BD5', name: 'Active', description: 'Energetic & Sporty' },
+  cozy: { iconSet: 'MaterialCommunityIcons', icon: 'home-heart', color: '#F4A261', name: 'Cozy', description: 'Comfortable & Warm' },
+  fun: { iconSet: 'MaterialCommunityIcons', icon: 'party-popper', color: '#E76F51', name: 'Fun', description: 'Playful & Entertaining' },
+  foodie: { iconSet: 'MaterialCommunityIcons', icon: 'food', color: '#E9C46A', name: 'Foodie', description: 'Culinary & Delicious' },
+  chill: { iconSet: 'Feather', icon: 'coffee', color: '#8B9DC3', name: 'Chill', description: 'Relaxed & Peaceful' },
+  spontaneous: { iconSet: 'MaterialCommunityIcons', icon: 'dice-multiple', color: '#F7931E', name: 'Spontaneous', description: 'Impulsive & Exciting' },
+  budget: { iconSet: 'FontAwesome5', icon: 'dollar-sign', color: '#6A994E', name: 'Budget-Friendly', description: 'Affordable & Smart' },
+  luxury: { iconSet: 'MaterialCommunityIcons', icon: 'diamond-stone', color: '#C9A87D', name: 'Luxury', description: 'Premium & Exclusive' },
+  random: { iconSet: 'MaterialCommunityIcons', icon: 'slot-machine', color: '#D4A5A5', name: 'Random', description: 'Spin & Discover' },
 };
 
 // Modern CategoryIcon
@@ -72,11 +75,11 @@ const CategoryIcon = ({ category, size = 32, color = null, isSelected = false })
 // Modern BudgetIcon
 const BudgetIcon = ({ budget, size = 20 }) => {
   const budgetConfig = {
-    low: { icon: <FontAwesome5 name="dollar-sign" size={size} color="#4CAF50" />, label: "$", color: "#4CAF50", description: "Budget Friendly" },
-    medium: { icon: <FontAwesome5 name="dollar-sign" size={size} color="#FF9800" />, label: "$$", color: "#FF9800", description: "Mid-Range" },
-    high: { icon: <FontAwesome5 name="dollar-sign" size={size} color="#E91E63" />, label: "$$$", color: "#E91E63", description: "Premium" }
+    low: { icon: <FontAwesome5 name="dollar-sign" size={size} color="#6A994E" />, label: "$", color: "#6A994E", description: "Budget Friendly" },
+    medium: { icon: <FontAwesome5 name="dollar-sign" size={size} color="#F4A261" />, label: "$$", color: "#F4A261", description: "Mid-Range" },
+    high: { icon: <FontAwesome5 name="dollar-sign" size={size} color="#C9A87D" />, label: "$$$", color: "#C9A87D", description: "Premium" }
   };
-  const config = budgetConfig[budget];
+  const config = budgetConfig[budget] || budgetConfig.medium; // Fallback to medium if budget not found
   return (
     <View style={{
       flexDirection: 'row',
@@ -95,10 +98,10 @@ const BudgetIcon = ({ budget, size = 20 }) => {
 // Modern LocationIcon
 const LocationIcon = ({ location, size = 20 }) => {
   const iconMap = {
-    indoor: <MaterialCommunityIcons name="home" size={size} color="#9C27B0" />,
-    outdoor: <MaterialCommunityIcons name="tree" size={size} color="#4CAF50" />,
+    indoor: <MaterialCommunityIcons name="home" size={size} color="#8B9DC3" />,
+    outdoor: <MaterialCommunityIcons name="tree" size={size} color="#7FB069" />,
   };
-  return iconMap[location];
+  return iconMap[location] || iconMap.indoor; // Fallback to indoor if location not found
 };
 
 // Tutorial Component
@@ -109,53 +112,25 @@ const Tutorial = ({ visible, onComplete }) => {
 
   const tutorialSteps = [
     {
-      title: "🌟 Welcome to DateUnveil! 🌟",
-      message: "Your magical journey to discover 100 amazing date ideas starts here! Let's explore together! ✨",
-      iconSet: 'FontAwesome5',
-      icon: 'heart',
-      color: "#FF6B9D"
-    },
-    {
-      title: "🎴 Meet Your Date Cards",
-      message: "Each card hides a special date idea! Click any card to reveal the magic inside! ✨",
+      title: "Welcome to DateUnveil!",
+      message: "Tap any card to reveal a date idea. Use filters to find what you want.",
       iconSet: 'MaterialCommunityIcons',
       icon: 'cards',
-      color: "#4ECDC4"
+      color: "#FF6B8A"
     },
     {
-      title: "🏷️ Category Magic",
-      message: "Use the filter bar to find exactly what you're looking for! Romantic, adventurous, or maybe something cozy? 🎯",
-      iconSet: 'MaterialCommunityIcons',
-      icon: 'palette',
-      color: "#45B7D1"
-    },
-    {
-      title: "💰 Budget & Location",
-      message: "See budget levels ($ to $$$) and location (🏠 indoor or 🌳 outdoor) at a glance!",
-      iconSet: 'FontAwesome5',
-      icon: 'dollar-sign',
-      color: "#96CEB4"
-    },
-    {
-      title: "📱 Share the Love",
-      message: "Found the perfect date? Share it via email, message, add to calendar, or set a reminder! 💌",
+      title: "Share & Save",
+      message: "Found a great idea? Share it via email, message, or add to your calendar.",
       iconSet: 'MaterialCommunityIcons',
       icon: 'share-variant',
-      color: "#DDA0DD"
+      color: "#7FB069"
     },
     {
-      title: "📚 Your Date History",
-      message: "Keep track of all your revealed ideas in the history section! Your romantic journey awaits! 📖",
-      iconSet: 'MaterialCommunityIcons',
-      icon: 'book-open-variant',
-      color: "#FF8E8E"
-    },
-    {
-      title: "🚀 You're All Set!",
-      message: "Ready to discover your perfect date? Let the adventure begin! 💕✨",
+      title: "You're Ready!",
+      message: "Start exploring your 100 date ideas!",
       iconSet: 'MaterialCommunityIcons',
       icon: 'rocket-launch',
-      color: "#FFB347"
+      color: "#A67DB8"
     }
   ];
 
@@ -252,7 +227,7 @@ const SmallCard = ({ item, isRevealed, onPress }) => {
     <TouchableOpacity style={styles.smallCard} onPress={onPress} activeOpacity={0.85}>
       <View style={styles.cardHeader}>
         <Text style={styles.cardNumber}>#{item.id}</Text>
-        <CategoryIcon category={item.category} size={20} />
+        <CategoryIcon category={item.category} size={16} />
       </View>
       <View style={styles.cardContent}>
         {!isRevealed ? (
@@ -268,16 +243,164 @@ const SmallCard = ({ item, isRevealed, onPress }) => {
       </View>
       {isRevealed && (
         <View style={styles.cardFooter}>
-          <BudgetIcon budget={item.budget} size={14} />
-          <LocationIcon location={item.location} size={14} />
+          <BudgetIcon budget={item.budget} size={12} />
+          <LocationIcon location={item.location} size={12} />
         </View>
       )}
     </TouchableOpacity>
   );
 };
 
+// Spinning Wheel Component
+const SpinningWheel = ({ visible, onClose, onSelectCard }) => {
+  const [isSpinning, setIsSpinning] = useState(false);
+  const [rotation, setRotation] = useState(0);
+  const [selectedNumber, setSelectedNumber] = useState(null);
+  const spinAnim = useRef(new Animated.Value(0)).current;
+  const [lastPanValue, setLastPanValue] = useState(0);
+  const [velocity, setVelocity] = useState(0);
+  const lastPanTime = useRef(Date.now());
+
+  const spinWheel = (initialVelocity = 0) => {
+    if (isSpinning) return;
+    
+    setIsSpinning(true);
+    setSelectedNumber(null);
+    
+    // Random number between 1-100
+    const randomNumber = Math.floor(Math.random() * 100) + 1;
+    
+    // Calculate rotation based on velocity or use default
+    const baseVelocity = Math.abs(initialVelocity) > 0.5 ? Math.abs(initialVelocity) * 2000 : 1500;
+    const fullSpins = 3 + Math.random() * 4; // 3-7 full spins
+    const targetAngle = (randomNumber - 1) * 3.6; // 360° / 100 = 3.6° per number
+    const totalRotation = fullSpins * 360 + targetAngle;
+    
+    Animated.timing(spinAnim, {
+      toValue: totalRotation,
+      duration: baseVelocity,
+      useNativeDriver: true,
+      easing: Easing.out(Easing.cubic),
+    }).start(() => {
+      setIsSpinning(false);
+      setSelectedNumber(randomNumber);
+      
+      // Auto-close after showing result
+      setTimeout(() => {
+        onSelectCard(randomNumber);
+        onClose();
+      }, 2000);
+    });
+  };
+
+  const handlePanGesture = (event) => {
+    if (isSpinning) return;
+    
+    const { translationX, translationY, velocityX, velocityY } = event.nativeEvent;
+    const currentTime = Date.now();
+    const timeDelta = currentTime - lastPanTime.current;
+    
+    // Calculate velocity magnitude
+    const velocityMagnitude = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+    setVelocity(velocityMagnitude);
+    
+    // Calculate rotation based on pan gesture
+    const panDistance = Math.sqrt(translationX * translationX + translationY * translationY);
+    const newRotation = lastPanValue + panDistance * 0.5;
+    
+    setLastPanValue(newRotation);
+    lastPanTime.current = currentTime;
+    
+    // Update wheel rotation in real-time
+    spinAnim.setValue(newRotation);
+  };
+
+  const handlePanEnd = () => {
+    if (isSpinning) return;
+    
+    // Start spinning with the calculated velocity
+    spinWheel(velocity / 1000);
+  };
+
+  const renderWheelSegments = () => {
+    const segments = [];
+    for (let i = 1; i <= 100; i++) {
+      const angle = (i - 1) * 3.6;
+      const isEven = i % 2 === 0;
+      
+      segments.push(
+        <View
+          key={i}
+          style={[
+            styles.wheelSegment,
+            {
+              transform: [{ rotate: `${angle}deg` }],
+              backgroundColor: isEven ? '#FF6B9D' : '#FF8E8E',
+            }
+          ]}
+        >
+          <Text style={styles.wheelNumber}>{i}</Text>
+        </View>
+      );
+    }
+    return segments;
+  };
+
+  if (!visible) return null;
+
+  return (
+    <View style={styles.wheelOverlay}>
+      <View style={styles.wheelContainer}>
+        <View style={styles.wheelHeader}>
+          <Text style={styles.wheelTitle}>🎰 Spin the Wheel! 🎰</Text>
+          <TouchableOpacity onPress={onClose} style={styles.wheelCloseButton}>
+            <MaterialCommunityIcons name="close" size={24} color="#3F51B5" />
+          </TouchableOpacity>
+        </View>
+        
+        <View style={styles.wheelContent}>
+          <View style={styles.wheelWrapper}>
+            <PanGestureHandler
+              onGestureEvent={handlePanGesture}
+              onEnded={handlePanEnd}
+              enabled={!isSpinning}
+            >
+              <Animated.View
+                style={[
+                  styles.wheel,
+                  {
+                    transform: [{ rotate: spinAnim.interpolate({
+                      inputRange: [0, 360],
+                      outputRange: ['0deg', '360deg'],
+                    }) }],
+                  }
+                ]}
+              >
+                {renderWheelSegments()}
+              </Animated.View>
+            </PanGestureHandler>
+            
+            {/* Center pointer */}
+            <View style={styles.wheelPointer} />
+          </View>
+          
+          {selectedNumber && (
+            <View style={styles.resultContainer}>
+              <Text style={styles.resultText}>🎉 Card #{selectedNumber} Selected! 🎉</Text>
+            </View>
+          )}
+          
+          <View style={styles.wheelInstructions}>
+            <Text style={styles.wheelInstructionText}>👆 Swipe to spin the wheel!</Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+};
+
 // Enhanced Category Filter Component
-const CategoryFilter = ({ selectedCategory, onCategorySelect, selectedBudget, onBudgetSelect }) => {
+const CategoryFilter = ({ selectedCategory, onCategorySelect, onRandomSelect }) => {
   return (
     <View style={styles.categoryFilterContainer}>
       <ScrollView 
@@ -312,7 +435,7 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect, selectedBudget, on
             <MaterialCommunityIcons 
               name="heart-multiple" 
               size={20} 
-              color={!selectedCategory ? "#fff" : "#FF6B9D"} 
+              color={!selectedCategory ? "#fff" : "#3F51B5"} 
             />
           </View>
           <Text style={[
@@ -328,7 +451,13 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect, selectedBudget, on
               styles.categoryFilterButton,
               selectedCategory === key && [styles.categoryFilterButtonActive, { backgroundColor: category.color }]
             ]}
-            onPress={() => onCategorySelect(key)}
+            onPress={() => {
+              if (key === 'random') {
+                onRandomSelect();
+              } else {
+                onCategorySelect(key);
+              }
+            }}
           >
             <View style={{ marginBottom: 4 }}>
               <CategoryIcon 
@@ -345,67 +474,6 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect, selectedBudget, on
           </TouchableOpacity>
         ))}
       </ScrollView>
-      
-      {/* Budget Filter */}
-      <View style={styles.budgetFilterContainer}>
-        <Text style={styles.budgetFilterTitle}>💰 Budget Filter:</Text>
-        <View style={styles.budgetFilterButtons}>
-          <TouchableOpacity 
-            style={[
-              styles.budgetFilterButton,
-              !selectedBudget && styles.budgetFilterButtonActive
-            ]}
-            onPress={() => onBudgetSelect(null)}
-          >
-            <Text style={[
-              styles.budgetFilterText,
-              !selectedBudget && { color: '#ffffff' }
-            ]}>All Budgets</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={[
-              styles.budgetFilterButton,
-              selectedBudget === 'low' && [styles.budgetFilterButtonActive, { backgroundColor: '#4CAF50' }]
-            ]}
-            onPress={() => onBudgetSelect('low')}
-          >
-            <FontAwesome5 name="dollar-sign" size={16} color={selectedBudget === 'low' ? "#fff" : "#4CAF50"} />
-            <Text style={[
-              styles.budgetFilterText,
-              selectedBudget === 'low' && { color: '#ffffff' }
-            ]}>Budget ($)</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={[
-              styles.budgetFilterButton,
-              selectedBudget === 'medium' && [styles.budgetFilterButtonActive, { backgroundColor: '#FF9800' }]
-            ]}
-            onPress={() => onBudgetSelect('medium')}
-          >
-            <FontAwesome5 name="dollar-sign" size={16} color={selectedBudget === 'medium' ? "#fff" : "#FF9800"} />
-            <Text style={[
-              styles.budgetFilterText,
-              selectedBudget === 'medium' && { color: '#ffffff' }
-            ]}>Mid-Range ($$)</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={[
-              styles.budgetFilterButton,
-              selectedBudget === 'high' && [styles.budgetFilterButtonActive, { backgroundColor: '#E91E63' }]
-            ]}
-            onPress={() => onBudgetSelect('high')}
-          >
-            <FontAwesome5 name="dollar-sign" size={16} color={selectedBudget === 'high' ? "#fff" : "#E91E63"} />
-            <Text style={[
-              styles.budgetFilterText,
-              selectedBudget === 'high' && { color: '#ffffff' }
-            ]}>Premium ($$$)</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
     </View>
   );
 };
@@ -413,87 +481,81 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect, selectedBudget, on
 // Enhanced Expanded Card Component
 const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar, onSetReminder }) => {
   const categories = {
-    romantic: { name: 'Romantic', icon: '💕', color: '#FF6B9D', description: 'Perfect for couples in love' },
-    adventurous: { name: 'Adventurous', icon: '🏔️', color: '#4CAF50', description: 'For thrill-seekers and explorers' },
-    creative: { name: 'Creative', icon: '🎨', color: '#9C27B0', description: 'Express your artistic side together' },
-    active: { name: 'Active', icon: '⚡', color: '#FF9800', description: 'Get moving and stay energized' },
-    cozy: { name: 'Cozy', icon: '🏠', color: '#795548', description: 'Comfortable and intimate moments' },
-    fun: { name: 'Fun', icon: '🎉', color: '#E91E63', description: 'Laugh and enjoy together' },
-    foodie: { name: 'Foodie', icon: '🍕', color: '#FF5722', description: 'Culinary adventures for food lovers' },
-    chill: { name: 'Chill', icon: '😌', color: '#607D8B', description: 'Relaxed and laid-back vibes' },
-    cultural: { name: 'Cultural', icon: '🏛️', color: '#3F51B5', description: 'Explore art, history, and culture' },
-    intellectual: { name: 'Intellectual', icon: '🧠', color: '#673AB7', description: 'Stimulate your minds together' },
-    spontaneous: { name: 'Spontaneous', icon: '🎲', color: '#00BCD4', description: 'Go with the flow and surprise each other' },
+    romantic: { name: 'Romantic', icon: '💕', color: '#FF6B8A' },
+    adventurous: { name: 'Adventurous', icon: '🏔️', color: '#7FB069' },
+    active: { name: 'Active', icon: '⚡', color: '#5B9BD5' },
+    cozy: { name: 'Cozy', icon: '🏠', color: '#F4A261' },
+    fun: { name: 'Fun', icon: '🎉', color: '#E76F51' },
+    foodie: { name: 'Foodie', icon: '🍕', color: '#E9C46A' },
+    chill: { name: 'Chill', icon: '😌', color: '#8B9DC3' },
+    spontaneous: { name: 'Spontaneous', icon: '🎲', color: '#F7931E' },
+    budget: { name: 'Budget-Friendly', icon: '💰', color: '#6A994E' },
+    luxury: { name: 'Luxury', icon: '💎', color: '#C9A87D' },
+    random: { name: 'Random', icon: '🎰', color: '#D4A5A5' },
   };
-  const categoryInfo = categories[item.category];
+  const categoryInfo = categories[item.category] || categories.romantic; // Fallback to romantic if category not found
   
   return (
     <View style={styles.expandedCardOverlay}>
       <View style={styles.expandedCardContent}>
+        {/* Header */}
         <View style={styles.expandedCardHeader}>
-          <View style={styles.expandedCardTitleContainer}>
-            <View style={styles.expandedCardTitleRow}>
-              <Text style={styles.expandedCardTitle}>💕 DateUnveil 💕</Text>
-              <View style={[styles.categoryBadgeLarge, { backgroundColor: categoryInfo.color }]}>
-                <Text style={styles.categoryEmojiLarge}>{categoryInfo.icon}</Text>
-                <Text style={styles.categoryNameLarge}>{categoryInfo.name}</Text>
-              </View>
+          <View style={styles.headerLeft}>
+            <Text style={styles.cardNumber}>#{item.id}</Text>
+            <View style={[styles.categoryBadge, { backgroundColor: categoryInfo.color }]}>
+              <Text style={styles.categoryIcon}>{categoryInfo.icon}</Text>
             </View>
-            <Text style={styles.categoryDescription}>{categoryInfo.description}</Text>
           </View>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Feather name="x" size={16} color="#FF8E8E" />
+            <MaterialCommunityIcons name="close" size={24} color="#757575" />
           </TouchableOpacity>
         </View>
         
-        <View style={styles.expandedCardBody}>
-          <View style={styles.cardIdContainer}>
-            <Text style={styles.expandedCardNumber}>#{item.id}</Text>
-          </View>
-          <Text style={styles.expandedCardIdea}>{item.idea}</Text>
+        {/* Main Content */}
+        <View style={[styles.expandedCardBody, { backgroundColor: '#FFF5F7' }]}>
+          <Text style={styles.dateIdea}>{item.idea || 'No idea found'}</Text>
+          <Text style={{ fontSize: 12, color: '#666', marginTop: 8 }}>Debug: Card #{item.id}</Text>
           
-          <View style={styles.expandedCardDetails}>
-            <View style={styles.detailRow}>
-              <BudgetIcon budget={item.budget} />
-              <LocationIcon location={item.location} />
-            </View>
+          {/* Quick Info */}
+          <View style={styles.quickInfo}>
+            <BudgetIcon budget={item.budget} />
+            <LocationIcon location={item.location} />
           </View>
         </View>
 
-        <View style={styles.expandedCardActions}>
-          <Text style={styles.actionsTitle}>💌 Share & Plan Your Date</Text>
-          <View style={styles.actionButtonsRow}>
-            <TouchableOpacity 
-              style={[styles.actionButton, { backgroundColor: '#FF6B9D' }]} 
-              onPress={onShareEmail}
-            >
-              <MaterialCommunityIcons name="email-send" size={18} color="#ffffff" style={{ marginRight: 8 }} />
-              <Text style={styles.actionButtonText}>Email</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.actionButton, { backgroundColor: '#FF8E8E' }]} 
-              onPress={onShareSMS}
-            >
-              <MaterialCommunityIcons name="message-text" size={18} color="#ffffff" style={{ marginRight: 8 }} />
-              <Text style={styles.actionButtonText}>Message</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.actionButtonsRow}>
-            <TouchableOpacity 
-              style={[styles.actionButton, { backgroundColor: '#FFB3D9' }]} 
-              onPress={onAddToCalendar}
-            >
-              <Feather name="calendar" size={18} color="#ffffff" style={{ marginRight: 8 }} />
-              <Text style={styles.actionButtonText}>Calendar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.actionButton, { backgroundColor: '#FFC0CB' }]} 
-              onPress={onSetReminder}
-            >
-              <Feather name="bell" size={18} color="#ffffff" style={{ marginRight: 8 }} />
-              <Text style={styles.actionButtonText}>Reminder</Text>
-            </TouchableOpacity>
-          </View>
+        {/* Action Buttons */}
+        <View style={styles.actionButtons}>
+          <TouchableOpacity 
+            style={[styles.actionButton, { backgroundColor: '#FF6B8A' }]} 
+            onPress={onShareEmail}
+          >
+            <MaterialCommunityIcons name="email" size={18} color="#ffffff" />
+            <Text style={styles.actionButtonText}>Email</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[styles.actionButton, { backgroundColor: '#7FB069' }]} 
+            onPress={onShareSMS}
+          >
+            <MaterialCommunityIcons name="message" size={18} color="#ffffff" />
+            <Text style={styles.actionButtonText}>SMS</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[styles.actionButton, { backgroundColor: '#F4A261' }]} 
+            onPress={onAddToCalendar}
+          >
+            <MaterialCommunityIcons name="calendar" size={18} color="#ffffff" />
+            <Text style={styles.actionButtonText}>Calendar</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[styles.actionButton, { backgroundColor: '#A67DB8' }]} 
+            onPress={onSetReminder}
+          >
+            <MaterialCommunityIcons name="bell" size={18} color="#ffffff" />
+            <Text style={styles.actionButtonText}>Remind</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -503,17 +565,17 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
 // Advanced Calendar Modal Component
 const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
   const categories = {
-    romantic: { name: 'Romantic', icon: '💕', color: '#FF6B9D' },
-    adventurous: { name: 'Adventurous', icon: '🏔️', color: '#4CAF50' },
-    creative: { name: 'Creative', icon: '🎨', color: '#9C27B0' },
-    active: { name: 'Active', icon: '⚡', color: '#FF9800' },
-    cozy: { name: 'Cozy', icon: '🏠', color: '#795548' },
-    fun: { name: 'Fun', icon: '🎉', color: '#E91E63' },
-    foodie: { name: 'Foodie', icon: '🍕', color: '#FF5722' },
-    chill: { name: 'Chill', icon: '😌', color: '#607D8B' },
-    cultural: { name: 'Cultural', icon: '🏛️', color: '#3F51B5' },
-    intellectual: { name: 'Intellectual', icon: '🧠', color: '#673AB7' },
-    spontaneous: { name: 'Spontaneous', icon: '🎲', color: '#00BCD4' },
+    romantic: { name: 'Romantic', icon: '💕', color: '#FF6B8A' },
+    adventurous: { name: 'Adventurous', icon: '🏔️', color: '#7FB069' },
+    active: { name: 'Active', icon: '⚡', color: '#5B9BD5' },
+    cozy: { name: 'Cozy', icon: '🏠', color: '#F4A261' },
+    fun: { name: 'Fun', icon: '🎉', color: '#E76F51' },
+    foodie: { name: 'Foodie', icon: '🍕', color: '#E9C46A' },
+    chill: { name: 'Chill', icon: '😌', color: '#8B9DC3' },
+    spontaneous: { name: 'Spontaneous', icon: '🎲', color: '#F7931E' },
+    budget: { name: 'Budget-Friendly', icon: '💰', color: '#6A994E' },
+    luxury: { name: 'Luxury', icon: '💎', color: '#C9A87D' },
+    random: { name: 'Random', icon: '🎰', color: '#D4A5A5' },
   };
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
@@ -525,9 +587,10 @@ const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
 
   useEffect(() => {
     if (visible && dateIdea) {
+      const categoryInfo = categories[dateIdea.category] || categories.romantic;
       setCustomTitle(`DateUnveil: ${dateIdea.idea}`);
       setCustomLocation('Your chosen location');
-      setCustomNotes(`Category: ${categories[dateIdea.category].name}\nBudget: ${dateIdea.budget === 'low' ? '$' : dateIdea.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${dateIdea.location}`);
+      setCustomNotes(`Category: ${categoryInfo.name}\nBudget: ${dateIdea.budget === 'low' ? '$' : dateIdea.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${dateIdea.location}`);
     }
   }, [visible, dateIdea]);
 
@@ -563,14 +626,14 @@ const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
   };
 
   const handleDateChange = (event, date) => {
-    setShowDatePicker(false);
+    setShowDatePicker(Platform.OS === 'ios');
     if (date) {
       setSelectedDate(date);
     }
   };
 
   const handleTimeChange = (event, time) => {
-    setShowTimePicker(false);
+    setShowTimePicker(Platform.OS === 'ios');
     if (time) {
       setSelectedTime(time);
     }
@@ -602,16 +665,28 @@ const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
                 style={styles.dateTimeButton}
                 onPress={() => setShowDatePicker(true)}
               >
-                <Text style={styles.dateTimeLabel}>Date:</Text>
-                <Text style={styles.dateTimeValue}>{formatDate(selectedDate)}</Text>
+                <View style={styles.dateTimeButtonContent}>
+                  <MaterialCommunityIcons name="calendar" size={20} color="#FF6B8A" />
+                  <View style={styles.dateTimeTextContainer}>
+                    <Text style={styles.dateTimeLabel}>Date</Text>
+                    <Text style={styles.dateTimeValue}>{formatDate(selectedDate)}</Text>
+                  </View>
+                  <MaterialCommunityIcons name="chevron-right" size={20} color="#FF6B8A" />
+                </View>
               </TouchableOpacity>
 
               <TouchableOpacity 
                 style={styles.dateTimeButton}
                 onPress={() => setShowTimePicker(true)}
               >
-                <Text style={styles.dateTimeLabel}>Time:</Text>
-                <Text style={styles.dateTimeValue}>{formatTime(selectedTime)}</Text>
+                <View style={styles.dateTimeButtonContent}>
+                  <MaterialCommunityIcons name="clock-outline" size={20} color="#FF6B8A" />
+                  <View style={styles.dateTimeTextContainer}>
+                    <Text style={styles.dateTimeLabel}>Time</Text>
+                    <Text style={styles.dateTimeValue}>{formatTime(selectedTime)}</Text>
+                  </View>
+                  <MaterialCommunityIcons name="chevron-right" size={20} color="#FF6B8A" />
+                </View>
               </TouchableOpacity>
             </View>
 
@@ -664,49 +739,27 @@ const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
           </View>
         </View>
 
-        {/* Date Picker Modal */}
+        {/* Date Picker */}
         {showDatePicker && (
-          <Modal
-            visible={showDatePicker}
-            transparent={true}
-            animationType="fade"
-          >
-            <View style={styles.pickerOverlay}>
-              <View style={styles.pickerContainer}>
-                <Text style={styles.pickerTitle}>Select Date</Text>
-                <View style={styles.pickerContent}>
-                  {/* Simple date picker - in a real app you'd use a proper date picker library */}
-                  <Text style={styles.pickerText}>Date: {formatDate(selectedDate)}</Text>
-                  <Text style={styles.pickerNote}>(Date picker would be implemented here)</Text>
-                </View>
-                <TouchableOpacity onPress={() => setShowDatePicker(false)} style={styles.pickerButton}>
-                  <Text style={styles.pickerButtonText}>OK</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
+          <DateTimePicker
+            value={selectedDate}
+            mode="date"
+            display="default"
+            onChange={handleDateChange}
+            minimumDate={new Date()}
+            maximumDate={new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)} // 1 year from now
+          />
         )}
 
-        {/* Time Picker Modal */}
+        {/* Time Picker */}
         {showTimePicker && (
-          <Modal
-            visible={showTimePicker}
-            transparent={true}
-            animationType="fade"
-          >
-            <View style={styles.pickerOverlay}>
-              <View style={styles.pickerContainer}>
-                <Text style={styles.pickerTitle}>Select Time</Text>
-                <View style={styles.pickerContent}>
-                  <Text style={styles.pickerText}>Time: {formatTime(selectedTime)}</Text>
-                  <Text style={styles.pickerNote}>(Time picker would be implemented here)</Text>
-                </View>
-                <TouchableOpacity onPress={() => setShowTimePicker(false)} style={styles.pickerButton}>
-                  <Text style={styles.pickerButtonText}>OK</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
+          <DateTimePicker
+            value={selectedTime}
+            mode="time"
+            display="default"
+            onChange={handleTimeChange}
+            is24Hour={false}
+          />
         )}
       </View>
     </Modal>
@@ -1161,30 +1214,30 @@ const ReminderModal = ({ visible, onClose, onSchedule, dateIdea }) => {
 
 export default function App() {
   const categories = {
-    romantic: { name: 'Romantic', icon: '💕', color: '#FF6B9D' },
-    adventurous: { name: 'Adventurous', icon: '🏔️', color: '#4CAF50' },
-    creative: { name: 'Creative', icon: '🎨', color: '#9C27B0' },
-    active: { name: 'Active', icon: '⚡', color: '#FF9800' },
-    cozy: { name: 'Cozy', icon: '🏠', color: '#795548' },
-    fun: { name: 'Fun', icon: '🎉', color: '#E91E63' },
-    foodie: { name: 'Foodie', icon: '🍕', color: '#FF5722' },
-    chill: { name: 'Chill', icon: '😌', color: '#607D8B' },
-    cultural: { name: 'Cultural', icon: '🏛️', color: '#3F51B5' },
-    intellectual: { name: 'Intellectual', icon: '🧠', color: '#673AB7' },
-    spontaneous: { name: 'Spontaneous', icon: '🎲', color: '#00BCD4' },
+    romantic: { name: 'Romantic', icon: '💕', color: '#FF6B8A' },
+    adventurous: { name: 'Adventurous', icon: '🏔️', color: '#7FB069' },
+    active: { name: 'Active', icon: '⚡', color: '#5B9BD5' },
+    cozy: { name: 'Cozy', icon: '🏠', color: '#F4A261' },
+    fun: { name: 'Fun', icon: '🎉', color: '#E76F51' },
+    foodie: { name: 'Foodie', icon: '🍕', color: '#E9C46A' },
+    chill: { name: 'Chill', icon: '😌', color: '#8B9DC3' },
+    spontaneous: { name: 'Spontaneous', icon: '🎲', color: '#F7931E' },
+    budget: { name: 'Budget-Friendly', icon: '💰', color: '#6A994E' },
+    luxury: { name: 'Luxury', icon: '💎', color: '#C9A87D' },
+    random: { name: 'Random', icon: '🎰', color: '#D4A5A5' },
   };
   
   const [revealedCards, setRevealedCards] = useState(new Set());
   const [expandedCard, setExpandedCard] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedBudget, setSelectedBudget] = useState(null);
   const [showTutorial, setShowTutorial] = useState(false);
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [showInvitationModal, setShowInvitationModal] = useState(false);
   const [showReminderModal, setShowReminderModal] = useState(false);
   const [invitationData, setInvitationData] = useState(null);
   const [tutorialKey, setTutorialKey] = useState(0);
+  const [showSpinningWheel, setShowSpinningWheel] = useState(false);
 
   useEffect(() => {
     // Load revealed cards from AsyncStorage on mount
@@ -1228,16 +1281,18 @@ export default function App() {
 
   const shareByEmail = () => {
     if (!expandedCard) return;
+    const categoryInfo = categories[expandedCard.category] || categories.romantic;
     MailComposer.composeAsync({
       subject: 'DateUnveil: Amazing Date Idea',
-      body: `I just discovered this amazing date idea: ${expandedCard.idea}\n\nCategory: ${categories[expandedCard.category].name}\nBudget: ${expandedCard.budget === 'low' ? '$' : expandedCard.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${expandedCard.location}\n\nShared via DateUnveil\n\nLet's make it happen!`,
+      body: `I just discovered this amazing date idea: ${expandedCard.idea}\n\nCategory: ${categoryInfo.name}\nBudget: ${expandedCard.budget === 'low' ? '$' : expandedCard.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${expandedCard.location}\n\nShared via DateUnveil\n\nLet's make it happen!`,
     }).catch(() => Alert.alert('Error', 'Unable to open email composer.'));
   };
 
   const shareBySMS = () => {
     if (!expandedCard) return;
     let smsUrl = '';
-    const message = `I just discovered this amazing date idea: ${expandedCard.idea}\n\nCategory: ${categories[expandedCard.category].name}\nBudget: ${expandedCard.budget === 'low' ? '$' : expandedCard.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${expandedCard.location}\n\nShared via DateUnveil\n\nLet's make it happen!`;
+    const categoryInfo = categories[expandedCard.category] || categories.romantic;
+    const message = `I just discovered this amazing date idea: ${expandedCard.idea}\n\nCategory: ${categoryInfo.name}\nBudget: ${expandedCard.budget === 'low' ? '$' : expandedCard.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${expandedCard.location}\n\nShared via DateUnveil\n\nLet's make it happen!`;
     
     if (Platform.OS === 'ios') {
       smsUrl = `sms:&body=${encodeURIComponent(message)}`;
@@ -1492,11 +1547,24 @@ export default function App() {
     }
   };
 
+  const handleWheelCardSelect = (cardNumber) => {
+    const selectedCard = dateIdeasData.find(item => item.id === cardNumber);
+    if (selectedCard) {
+      setExpandedCard(selectedCard);
+      // Reveal the card if not already revealed
+      if (!revealedCards.has(cardNumber)) {
+        const newRevealedCards = new Set(revealedCards);
+        newRevealedCards.add(cardNumber);
+        setRevealedCards(newRevealedCards);
+        AsyncStorage.setItem('revealedCards', JSON.stringify(Array.from(newRevealedCards)));
+      }
+    }
+  };
+
   // Filter data based on selected category and budget
   const filteredData = dateIdeasData.filter(item => {
     const categoryMatch = !selectedCategory || item.category === selectedCategory;
-    const budgetMatch = !selectedBudget || item.budget === selectedBudget;
-    return categoryMatch && budgetMatch;
+    return categoryMatch;
   });
 
   const renderCard = ({ item }) => (
@@ -1518,11 +1586,11 @@ export default function App() {
       
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>💕 DateUnveil 💕</Text>
+          <Text style={styles.headerTitle}>DateUnveil</Text>
           <Text style={styles.headerSubtitle}>Discover Your Perfect Date Idea</Text>
           <View style={styles.progressContainer}>
             <Text style={styles.progressText}>
-              {revealedCards.size} / 100 Cards Revealed
+              {revealedCards.size} / 100 Revealed
             </Text>
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: `${(revealedCards.size / 100) * 100}%` }]} />
@@ -1534,33 +1602,38 @@ export default function App() {
       <CategoryFilter 
         selectedCategory={selectedCategory}
         onCategorySelect={setSelectedCategory}
-        selectedBudget={selectedBudget}
-        onBudgetSelect={setSelectedBudget}
+        onRandomSelect={() => setShowSpinningWheel(true)}
       />
 
       <FlatList
         data={filteredData}
         renderItem={renderCard}
         keyExtractor={(item) => item.id.toString()}
-        numColumns={3}
-        key="3-column-grid"
+        numColumns={4}
+        key="4-column-grid"
         contentContainerStyle={styles.gridContainer}
         showsVerticalScrollIndicator={false}
       />
 
-      <View style={styles.footer}>
-        <TouchableOpacity 
-          style={styles.historyButton}
-          onPress={() => setShowHistory(true)}
-        >
-          <Text style={styles.historyButtonText}>💕 View Date History 💕</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={styles.resetButton}
-          onPress={resetAppData}
-        >
-          <Text style={styles.resetButtonText}>🔄 Reset App Data</Text>
-        </TouchableOpacity>
+      {/* Professional Bottom Action Bar */}
+      <View style={styles.bottomActionBar}>
+        <View style={styles.actionBarContent}>
+          <TouchableOpacity 
+            style={styles.actionBarButton}
+            onPress={() => setShowHistory(true)}
+          >
+            <MaterialCommunityIcons name="history" size={20} color="#FF6B8A" />
+            <Text style={styles.actionBarButtonText}>History</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.actionBarButton}
+            onPress={resetAppData}
+          >
+            <MaterialCommunityIcons name="refresh" size={20} color="#FF6B8A" />
+            <Text style={styles.actionBarButtonText}>Reset</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {expandedCard && (
@@ -1623,6 +1696,14 @@ export default function App() {
         visible={showTutorial}
         onComplete={completeTutorial}
       />
+
+      <SpinningWheel
+        visible={showSpinningWheel}
+        onClose={() => setShowSpinningWheel(false)}
+        onSelectCard={handleWheelCardSelect}
+      />
+
+
     </SafeAreaView>
   );
 }
@@ -1630,42 +1711,42 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FDF6F0',
+    backgroundColor: '#FEF7F0',
     paddingTop: 10,
   },
   header: {
-    backgroundColor: '#FF6B9D',
+    backgroundColor: '#FF6B8A',
     paddingTop: 20,
-    paddingBottom: 20,
+    paddingBottom: 16,
     paddingHorizontal: 20,
   },
   headerContent: {
     alignItems: 'center',
   },
+
   headerTitle: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#ffffff',
-    marginBottom: 4,
     textShadowColor: 'rgba(0, 0, 0, 0.1)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
   },
   headerSubtitle: {
-    fontSize: 14,
-    color: '#FFE4E1',
+    fontSize: 13,
+    color: '#FFF5F7',
     fontWeight: '500',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   progressContainer: {
     alignItems: 'center',
     width: '100%',
   },
   progressText: {
-    fontSize: 12,
-    color: '#FFE4E1',
+    fontSize: 11,
+    color: '#FFF5F7',
     fontWeight: '600',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   progressBar: {
     width: '80%',
@@ -1682,8 +1763,8 @@ const styles = StyleSheet.create({
   categoryFilterContainer: {
     backgroundColor: '#ffffff',
     borderBottomWidth: 1,
-    borderBottomColor: '#FFE4E1',
-    shadowColor: '#FF6B9D',
+    borderBottomColor: '#F0E6E0',
+    shadowColor: '#FF6B8A',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -1701,80 +1782,41 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#FFE4E1',
+    borderColor: '#F0E6E0',
     marginRight: 10,
-    backgroundColor: '#FFF8FA',
+    backgroundColor: '#FEF7F0',
     alignItems: 'center',
     minWidth: 80,
   },
   categoryFilterButtonActive: {
-    backgroundColor: '#FF6B9D',
-    borderColor: '#FF6B9D',
+    backgroundColor: '#FF6B8A',
+    borderColor: '#FF6B8A',
   },
 
   categoryFilterText: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#FF6B9D',
+    color: '#FF6B8A',
   },
-  budgetFilterContainer: {
-    backgroundColor: '#FFF8FA',
-    borderTopWidth: 1,
-    borderTopColor: '#FFE4E1',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-  },
-  budgetFilterTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#FF6B9D',
-    marginBottom: 8,
-  },
-  budgetFilterButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  budgetFilterButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#FFE4E1',
-    backgroundColor: '#FFF',
-    marginHorizontal: 4,
-  },
-  budgetFilterButtonActive: {
-    backgroundColor: '#FF6B9D',
-    borderColor: '#FF6B9D',
-  },
-  budgetFilterText: {
-    fontSize: 10,
-    fontWeight: '600',
-    color: '#FF6B9D',
-    marginLeft: 4,
-  },
+
   gridContainer: {
-    padding: 16,
-    paddingBottom: 32,
+    padding: 12,
+    paddingBottom: 100,
   },
   smallCard: {
-    width: (width - 60) / 3,
-    height: 140,
+    width: (width - 48) / 4,
+    height: 120,
     backgroundColor: '#FFF',
-    borderRadius: 16,
-    margin: 6,
-    padding: 12,
-    shadowColor: '#FF6B9D',
-    shadowOffset: { width: 0, height: 4 },
+    borderRadius: 12,
+    margin: 4,
+    padding: 8,
+    shadowColor: '#FF6B8A',
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowRadius: 6,
+    elevation: 3,
     borderWidth: 1,
-    borderColor: '#FFE4E1',
+    borderColor: '#F0E6E0',
     overflow: 'hidden',
   },
   cardHeader: {
@@ -1785,9 +1827,9 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cardNumber: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: '#FF6B9D',
+    fontSize: 7,
+    fontWeight: '500',
+    color: '#D4A5A5',
   },
   cardContent: {
     flex: 1,
@@ -1798,47 +1840,47 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mysteryIcon: {
-    fontSize: 20,
-    marginBottom: 4,
+    fontSize: 16,
+    marginBottom: 3,
   },
   tapToReveal: {
-    fontSize: 10,
-    color: '#B0A8B9',
+    fontSize: 9,
+    color: '#D4A5A5',
     fontWeight: '600',
     textAlign: 'center',
   },
   ideaText: {
-    fontSize: 11,
-    color: '#FF6B9D',
+    fontSize: 10,
+    color: '#FF6B8A',
     fontWeight: '600',
     textAlign: 'center',
-    lineHeight: 14,
+    lineHeight: 12,
   },
   cardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 6,
+    marginTop: 4,
   },
   revealedCard: {
-    backgroundColor: '#FFF0F5',
-    borderColor: '#FF6B9D',
+    backgroundColor: '#FFF5F7',
+    borderColor: '#FF6B8A',
     borderWidth: 2,
   },
   expandedCard: {
-    backgroundColor: '#FFB3D9',
+    backgroundColor: '#FFE8ED',
     borderWidth: 2,
-    borderColor: '#FF6B9D',
+    borderColor: '#FF6B8A',
   },
   smallCardNumber: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: '#ffffff',
+    fontSize: 7,
+    fontWeight: '500',
+    color: '#D4A5A5',
   },
   smallCardText: {
-    fontSize: 10,
-    color: '#FF6B9D',
+    fontSize: 9,
+    color: '#FF6B8A',
     textAlign: 'center',
-    lineHeight: 12,
+    lineHeight: 11,
     fontWeight: '500',
   },
   expandedCardOverlay: {
@@ -1847,160 +1889,116 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255, 107, 157, 0.95)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1000,
   },
   expandedCardContent: {
     backgroundColor: '#ffffff',
-    borderRadius: 28,
+    borderRadius: 20,
     width: width - 40,
     maxHeight: height * 0.8,
-    shadowColor: '#FF6B9D',
+    minHeight: 400,
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 20,
+      height: 10,
     },
-    shadowOpacity: 0.4,
-    shadowRadius: 30,
-    elevation: 20,
-    borderWidth: 3,
-    borderColor: '#FFE4E1',
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 15,
   },
   expandedCardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    padding: 24,
+    alignItems: 'center',
+    padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#FFE4E1',
+    borderBottomColor: '#F0F0F0',
   },
-  expandedCardTitleContainer: {
-    flex: 1,
-  },
-  expandedCardTitleRow: {
+  headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
   },
-  expandedCardTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#FF6B9D',
+  cardNumber: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#D4A5A5',
     marginRight: 12,
   },
-  categoryBadgeLarge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 16,
-  },
-  categoryEmojiLarge: {
-    fontSize: 16,
-    marginRight: 6,
-  },
-  categoryNameLarge: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#ffffff',
-  },
-  categoryDescription: {
-    fontSize: 12,
-    color: '#FF8E8E',
-    fontStyle: 'italic',
-  },
-  closeButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#FFF0F5',
+  categoryBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  closeButtonText: {
-    fontSize: 16,
-    color: '#FF8E8E',
-    fontWeight: 'bold',
+  categoryIcon: {
+    fontSize: 18,
+  },
+  closeButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#F5F5F5',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   expandedCardBody: {
     padding: 24,
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
+    minHeight: 200,
   },
-  cardIdContainer: {
-    backgroundColor: '#FF6B9D',
-    borderRadius: 16,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    marginBottom: 16,
-  },
-  expandedCardNumber: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#ffffff',
-  },
-  expandedCardIdea: {
-    fontSize: 20,
-    color: '#FF6B9D',
+  dateIdea: {
+    fontSize: 24,
+    color: '#FF6B8A',
     textAlign: 'center',
-    lineHeight: 28,
-    fontWeight: '600',
-    marginBottom: 20,
-  },
-  expandedCardDetails: {
-    width: '100%',
-    backgroundColor: '#FFF8FA',
-    borderRadius: 16,
+    lineHeight: 32,
+    fontWeight: '700',
+    marginBottom: 24,
+    backgroundColor: '#FFF5F7',
     padding: 16,
+    borderRadius: 12,
   },
-  detailRow: {
+  quickInfo: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20,
   },
-  expandedCardActions: {
-    padding: 24,
-    borderTopWidth: 1,
-    borderTopColor: '#FFE4E1',
-  },
-  actionsTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#FF6B9D',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  actionButtonsRow: {
+  actionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    padding: 20,
+    gap: 8,
   },
   actionButton: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 8,
     borderRadius: 12,
-    marginHorizontal: 4,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 3,
+      height: 2,
     },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    elevation: 4,
-  },
-  actionButtonIcon: {
-    fontSize: 18,
-    marginRight: 8,
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    minWidth: 70,
   },
   actionButtonText: {
     color: '#ffffff',
-    fontSize: 14,
+    fontSize: 11,
     fontWeight: '600',
+    marginTop: 4,
+    textAlign: 'center',
   },
   footer: {
     paddingHorizontal: 20,
@@ -2009,12 +2007,12 @@ const styles = StyleSheet.create({
   historyButton: {
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: '#FF6B9D',
+    borderColor: '#3F51B5',
     paddingVertical: 14,
     paddingHorizontal: 24,
     borderRadius: 20,
     alignItems: 'center',
-    shadowColor: '#FF6B9D',
+    shadowColor: '#3F51B5',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -2024,20 +2022,20 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   historyButtonText: {
-    color: '#FF6B9D',
+    color: '#3F51B5',
     fontSize: 16,
     fontWeight: 'bold',
   },
   resetButton: {
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: '#FF8E8E',
+    borderColor: '#757575',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 20,
     alignItems: 'center',
     marginTop: 10,
-    shadowColor: '#FF8E8E',
+    shadowColor: '#757575',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -2047,7 +2045,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   resetButtonText: {
-    color: '#FF8E8E',
+    color: '#757575',
     fontSize: 14,
     fontWeight: 'bold',
   },
@@ -2057,7 +2055,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255, 107, 157, 0.6)',
+    backgroundColor: 'rgba(63, 81, 181, 0.6)',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1000,
@@ -2067,7 +2065,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     width: width - 40,
     maxHeight: height * 0.7,
-    shadowColor: '#FF6B9D',
+    shadowColor: '#3F51B5',
     shadowOffset: {
       width: 0,
       height: 15,
@@ -2076,7 +2074,7 @@ const styles = StyleSheet.create({
     shadowRadius: 25,
     elevation: 15,
     borderWidth: 2,
-    borderColor: '#FFE4E1',
+    borderColor: '#E0E0E0',
   },
   modalHeader: {
     flexDirection: 'row',
@@ -2084,19 +2082,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 24,
     borderBottomWidth: 1,
-    borderBottomColor: '#FFE4E1',
+    borderBottomColor: '#E0E0E0',
   },
   modalTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#FF6B9D',
+    color: '#3F51B5',
   },
   historyList: {
     padding: 24,
   },
   emptyHistoryText: {
     fontSize: 16,
-    color: '#FF8E8E',
+    color: '#757575',
     textAlign: 'center',
     fontStyle: 'italic',
   },
@@ -2105,18 +2103,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#FFF0F5',
+    borderBottomColor: '#E8EAF6',
   },
   historyNumber: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#FF6B9D',
+    color: '#3F51B5',
     marginRight: 12,
     minWidth: 30,
   },
   historyText: {
     fontSize: 16,
-    color: '#FF6B9D',
+    color: '#3F51B5',
     flex: 1,
     lineHeight: 22,
   },
@@ -2127,7 +2125,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255, 107, 157, 0.95)',
+    backgroundColor: 'rgba(63, 81, 181, 0.95)',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 2000,
@@ -2142,7 +2140,7 @@ const styles = StyleSheet.create({
     padding: 24,
     maxHeight: height * 0.8,
     minHeight: 340,
-    shadowColor: '#FF6B9D',
+    shadowColor: '#3F51B5',
     shadowOffset: {
       width: 0,
       height: 20,
@@ -2151,7 +2149,7 @@ const styles = StyleSheet.create({
     shadowRadius: 30,
     elevation: 20,
     borderWidth: 3,
-    borderColor: '#FFE4E1',
+    borderColor: '#E0E0E0',
     marginBottom: 16,
     justifyContent: 'space-between',
   },
@@ -2181,13 +2179,13 @@ const styles = StyleSheet.create({
   tutorialTitle: {
     fontSize: 26,
     fontWeight: 'bold',
-    color: '#FF6B9D',
+    color: '#3F51B5',
     textAlign: 'center',
     lineHeight: 32,
   },
   tutorialMessage: {
     fontSize: 16,
-    color: '#FF6B9D',
+    color: '#3F51B5',
     textAlign: 'center',
     lineHeight: 24,
     marginBottom: 20,
@@ -2201,7 +2199,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#FFE4E1',
+    backgroundColor: '#E0E0E0',
     marginHorizontal: 5,
   },
   progressDotActive: {
@@ -2222,10 +2220,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: '#FF8E8E',
+    borderColor: '#757575',
   },
   skipButtonText: {
-    color: '#FF8E8E',
+    color: '#757575',
     fontSize: 16,
     fontWeight: '600',
   },
@@ -2233,7 +2231,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 18,
-    shadowColor: '#FF6B9D',
+    shadowColor: '#3F51B5',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -2254,7 +2252,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255, 107, 157, 0.95)',
+    backgroundColor: 'rgba(63, 81, 181, 0.95)',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 2000,
@@ -2264,7 +2262,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     width: width - 40,
     maxHeight: height * 0.8,
-    shadowColor: '#FF6B9D',
+    shadowColor: '#3F51B5',
     shadowOffset: {
       width: 0,
       height: 20,
@@ -2273,7 +2271,7 @@ const styles = StyleSheet.create({
     shadowRadius: 30,
     elevation: 20,
     borderWidth: 3,
-    borderColor: '#FFE4E1',
+    borderColor: '#E0E0E0',
   },
   calendarModalHeader: {
     flexDirection: 'row',
@@ -2281,12 +2279,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 24,
     borderBottomWidth: 1,
-    borderBottomColor: '#FFE4E1',
+    borderBottomColor: '#E0E0E0',
   },
   calendarModalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FF6B9D',
+    color: '#3F51B5',
   },
   calendarModalBody: {
     padding: 24,
@@ -2309,20 +2307,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: '#FFF8FA',
+    backgroundColor: '#F5F5F5',
     borderRadius: 12,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: '#FFE4E1',
+    borderColor: '#E0E0E0',
   },
   dateTimeLabel: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#FF6B9D',
+    color: '#3F51B5',
   },
   dateTimeValue: {
     fontSize: 16,
-    color: '#FF6B9D',
+    color: '#3F51B5',
   },
   inputGroup: {
     marginBottom: 16,
@@ -2330,35 +2328,35 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#FF6B9D',
+    color: '#3F51B5',
     marginBottom: 8,
   },
   textInput: {
     borderWidth: 1,
-    borderColor: '#FFE4E1',
+    borderColor: '#E0E0E0',
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: '#FFF8FA',
-    color: '#FF6B9D',
+    backgroundColor: '#F5F5F5',
+    color: '#3F51B5',
   },
   calendarModalActions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 24,
     borderTopWidth: 1,
-    borderTopColor: '#FFE4E1',
+    borderTopColor: '#E0E0E0',
   },
   cancelButton: {
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: '#FF8E8E',
+    borderColor: '#757575',
     backgroundColor: 'transparent',
   },
   cancelButtonText: {
-    color: '#FF8E8E',
+    color: '#757575',
     fontSize: 16,
     fontWeight: '600',
   },
@@ -2366,8 +2364,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 20,
-    backgroundColor: '#FF6B9D',
-    shadowColor: '#FF6B9D',
+    backgroundColor: '#3F51B5',
+    shadowColor: '#3F51B5',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -2679,6 +2677,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#FF8E8E',
   },
+  dateTimeButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  dateTimeTextContainer: {
+    flex: 1,
+    marginLeft: 12,
+  },
   messageSection: {
     marginBottom: 24,
   },
@@ -2735,5 +2743,200 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#ffffff',
+  },
+
+
+
+  // Professional Bottom Action Bar Styles
+  bottomActionBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#ffffff',
+    borderTopWidth: 1,
+    borderTopColor: '#F0E6E0',
+    shadowColor: '#FF6B8A',
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 8,
+    zIndex: 1000,
+  },
+  actionBarContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  actionBarButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    minWidth: 60,
+    backgroundColor: 'transparent',
+    transition: 'all 0.2s ease',
+  },
+  actionBarButtonText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#FF6B8A',
+    marginTop: 4,
+    textAlign: 'center',
+  },
+
+  // Spinning Wheel Styles
+  wheelOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 3000,
+  },
+  wheelContainer: {
+    backgroundColor: '#ffffff',
+    borderRadius: 24,
+    width: width - 40,
+    maxHeight: height * 0.9,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 20,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 30,
+    elevation: 20,
+  },
+  wheelHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0E6E0',
+  },
+  wheelTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FF6B8A',
+  },
+  wheelCloseButton: {
+    padding: 8,
+  },
+  wheelContent: {
+    padding: 24,
+    alignItems: 'center',
+  },
+  wheelWrapper: {
+    position: 'relative',
+    marginBottom: 24,
+  },
+  wheel: {
+    width: 280,
+    height: 280,
+    borderRadius: 140,
+    position: 'relative',
+    borderWidth: 8,
+    borderColor: '#FF6B8A',
+    backgroundColor: '#FEF7F0',
+  },
+  wheelSegment: {
+    position: 'absolute',
+    width: 140,
+    height: 2,
+    left: 140,
+    top: 139,
+    transformOrigin: '0 1px',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+  },
+  wheelNumber: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+    transform: [{ rotate: '90deg' }],
+  },
+  wheelPointer: {
+    position: 'absolute',
+    top: -10,
+    left: '50%',
+    marginLeft: -10,
+    width: 0,
+    height: 0,
+    borderLeftWidth: 10,
+    borderRightWidth: 10,
+    borderBottomWidth: 20,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: '#FF6B8A',
+    zIndex: 10,
+  },
+  resultContainer: {
+    backgroundColor: '#FFF5F7',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 20,
+    marginBottom: 20,
+    borderWidth: 2,
+    borderColor: '#7FB069',
+  },
+  resultText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#7FB069',
+    textAlign: 'center',
+  },
+  spinButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FF6B8A',
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    borderRadius: 25,
+    shadowColor: '#FF6B8A',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  spinButtonDisabled: {
+    backgroundColor: '#D4A5A5',
+  },
+  spinButtonText: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 8,
+  },
+  wheelInstructions: {
+    backgroundColor: '#FFF5F7',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#FF6B8A',
+  },
+  wheelInstructionText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FF6B8A',
+    textAlign: 'center',
   },
 });
