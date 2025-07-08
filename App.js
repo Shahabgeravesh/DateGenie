@@ -15,9 +15,9 @@ import {
   LinearGradient,
   Modal,
   TextInput,
-  Easing
+  Easing,
+  PanResponder
 } from 'react-native';
-import { PanGestureHandler } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { StatusBar } from 'expo-status-bar';
@@ -260,6 +260,7 @@ const SpinningWheel = ({ visible, onClose, onSelectCard }) => {
   const [lastPanValue, setLastPanValue] = useState(0);
   const [velocity, setVelocity] = useState(0);
   const lastPanTime = useRef(Date.now());
+  const lastPanPosition = useRef({ x: 0, y: 0 });
 
   const spinWheel = (initialVelocity = 0) => {
     if (isSpinning) return;
@@ -293,34 +294,48 @@ const SpinningWheel = ({ visible, onClose, onSelectCard }) => {
     });
   };
 
-  const handlePanGesture = (event) => {
-    if (isSpinning) return;
-    
-    const { translationX, translationY, velocityX, velocityY } = event.nativeEvent;
-    const currentTime = Date.now();
-    const timeDelta = currentTime - lastPanTime.current;
-    
-    // Calculate velocity magnitude
-    const velocityMagnitude = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-    setVelocity(velocityMagnitude);
-    
-    // Calculate rotation based on pan gesture
-    const panDistance = Math.sqrt(translationX * translationX + translationY * translationY);
-    const newRotation = lastPanValue + panDistance * 0.5;
-    
-    setLastPanValue(newRotation);
-    lastPanTime.current = currentTime;
-    
-    // Update wheel rotation in real-time
-    spinAnim.setValue(newRotation);
-  };
-
-  const handlePanEnd = () => {
-    if (isSpinning) return;
-    
-    // Start spinning with the calculated velocity
-    spinWheel(velocity / 1000);
-  };
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => !isSpinning,
+      onMoveShouldSetPanResponder: () => !isSpinning,
+      onPanResponderGrant: (evt) => {
+        lastPanPosition.current = { x: evt.nativeEvent.pageX, y: evt.nativeEvent.pageY };
+        lastPanTime.current = Date.now();
+      },
+      onPanResponderMove: (evt) => {
+        if (isSpinning) return;
+        
+        const currentPosition = { x: evt.nativeEvent.pageX, y: evt.nativeEvent.pageY };
+        const currentTime = Date.now();
+        
+        // Calculate distance moved
+        const deltaX = currentPosition.x - lastPanPosition.current.x;
+        const deltaY = currentPosition.y - lastPanPosition.current.y;
+        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        
+        // Calculate velocity
+        const timeDelta = currentTime - lastPanTime.current;
+        const velocityMagnitude = timeDelta > 0 ? distance / timeDelta : 0;
+        setVelocity(velocityMagnitude);
+        
+        // Calculate rotation based on movement
+        const newRotation = lastPanValue + distance * 0.3;
+        setLastPanValue(newRotation);
+        
+        // Update wheel rotation in real-time
+        spinAnim.setValue(newRotation);
+        
+        lastPanPosition.current = currentPosition;
+        lastPanTime.current = currentTime;
+      },
+      onPanResponderRelease: () => {
+        if (isSpinning) return;
+        
+        // Start spinning with the calculated velocity
+        spinWheel(velocity / 50);
+      },
+    })
+  ).current;
 
   const renderWheelSegments = () => {
     const segments = [];
@@ -360,25 +375,20 @@ const SpinningWheel = ({ visible, onClose, onSelectCard }) => {
         
         <View style={styles.wheelContent}>
           <View style={styles.wheelWrapper}>
-            <PanGestureHandler
-              onGestureEvent={handlePanGesture}
-              onEnded={handlePanEnd}
-              enabled={!isSpinning}
+            <Animated.View
+              {...panResponder.panHandlers}
+              style={[
+                styles.wheel,
+                {
+                  transform: [{ rotate: spinAnim.interpolate({
+                    inputRange: [0, 360],
+                    outputRange: ['0deg', '360deg'],
+                  }) }],
+                }
+              ]}
             >
-              <Animated.View
-                style={[
-                  styles.wheel,
-                  {
-                    transform: [{ rotate: spinAnim.interpolate({
-                      inputRange: [0, 360],
-                      outputRange: ['0deg', '360deg'],
-                    }) }],
-                  }
-                ]}
-              >
-                {renderWheelSegments()}
-              </Animated.View>
-            </PanGestureHandler>
+              {renderWheelSegments()}
+            </Animated.View>
             
             {/* Center pointer */}
             <View style={styles.wheelPointer} />
