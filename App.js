@@ -922,14 +922,6 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
             <MaterialCommunityIcons name="calendar" size={18} color="#FFFFFF" />
             <Text style={styles.expandedActionButtonText}>Calendar</Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={[styles.expandedActionButton, { backgroundColor: '#AF52DE' }]} 
-            onPress={onSetReminder}
-          >
-            <MaterialCommunityIcons name="bell" size={18} color="#FFFFFF" />
-            <Text style={styles.expandedActionButtonText}>Remind</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -2178,8 +2170,16 @@ export default function App() {
           />
           <CategoryFilter 
             selectedCategory={selectedCategory}
-            onCategorySelect={setSelectedCategory}
-            onRandomSelect={() => setShowSpinningWheel(true)}
+            onCategorySelect={(key) => {
+              if (key !== selectedCategory) {
+                setShowHistory(false);
+                setSelectedCategory(key);
+              }
+            }}
+            onRandomSelect={() => {
+              setShowHistory(false);
+              setShowSpinningWheel(true);
+            }}
           />
           <FlatList
             data={gridData}
@@ -2191,18 +2191,25 @@ export default function App() {
             showsVerticalScrollIndicator={false}
           />
           {/* Professional Bottom Action Bar */}
-          <View style={[styles.tabBar, { backgroundColor: '#fffbe6', borderTopColor: '#ffe082' }]}>
+          <View style={styles.tabBar}>
             <View style={styles.tabBarContent}>
               <PlatformButton
-                onPress={() => setShowHistory(true)}
-                style={{}}
-                theme={theme}
-                platformStyles={{ fontFamily: 'System' }}
-                buttonColor="#FFB300"
-              >
-                {getActionIcon('history', 24, '#FFB300')}
-                History
-              </PlatformButton>
+  onPress={() => {
+    setExpandedCard(null);
+    setShowCalendarModal(false);
+    setShowInvitationModal(false);
+    setShowReminderModal(false);
+    setShowSpinningWheel(false);
+    setShowHistory(true);
+  }}
+  style={{}}
+  theme={theme}
+  platformStyles={{ fontFamily: 'System' }}
+  buttonColor="#FFB300"
+>
+  {getActionIcon('history', 24, '#FFB300')}
+  History
+</PlatformButton>
               <PlatformButton
                 onPress={resetAppData}
                 style={{}}
@@ -2226,15 +2233,23 @@ export default function App() {
             />
           )}
           {showHistory && (
-            <View style={styles.modalOverlay}>
-              <View style={styles.modalContent}>
+  <TouchableOpacity 
+    style={styles.modalOverlay} 
+    activeOpacity={1} 
+    onPress={() => setShowHistory(false)}
+  >
+    <TouchableOpacity 
+      style={styles.modalContent} 
+      activeOpacity={1} 
+      onPress={(e) => e.stopPropagation()}
+    >
                 <View style={styles.modalHeader}>
                   <Text style={styles.modalTitle}>Your Date History</Text>
                   <TouchableOpacity onPress={() => setShowHistory(false)} style={styles.closeButton}>
                     <Text style={styles.closeButtonText}>✕</Text>
                   </TouchableOpacity>
-                </View>
-                <ScrollView style={styles.historyList}>
+                      </View>
+      <ScrollView style={styles.historyList}>
                   {revealedCards.length === 0 ? (
                     <Text style={styles.emptyHistoryText}>No date ideas revealed yet. Start exploring to discover amazing date ideas.</Text>
                   ) : (
@@ -2255,11 +2270,11 @@ export default function App() {
                         </View>
                       </View>
                     ))
-                  )}
-                </ScrollView>
-              </View>
-            </View>
-          )}
+                          )}
+      </ScrollView>
+    </TouchableOpacity>
+  </TouchableOpacity>
+)}
           <CalendarModal
             visible={showCalendarModal}
             onClose={() => setShowCalendarModal(false)}
@@ -2490,10 +2505,15 @@ const styles = StyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
   modalOverlay: {
-    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 1000,
   },
   modalContent: {
     width: width - 32,
@@ -2522,7 +2542,7 @@ const styles = StyleSheet.create({
   },
   historyList: {
     padding: 20,
-    maxHeight: 30,
+    maxHeight: height * 0.5,
   },
   historyItem: {
     flexDirection: 'row',
@@ -2568,25 +2588,25 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 49,
-    backgroundColor: '#FFFFFF',
+    bottom: Platform.OS === 'ios' ? 20 : 10,
+    left: 16,
+    right: 16,
+    height: 60,
+    backgroundColor: '#fffbe6',
     borderTopWidth: 0.5,
-    borderTopColor: '#E500000',
+    borderTopColor: '#ffe082',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: -1 },
+    shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
-    shadowRadius: 3,
+    shadowRadius: 8,
     elevation: 8,
-    paddingBottom: Platform.OS === 'ios' ? 34 : 0, // Safe area for home indicator
+    borderRadius: 16,
   },
   tabBarContent: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: 49,
+    height: 60,
     paddingHorizontal: 20,
   },
   tabBarButton: {
