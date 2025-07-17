@@ -186,6 +186,39 @@ const getBudgetIcon = (budget, size = 20) => {
   );
 };
 
+// Fun font system for card numbers
+const getFunFont = (number) => {
+  // Group numbers into different fun font categories
+  if (number <= 20) {
+    return Platform.OS === 'ios' ? 'Marker Felt' : 'cursive'; // Playful marker font
+  } else if (number <= 40) {
+    return Platform.OS === 'ios' ? 'Chalkboard SE' : 'monospace'; // Chalk-like font
+  } else if (number <= 60) {
+    return Platform.OS === 'ios' ? 'Bradley Hand' : 'serif'; // Handwritten style
+  } else if (number <= 80) {
+    return Platform.OS === 'ios' ? 'Avenir Next' : 'sans-serif'; // Modern clean
+  } else {
+    return Platform.OS === 'ios' ? 'Futura' : 'fantasy'; // Futuristic
+  }
+};
+
+// Fun color system for card numbers
+const getFunColor = (number) => {
+  const colors = [
+    '#FF6B8A', // Romantic pink
+    '#7FB069', // Adventurous green
+    '#5B9BD5', // Active blue
+    '#F4A261', // Cozy orange
+    '#E76F51', // Fun red
+    '#E9C46A', // Foodie yellow
+    '#8B9DC3', // Chill purple
+    '#F7931E', // Spontaneous orange
+    '#6A994E', // Budget green
+    '#C9A87D', // Luxury gold
+  ];
+  return colors[number % colors.length];
+};
+
 // Platform-specific location icons
 const getLocationIcon = (location, size = 20) => {
   const locationConfig = {
@@ -605,8 +638,22 @@ const SmallCard = ({ item, sequenceNumber, isRevealed, onPress }) => {
     >
       <View style={{ alignItems: 'center' }}>
         <Text style={[
-          { fontSize: 24, fontWeight: 'bold', textAlign: 'center' },
-          isRevealed && { color: '#07F' }
+          { 
+            fontSize: 24, 
+            fontWeight: 'bold', 
+            textAlign: 'center',
+            fontFamily: getFunFont(sequenceNumber),
+            color: getFunColor(sequenceNumber),
+            textShadowColor: 'rgba(0,0,0,0.1)',
+            textShadowOffset: { width: 1, height: 1 },
+            textShadowRadius: 2,
+          },
+          isRevealed && { 
+            color: '#007AFF',
+            textShadowColor: 'rgba(0,122,255,0.3)',
+            textShadowOffset: { width: 0, height: 0 },
+            textShadowRadius: 4,
+          }
         ]}>
           {sequenceNumber}
         </Text>
@@ -614,7 +661,7 @@ const SmallCard = ({ item, sequenceNumber, isRevealed, onPress }) => {
           <MaterialCommunityIcons 
             name="check-circle" 
             size={16} 
-            color="#007F" 
+            color="#007AFF" 
             style={{ marginTop: 4 }}
           />
         )}
@@ -726,7 +773,16 @@ const SpinningWheel = ({ visible, onClose, onSelectCard }) => {
             }
           ]}
         >
-          <Text style={styles.wheelNumber}>{i}</Text>
+          <Text style={[
+            styles.wheelNumber,
+            {
+              fontFamily: getFunFont(i),
+              color: getFunColor(i),
+              textShadowColor: 'rgba(0,0,0,0.2)',
+              textShadowOffset: { width: 1, height: 1 },
+              textShadowRadius: 2,
+            }
+          ]}>{i}</Text>
         </View>
       );
     }
@@ -868,7 +924,16 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
         {/* Header */}
         <View style={styles.expandedCardHeader}>
           <View style={styles.headerLeft}>
-            <Text style={styles.expandedCardNumber}>#{item.sequenceNumber}</Text>
+            <Text style={[
+              styles.expandedCardNumber,
+              {
+                fontFamily: getFunFont(item.sequenceNumber),
+                color: getFunColor(item.sequenceNumber),
+                textShadowColor: 'rgba(0,0,0,0.1)',
+                textShadowOffset: { width: 1, height: 1 },
+                textShadowRadius: 2,
+              }
+            ]}>#{item.sequenceNumber}</Text>
             <View style={[styles.categoryBadge, { backgroundColor: categoryInfo.color }]}> 
               <Text style={styles.categoryBadgeText}>{categoryInfo.icon}</Text>
             </View>
@@ -906,21 +971,22 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
         </View>
 
         {/* Action Buttons */}
-        <View style={styles.expandedActionButtons}>
+        <View style={[styles.expandedActionButtons, { flexDirection: 'row', gap: 12, marginTop: 8 }]}> 
           <TouchableOpacity 
-            style={[styles.expandedActionButton, { backgroundColor: '#007AFF' }]} 
+            style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 48, borderRadius: 12, backgroundColor: '#007AFF' }} 
             onPress={() => shareDateIdea(item)}
+            activeOpacity={0.85}
           >
-            <MaterialCommunityIcons name="share-variant" size={18} color="#FFFFFF" />
-            <Text style={styles.expandedActionButtonText}>Share</Text>
+            <MaterialCommunityIcons name="share-variant" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
+            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', fontFamily: 'System' }}>Share</Text>
           </TouchableOpacity>
-          
           <TouchableOpacity 
-            style={[styles.expandedActionButton, { backgroundColor: '#FF9500' }]} 
+            style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 48, borderRadius: 12, backgroundColor: '#FF6B8A' }} 
             onPress={onAddToCalendar}
+            activeOpacity={0.85}
           >
-            <MaterialCommunityIcons name="calendar" size={18} color="#FFFFFF" />
-            <Text style={styles.expandedActionButtonText}>Calendar</Text>
+            <MaterialCommunityIcons name="calendar" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
+            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', fontFamily: 'System' }}>Calendar</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -992,14 +1058,14 @@ const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
   };
 
   const handleDateChange = (event, date) => {
-    setShowDatePicker(Platform.OS === 'ios');
+    setShowDatePicker(false);
     if (date) {
       setSelectedDate(date);
     }
   };
 
   const handleTimeChange = (event, time) => {
-    setShowTimePicker(Platform.OS === 'ios');
+    setShowTimePicker(false);
     if (time) {
       setSelectedTime(time);
     }
@@ -1032,12 +1098,12 @@ const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
                 onPress={() => setShowDatePicker(true)}
               >
                 <View style={styles.dateTimeButtonContent}>
-                  <MaterialCommunityIcons name="calendar" size={20} color="#FF6B8A" />
+                  <MaterialCommunityIcons name="calendar" size={20} color="#007AFF" />
                   <View style={styles.dateTimeTextContainer}>
                     <Text style={styles.dateTimeLabel}>Date</Text>
                     <Text style={styles.dateTimeValue}>{formatDate(selectedDate)}</Text>
                   </View>
-                  <MaterialCommunityIcons name="chevron-right" size={20} color="#FF6B8A" />
+                  <MaterialCommunityIcons name="chevron-right" size={20} color="#007AFF" />
                 </View>
               </TouchableOpacity>
 
@@ -1046,16 +1112,16 @@ const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
                 onPress={() => setShowTimePicker(true)}
               >
                 <View style={styles.dateTimeButtonContent}>
-                  <MaterialCommunityIcons name="clock-outline" size={20} color="#FF6B8A" />
+                  <MaterialCommunityIcons name="clock-outline" size={20} color="#007AFF" />
                   <View style={styles.dateTimeTextContainer}>
                     <Text style={styles.dateTimeLabel}>Time</Text>
                     <Text style={styles.dateTimeValue}>{formatTime(selectedTime)}</Text>
                   </View>
-                  <MaterialCommunityIcons name="chevron-right" size={20} color="#FF6B8A" />
+                  <MaterialCommunityIcons name="chevron-right" size={20} color="#007AFF" />
                 </View>
               </TouchableOpacity>
             </View>
-
+            <View style={{ height: 1, backgroundColor: '#F2F2F7', marginVertical: 16 }} />
             <View style={styles.detailsSection}>
               <Text style={styles.sectionTitle}>📝 Event Details</Text>
               
@@ -1096,11 +1162,11 @@ const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
           </ScrollView>
 
           <View style={styles.calendarModalActions}>
-            <TouchableOpacity onPress={onClose} style={styles.cancelButton}>
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </TouchableOpacity>
             <TouchableOpacity onPress={handleSchedule} style={styles.scheduleButton}>
               <Text style={styles.scheduleButtonText}>Schedule Date</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onClose} style={styles.cancelButton}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1110,7 +1176,7 @@ const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
           <DateTimePicker
             value={selectedDate}
             mode="date"
-            display="default"
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
             onChange={handleDateChange}
             minimumDate={new Date()}
             maximumDate={new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)} // 1 year from now
@@ -1122,7 +1188,7 @@ const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
           <DateTimePicker
             value={selectedTime}
             mode="time"
-            display="default"
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
             onChange={handleTimeChange}
             is24Hour={false}
           />
@@ -2150,89 +2216,83 @@ export default function App() {
 
   // Main app content
   return (
-    <View style={{ flex: 1 }}>
-      <LinearGradient
-        colors={["#f8fafc", "#fceabb", "#f8fafc"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={{ flex: 1 }}
-      >
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
-          <RNStatusBar 
-            barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} 
-            backgroundColor={'#FFFFFF'} 
-          />
-          <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-          <AppHeader 
-            revealedCards={revealedCards}
-            theme={theme}
-            platformStyles={{ fontFamily: 'System' }}
-          />
-          <CategoryFilter 
-            selectedCategory={selectedCategory}
-            onCategorySelect={(key) => {
-              if (key !== selectedCategory) {
-                setShowHistory(false);
-                setSelectedCategory(key);
-              }
-            }}
-            onRandomSelect={() => {
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+        <RNStatusBar 
+          barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} 
+          backgroundColor={'#FFFFFF'} 
+        />
+        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+        <AppHeader 
+          revealedCards={revealedCards}
+          theme={theme}
+          platformStyles={{ fontFamily: 'System' }}
+        />
+        <CategoryFilter 
+          selectedCategory={selectedCategory}
+          onCategorySelect={(key) => {
+            if (key !== selectedCategory) {
               setShowHistory(false);
-              setShowSpinningWheel(true);
-            }}
-          />
-          <FlatList
-            data={gridData}
-            renderItem={renderCard}
-            keyExtractor={(item, idx) => item.id ? item.id.toString() : `placeholder-${idx}`}
-            numColumns={4}
-            key="4-column-grid"
-            contentContainerStyle={[styles.gridContainer, { backgroundColor: 'rgba(255, 245, 230, 0.25)', borderRadius: 18, marginHorizontal: 8 }]}
-            showsVerticalScrollIndicator={false}
-          />
-          {/* Professional Bottom Action Bar */}
-          <View style={styles.tabBar}>
-            <View style={styles.tabBarContent}>
-              <PlatformButton
-  onPress={() => {
-    setExpandedCard(null);
-    setShowCalendarModal(false);
-    setShowInvitationModal(false);
-    setShowReminderModal(false);
-    setShowSpinningWheel(false);
-    setShowHistory(true);
-  }}
-  style={{}}
-  theme={theme}
-  platformStyles={{ fontFamily: 'System' }}
-  buttonColor="#FFB300"
->
-  {getActionIcon('history', 24, '#FFB300')}
-  History
-</PlatformButton>
-              <PlatformButton
-                onPress={resetAppData}
-                style={{}}
-                theme={theme}
-                platformStyles={{ fontFamily: 'System' }}
-                buttonColor="#FFB300"
-              >
-                {getActionIcon('reset', 24, '#FFB300')}
-                Reset
-              </PlatformButton>
-            </View>
+              setSelectedCategory(key);
+            }
+          }}
+          onRandomSelect={() => {
+            setShowHistory(false);
+            setShowSpinningWheel(true);
+          }}
+        />
+        <FlatList
+          data={gridData}
+          renderItem={renderCard}
+          keyExtractor={(item, idx) => item.id ? item.id.toString() : `placeholder-${idx}`}
+          numColumns={4}
+          key="4-column-grid"
+          contentContainerStyle={[styles.gridContainer, { backgroundColor: '#fff', borderRadius: 18, marginHorizontal: 8 }]}
+          showsVerticalScrollIndicator={false}
+        />
+        {/* Professional Bottom Action Bar */}
+        <View style={styles.tabBar}>
+          <View style={styles.tabBarContent}>
+            <PlatformButton
+              onPress={() => {
+                setExpandedCard(null);
+                setShowCalendarModal(false);
+                setShowInvitationModal(false);
+                setShowReminderModal(false);
+                setShowSpinningWheel(false);
+                setShowHistory(true);
+              }}
+              style={{}}
+              theme={theme}
+              platformStyles={{ fontFamily: 'System' }}
+              buttonColor="#007AFF"
+            >
+              {getActionIcon('history', 24, '#007AFF')}
+              History
+            </PlatformButton>
+            <PlatformButton
+              onPress={resetAppData}
+              style={{}}
+              theme={theme}
+              platformStyles={{ fontFamily: 'System' }}
+              buttonColor="#007AFF"
+            >
+              {getActionIcon('reset', 24, '#007AFF')}
+              Reset
+            </PlatformButton>
           </View>
-          {expandedCard && (
-            <ExpandedCard
-              item={expandedCard}
-              onClose={closeExpandedCard}
-              onShareEmail={shareByEmail}
-              onShareSMS={shareBySMS}
-              onAddToCalendar={() => setShowCalendarModal(true)}
-              onSetReminder={setReminder}
-            />
-          )}
-          {showHistory && (
+        </View>
+        {expandedCard && (
+          <ExpandedCard
+            item={expandedCard}
+            onClose={closeExpandedCard}
+            onShareEmail={shareByEmail}
+            onShareSMS={shareBySMS}
+            onAddToCalendar={() => setShowCalendarModal(true)}
+            onSetReminder={setReminder}
+          />
+        )}
+        {showHistory && (
   <TouchableOpacity 
     style={styles.modalOverlay} 
     activeOpacity={1} 
@@ -2255,7 +2315,16 @@ export default function App() {
                   ) : (
                     revealedCards.map((card, index) => (
                       <View key={index} style={styles.historyItem}>
-                        <Text style={styles.historyNumber}>#{card.sequenceNumber || card.id}</Text>
+                        <Text style={[
+                          styles.historyNumber,
+                          {
+                            fontFamily: getFunFont(card.sequenceNumber || card.id),
+                            color: getFunColor(card.sequenceNumber || card.id),
+                            textShadowColor: 'rgba(0,0,0,0.1)',
+                            textShadowOffset: { width: 1, height: 1 },
+                            textShadowRadius: 1,
+                          }
+                        ]}>#{card.sequenceNumber || card.id}</Text>
                         <View style={{ flex: 1 }}>
                           <Text style={styles.historyText}>
                             {card.idea || `Date idea #${card.id} - Coming soon!`}
@@ -2275,30 +2344,29 @@ export default function App() {
     </TouchableOpacity>
   </TouchableOpacity>
 )}
-          <CalendarModal
-            visible={showCalendarModal}
-            onClose={() => setShowCalendarModal(false)}
-            onSchedule={handleScheduleDate}
-            dateIdea={expandedCard}
-          />
-          <InvitationModal
-            visible={showInvitationModal}
-            onClose={() => setShowInvitationModal(false)}
-            invitationData={invitationData}
-          />
-          <ReminderModal
-            visible={showReminderModal}
-            onClose={() => setShowReminderModal(false)}
-            onSchedule={scheduleAdvancedReminder}
-            dateIdea={expandedCard}
-          />
-          <SpinningWheel
-            visible={showSpinningWheel}
-            onClose={() => setShowSpinningWheel(false)}
-            onSelectCard={handleWheelCardSelect}
-          />
-        </SafeAreaView>
-      </LinearGradient>
+        <CalendarModal
+          visible={showCalendarModal}
+          onClose={() => setShowCalendarModal(false)}
+          onSchedule={handleScheduleDate}
+          dateIdea={expandedCard}
+        />
+        <InvitationModal
+          visible={showInvitationModal}
+          onClose={() => setShowInvitationModal(false)}
+          invitationData={invitationData}
+        />
+        <ReminderModal
+          visible={showReminderModal}
+          onClose={() => setShowReminderModal(false)}
+          onSchedule={scheduleAdvancedReminder}
+          dateIdea={expandedCard}
+        />
+        <SpinningWheel
+          visible={showSpinningWheel}
+          onClose={() => setShowSpinningWheel(false)}
+          onSelectCard={handleWheelCardSelect}
+        />
+      </SafeAreaView>
     </View>
   );
 }
@@ -2592,9 +2660,9 @@ const styles = StyleSheet.create({
     left: 16,
     right: 16,
     height: 60,
-    backgroundColor: '#fffbe6',
+    backgroundColor: '#FFFFFF',
     borderTopWidth: 0.5,
-    borderTopColor: '#ffe082',
+    borderTopColor: '#E5E5E7',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
@@ -2619,7 +2687,7 @@ const styles = StyleSheet.create({
   tabBarButtonText: {
     fontSize: 10,
     fontWeight: 400,
-    color: '#8E8E93',
+    color: '#86868B',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     marginTop: 2,
     textAlign: 'center',
@@ -2668,6 +2736,7 @@ const styles = StyleSheet.create({
   },
   inputGroup: {
     marginBottom: 16,
+    paddingVertical: 8,
   },
   inputLabel: {
     fontSize: 12,
@@ -2676,14 +2745,14 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   textInput: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#222',
     fontFamily: 'System',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: '#E0E0E0',
-    borderRadius: 8,
+    borderRadius: 10,
   },
   calendarModalOverlay: {
     flex: 1,
@@ -2693,10 +2762,16 @@ const styles = StyleSheet.create({
   },
   calendarModalContent: {
     width: '90%',
+    maxWidth: 400,
     backgroundColor: '#fff',
-    padding: 24,
+    padding: 20,
     borderRadius: 16,
-    elevation: 4,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    marginVertical: 40,
   },
   calendarModalHeader: {
     flexDirection: 'row',
@@ -2706,45 +2781,38 @@ const styles = StyleSheet.create({
   },
   calendarModalTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#222',
+    fontWeight: '700',
+    color: '#1D1D1F',
     fontFamily: 'System',
   },
   calendarModalBody: {
     marginBottom: 24,
   },
   calendarModalActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    marginTop: 20,
   },
   cancelButton: {
-    flex: 1,
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    borderRadius: 8,
-    marginRight: 12,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
   },
   cancelButtonText: {
-    fontSize: 14,
-    color: '#666',
+    color: '#86868B',
+    fontSize: 16,
     fontFamily: 'System',
   },
   scheduleButton: {
-    flex: 1,
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: '#FF6B8A',
-    borderRadius: 8,
-    justifyContent: 'center',
+    backgroundColor: '#007AFF',
+    borderRadius: 12,
+    height: 48,
     alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
   },
   scheduleButtonText: {
-    fontSize: 14,
     color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
     fontFamily: 'System',
   },
   invitationModalOverlay: {
@@ -2794,14 +2862,15 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   sectionTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#222',
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1D1D1F',
     fontFamily: 'System',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   inputGroup: {
-    marginBottom: 16,
+    marginBottom: 12,
+    paddingVertical: 4,
   },
   inputLabel: {
     fontSize: 12,
@@ -2810,14 +2879,15 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   textInput: {
-    fontSize: 14,
-    color: '#222',
+    fontSize: 16,
+    color: '#1D1D1F',
     fontFamily: 'System',
-    paddingVertical: 8,
+    paddingVertical: 10,
     paddingHorizontal: 12,
     borderWidth: 1,
     borderColor: '#E0E0E0',
-    borderRadius: 8,
+    borderRadius: 10,
+    backgroundColor: '#FAFAFA',
   },
   invitationModalActions: {
     flexDirection: 'row',
@@ -3199,7 +3269,7 @@ const styles = StyleSheet.create({
   },
   expandedActionButtonText: {
     fontSize: 13,
-    fontWeight: 50,
+    fontWeight: 500,
     color: '#FFFFFF',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     marginTop: 4,
