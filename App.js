@@ -16,7 +16,11 @@ import {
   Modal,
   TextInput,
   Easing,
-  PanResponder
+  PanResponder,
+  TouchableHighlight,
+  ActionSheetIOS,
+  Appearance,
+  Share
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -26,6 +30,10 @@ import * as Linking from 'expo-linking';
 import * as Calendar from 'expo-calendar';
 import * as Notifications from 'expo-notifications';
 import { MaterialCommunityIcons, FontAwesome5, Feather } from '@expo/vector-icons';
+
+// Platform-specific icon imports
+import { Ionicons } from '@expo/vector-icons'; // SF Symbols equivalent for iOS
+import { MaterialIcons } from '@expo/vector-icons'; // Material Icons for Android
 
 const { width, height } = Dimensions.get('window');
 
@@ -47,39 +55,118 @@ const categories = {
   random: { iconSet: 'MaterialCommunityIcons', icon: 'slot-machine', color: '#D4A5A5', name: 'Random', description: 'Spin & Discover' },
 };
 
-// Modern CategoryIcon
-const CategoryIcon = ({ category, size = 32, color = null, isSelected = false }) => {
-  const { iconSet, icon, color: defaultColor } = categories[category] || {};
-  const IconComponent = iconSet === 'FontAwesome5' ? FontAwesome5 : iconSet === 'Feather' ? Feather : MaterialCommunityIcons;
-  return (
-    <View style={{
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: isSelected ? 'rgba(255,255,255,0.2)' : '#fff',
-      borderRadius: size / 2,
-      width: size + 8,
-      height: size + 8,
-      shadowColor: color || defaultColor,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.15,
-      shadowRadius: 6,
-      elevation: 3,
-      borderWidth: isSelected ? 1 : 0,
-      borderColor: isSelected ? 'rgba(255,255,255,0.3)' : 'transparent',
-    }}>
-      <IconComponent name={icon} size={size} color={color || defaultColor} />
-    </View>
-  );
+// Platform-specific icon mapping
+const getPlatformIcon = (iosIcon, androidIcon, size = 24, color = '#000') => {
+  if (Platform.OS === 'ios') {
+    return <Ionicons name={iosIcon} size={size} color={color} />;
+  } else {
+    return <MaterialIcons name={androidIcon} size={size} color={color} />;
+  }
 };
 
-// Modern BudgetIcon
-const BudgetIcon = ({ budget, size = 20 }) => {
-  const budgetConfig = {
-    low: { icon: <FontAwesome5 name="dollar-sign" size={size} color="#6A994E" />, label: "$", color: "#6A994E", description: "Budget Friendly" },
-    medium: { icon: <FontAwesome5 name="dollar-sign" size={size} color="#F4A261" />, label: "$$", color: "#F4A261", description: "Mid-Range" },
-    high: { icon: <FontAwesome5 name="dollar-sign" size={size} color="#C9A87D" />, label: "$$$", color: "#C9A87D", description: "Premium" }
+// Platform-specific category icons
+const getCategoryIcon = (category, size = 32, color = null) => {
+  const iconMap = {
+    romantic: {
+      ios: 'heart',
+      android: 'favorite',
+      fallback: 'heart'
+    },
+    adventurous: {
+      ios: 'trending-up',
+      android: 'trending-up',
+      fallback: 'hiking'
+    },
+    active: {
+      ios: 'fitness',
+      android: 'directions-run',
+      fallback: 'run'
+    },
+    cozy: {
+      ios: 'home',
+      android: 'home',
+      fallback: 'home-heart'
+    },
+    fun: {
+      ios: 'happy',
+      android: 'celebration',
+      fallback: 'party-popper'
+    },
+    foodie: {
+      ios: 'restaurant',
+      android: 'restaurant',
+      fallback: 'food'
+    },
+    chill: {
+      ios: 'cafe',
+      android: 'local-cafe',
+      fallback: 'coffee'
+    },
+    spontaneous: {
+      ios: 'dice',
+      android: 'casino',
+      fallback: 'dice-multiple'
+    },
+    budget: {
+      ios: 'wallet-outline',
+      android: 'account-balance-wallet',
+      fallback: 'dollar-sign'
+    },
+    luxury: {
+      ios: 'diamond',
+      android: 'diamond',
+      fallback: 'diamond-stone'
+    },
+    random: {
+      ios: 'shuffle',
+      android: 'shuffle',
+      fallback: 'slot-machine'
+    }
   };
-  const config = budgetConfig[budget] || budgetConfig.medium; // Fallback to medium if budget not found
+
+  const iconConfig = iconMap[category] || iconMap.random;
+  const defaultColor = color || categories[category]?.color || '#FF6B8A';
+
+  if (Platform.OS === 'ios') {
+    return <Ionicons name={iconConfig.ios} size={size} color={defaultColor} />;
+  } else if (Platform.OS === 'android') {
+    return <MaterialIcons name={iconConfig.android} size={size} color={defaultColor} />;
+  } else {
+    // Fallback to original icon system
+    const IconComponent = iconConfig.fallback.includes('FontAwesome5') ? FontAwesome5 : 
+                         iconConfig.fallback.includes('Feather') ? Feather : MaterialCommunityIcons;
+    return <IconComponent name={iconConfig.fallback} size={size} color={defaultColor} />;
+  }
+};
+
+// Platform-specific budget icons
+const getBudgetIcon = (budget, size = 20) => {
+  const budgetConfig = {
+    low: {
+      ios: 'wallet-outline',
+      android: 'account-balance-wallet',
+      label: '$',
+      color: '#6A994E',
+      description: 'Budget Friendly'
+    },
+    medium: {
+      ios: 'wallet',
+      android: 'account-balance-wallet',
+      label: '$$',
+      color: '#F4A261',
+      description: 'Mid-Range'
+    },
+    high: {
+      ios: 'diamond',
+      android: 'diamond',
+      label: '$$$',
+      color: '#C9A87D',
+      description: 'Premium'
+    }
+  };
+  
+  const config = budgetConfig[budget] || budgetConfig.medium;
+  
   return (
     <View style={{
       flexDirection: 'row',
@@ -89,19 +176,297 @@ const BudgetIcon = ({ budget, size = 20 }) => {
       paddingVertical: 3,
       borderRadius: 8,
     }}>
-      {config.icon}
+      {Platform.OS === 'ios' ? (
+        <Ionicons name={config.ios} size={size} color={config.color} />
+      ) : (
+        <MaterialIcons name={config.android} size={size} color={config.color} />
+      )}
       <Text style={{ fontSize: size * 0.6, fontWeight: 'bold', color: config.color, marginLeft: 2 }}>{config.label}</Text>
     </View>
   );
 };
 
+// Platform-specific location icons
+const getLocationIcon = (location, size = 20) => {
+  const locationConfig = {
+    indoor: {
+      ios: 'home-outline',
+      android: 'home'
+    },
+    outdoor: {
+      ios: 'leaf-outline',
+      android: 'park'
+    }
+  };
+  
+  const config = locationConfig[location] || locationConfig.indoor;
+  
+  if (Platform.OS === 'ios') {
+    return <Ionicons name={config.ios} size={size} color="#8B93C3" />;
+  } else {
+    return <MaterialIcons name={config.android} size={size} color="#8B9C3" />;
+  }
+};
+
+// Platform-specific action icons
+const getActionIcon = (action, size = 20, color = '#FF6B8A') => {
+  const actionIcons = {
+    history: {
+      ios: 'time-outline',
+      android: 'history'
+    },
+    reset: {
+      ios: 'refresh-outline',
+      android: 'refresh'
+    },
+    share: {
+      ios: 'share-outline',
+      android: 'share'
+    },
+    calendar: {
+      ios: 'calendar-outline',
+      android: 'event'
+    },
+    reminder: {
+      ios: 'notifications-outline',
+      android: 'notifications'
+    },
+    close: {
+      ios: 'close',
+      android: 'close'
+    },
+    email: {
+      ios: 'mail-outline',
+      android: 'email'
+    },
+    sms: {
+      ios: 'chatbubble-outline',
+      android: 'sms'
+    }
+  };
+  
+  const iconConfig = actionIcons[action] || actionIcons.close;
+  
+  if (Platform.OS === 'ios') {
+    return <Ionicons name={iconConfig.ios} size={size} color={color} />;
+  } else {
+    return <MaterialIcons name={iconConfig.android} size={size} color={color} />;
+  }
+};
+
+// Modern CategoryIcon - Updated to use platform-specific icons
+const CategoryIcon = ({ category, size = 32, color = null, isSelected = false }) => {
+  const { color: defaultColor } = categories[category] || {};
+  const iconColor = color || defaultColor;
+  
+  return (
+    <View style={[
+      styles.categoryIconContainer,
+      {
+        backgroundColor: isSelected ? 'rgba(255,255,255,0.2)' : '#fff',
+        borderColor: isSelected ? 'rgba(255,255,255,0.3)' : 'transparent',
+      }
+    ]}>
+      {getCategoryIcon(category, size, iconColor)}
+    </View>
+  );
+};
+
+// Modern BudgetIcon
+const BudgetIcon = ({ budget, size = 20 }) => {
+  return getBudgetIcon(budget, size);
+};
+
 // Modern LocationIcon
 const LocationIcon = ({ location, size = 20 }) => {
-  const iconMap = {
-    indoor: <MaterialCommunityIcons name="home" size={size} color="#8B9DC3" />,
-    outdoor: <MaterialCommunityIcons name="tree" size={size} color="#7FB069" />,
+  return getLocationIcon(location, size);
+};
+
+// Platform-specific color themes
+const createTheme = (colorScheme) => {
+  const isDark = colorScheme === 'dark';
+  
+  return {
+    // Platform-specific base colors
+    primary: Platform.select({
+      ios: isDark ? '#07F' : '#007AFF', // iOS blue
+      android: isDark ? '#BB86FC' : '#6200EE', // Material Design purple
+      default: isDark ? '#07F' : '#007AFF'
+    }),    
+    secondary: Platform.select({
+      ios: isDark ? '#5856D6' : '#5856D6', // iOS secondary blue
+      android: isDark ? '#3DAC6D' : '#3DAC6D', // Material Design teal
+      default: isDark ? '#5856D6' : '#5856D6'
+    }),
+    
+    // Background colors
+    background: Platform.select({
+      ios: isDark ? '#000' : '#F2F2F7', // iOS system background
+      android: isDark ? '#121212' : '#FAFAFA', // Material Design background
+      default: isDark ? '#000' : '#F2F2F7'
+    }),
+    
+    surface: Platform.select({
+      ios: isDark ? '#11E' : '#FFFFFF', // iOS secondary background
+      android: isDark ? '#110E' : '#FFFFFF', // Material Design surface
+      default: isDark ? '#11E' : '#FFFFFF'
+    }),
+    
+    // Text colors
+    text: Platform.select({
+      ios: isDark ? '#FFFFFF' : '#000000', // iOS label
+      android: isDark ? '#FFFFFF' : '#000000', // Material Design on-surface
+      default: isDark ? '#FFFFFF' : '#000000'
+    }),
+    
+    textSecondary: Platform.select({
+      ios: isDark ? '#8E8E93' : '#8E8E93', // iOS secondary label
+      android: isDark ? '#B3FFFFFF' : '#990000', // Material Design on-surface variant
+      default: isDark ? '#8E8E93' : '#8E8E93'
+    }),
+    
+    // Card colors
+    card: Platform.select({
+      ios: isDark ? '#22E' : '#FFFFFF', // iOS tertiary background
+      android: isDark ? '#22D' : '#FFFFFF', // Material Design surface variant
+      default: isDark ? '#22E' : '#FFFFFF'
+    }),
+    
+    // Border colors
+    border: Platform.select({
+      ios: isDark ? '#38383A' : '#C6C6C8', // iOS separator
+      android: isDark ? '#22D' : '#E0E0E0', // Material Design outline
+      default: isDark ? '#38383A' : '#C6C6C8'
+    }),
+    
+    // Status colors
+    success: Platform.select({
+      ios: isDark ? '#34C759' : '#34C759', // iOS green
+      android: isDark ? '#4AF50A' : '#4AF50A', // Material Design green
+      default: isDark ? '#34C759' : '#34C759'
+    }),
+    
+    error: Platform.select({
+      ios: isDark ? '#FF3B30' : '#FF3B30', // iOS red
+      android: isDark ? '#F44336' : '#F44336', // Material Design red
+      default: isDark ? '#FF3B30' : '#FF3B30'
+    }),
+    
+    warning: Platform.select({
+      ios: isDark ? '#FF9500' : '#FF9500', // iOS orange
+      android: isDark ? '#FF9800' : '#FF9800', // Material Design orange
+      default: isDark ? '#FF9500' : '#FF9500'
+    }),
+    
+    // DateUnveil specific colors (adapted for dark mode)
+    dateUnveil: {
+      romantic: isDark ? '#FF6B8A' : '#FF6B8A',
+      adventurous: isDark ? '#7FB069' : '#7FB069',
+      active: isDark ? '#5B9BD5' : '#5B9BD5',
+      cozy: isDark ? '#F4A261' : '#F4A261',
+      fun: isDark ? '#E76F51' : '#E76F51',
+      foodie: isDark ? '#E9C46A' : '#E9C46A',
+      chill: isDark ? '#8B9DC3' : '#8B9DC3',
+      spontaneous: isDark ? '#F7931E' : '#F7931E',
+      budget: isDark ? '#6A994E' : '#6A994E',
+      luxury: isDark ? '#C9A87D' : '#C9A87D',
+      random: isDark ? '#D4A5A5' : '#D4A5A5'
+    }
   };
-  return iconMap[location] || iconMap.indoor; // Fallback to indoor if location not found
+};
+
+// Custom hook for color scheme
+const useColorScheme = () => {
+  const [colorScheme, setColorScheme] = useState(Appearance.getColorScheme());
+  
+  useEffect(() => {
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+      setColorScheme(colorScheme);
+    });
+    
+    return () => subscription?.remove();
+  }, []);
+  
+  return colorScheme;
+};
+
+// Platform-specific alert/action sheet helper
+const showPlatformAlert = (title, message, options, onSelect) => {
+  if (Platform.OS === 'ios') {
+    const actionSheetOptions = [...options.map(opt => opt.text), 'Cancel'];
+    const cancelButtonIndex = actionSheetOptions.length - 1;
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: actionSheetOptions,
+        cancelButtonIndex,
+        title,
+        message,
+      },
+      (buttonIndex) => {
+        if (buttonIndex !== cancelButtonIndex && onSelect) {
+          onSelect(options[buttonIndex]);
+        }
+      }
+    );
+  } else {
+    Alert.alert(title, message, options, onSelect);
+  }
+};
+
+// Platform-specific sharing helper
+const showShareOptions = (idea, categoryInfo, onEmailShare, onSMSShare) => {
+  if (Platform.OS === 'ios') {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ['Share via Email', 'Share via SMS', 'Cancel'],
+        cancelButtonIndex: 2,
+        title: 'Share Date Idea',
+        message: 'Choose how you\'d like to share this amazing date idea',
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 0) onEmailShare();
+        if (buttonIndex === 1) onSMSShare();
+      }
+    );
+  } else {
+    Alert.alert(
+      'Share Date Idea',
+      'Choose how you\'d like to share this amazing date idea',
+      [
+        { text: 'Email', onPress: onEmailShare },
+        { text: 'SMS', onPress: onSMSShare },
+        { text: 'Cancel', style: 'cancel' },
+      ]
+    );
+  }
+};
+
+// Platform-specific confirmation helper
+const showConfirmation = (title, message, onConfirm, onCancel) => {
+  if (Platform.OS === 'ios') {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ['Confirm', 'Cancel'],
+        cancelButtonIndex: 1,
+        destructiveButtonIndex: 0,
+        title,
+        message,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 0) onConfirm();
+        if (buttonIndex === 1) onCancel();
+      }
+    );
+  } else {
+    Alert.alert(
+      title,
+      message,
+      [
+        { text: 'Cancel', style: 'cancel', onPress: onCancel },
+        { text: 'Confirm', onPress: onConfirm },
+      ]
+    );
+  }
 };
 
 // Tutorial Component
@@ -112,25 +477,25 @@ const Tutorial = ({ visible, onComplete }) => {
 
   const tutorialSteps = [
     {
-      title: "Welcome to DateUnveil!",
-      message: "Tap any card to reveal a date idea. Use filters to find what you want.",
+      title: "Welcome to DateUnveil",
+      message: "Discover 100 creative date ideas. Tap a card to reveal, filter by category, and save your favorites.",
       iconSet: 'MaterialCommunityIcons',
-      icon: 'cards',
-      color: "#FF6B8A"
+      icon: 'cards-heart',
+      color: "#007AFF"
     },
     {
       title: "Share & Save",
       message: "Found a great idea? Share it via email, message, or add to your calendar.",
       iconSet: 'MaterialCommunityIcons',
       icon: 'share-variant',
-      color: "#7FB069"
+      color: "#34C759"
     },
     {
       title: "You're Ready!",
-      message: "Start exploring your 100 date ideas!",
+      message: "Start exploring your 100 date ideas now.",
       iconSet: 'MaterialCommunityIcons',
       icon: 'rocket-launch',
-      color: "#A67DB8"
+      color: "#FF9500"
     }
   ];
 
@@ -168,86 +533,93 @@ const Tutorial = ({ visible, onComplete }) => {
   const currentTutorial = tutorialSteps[currentStep];
 
   return (
-    <View style={styles.tutorialOverlay}>
-      <View style={styles.tutorialBackground}>
-        <Animated.View 
-          style={[
-            styles.tutorialContent,
-            {
-              opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }]
-            }
-          ]}
-        >
-          <View style={{flex: 1, minHeight: 320}}>
-            <View style={[styles.tutorialHeader, { backgroundColor: currentTutorial.color + '15' }]}> 
-              <View style={[styles.tutorialIconContainer, { backgroundColor: currentTutorial.color }]}> 
-                {currentTutorial.iconSet === 'MaterialCommunityIcons' ? ( 
-                  <MaterialCommunityIcons name={currentTutorial.icon} size={32} color="#fff" /> 
-                ) : currentTutorial.iconSet === 'FontAwesome5' ? ( 
-                  <FontAwesome5 name={currentTutorial.icon} size={28} color="#fff" /> 
-                ) : ( 
-                  <Feather name={currentTutorial.icon} size={28} color="#fff" /> 
-                )} 
-              </View> 
-              <Text style={styles.tutorialTitle}>{currentTutorial.title}</Text> 
-            </View>
-            <Text style={styles.tutorialMessage}>{currentTutorial.message}</Text>
-            <View style={styles.tutorialProgress}>
-              {tutorialSteps.map((_, index) => (
-                <View 
-                  key={index} 
-                  style={[
-                    styles.progressDot,
-                    index === currentStep && [styles.progressDotActive, { backgroundColor: currentTutorial.color }]
-                  ]} 
-                />
-              ))}
-            </View>
-          </View>
-                    <View style={styles.tutorialButtons}>
-            <TouchableOpacity onPress={skipTutorial} style={[styles.nextButton, { backgroundColor: currentTutorial.color }]}>
-              <Text style={styles.nextButtonText}>Skip Tutorial</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={nextStep} style={[styles.nextButton, { backgroundColor: currentTutorial.color }]}>
-              <Text style={styles.nextButtonText}>
-                {currentStep === tutorialSteps.length - 1 ? "Let's Start! 🚀" : "Next ✨"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Animated.View>
-      </View>
+    <View style={styles.tutorialFullScreen}>
+      <Animated.View 
+        style={[
+          styles.tutorialContent,
+          {
+            opacity: fadeAnim,
+            transform: [{ translateY: slideAnim }]
+          }
+        ]}
+      >
+        <View style={styles.tutorialHeader}> 
+          <View style={[styles.tutorialIconContainer, { backgroundColor: currentTutorial.color }]}> 
+            {currentTutorial.iconSet === 'MaterialCommunityIcons' ? ( 
+              <MaterialCommunityIcons name={currentTutorial.icon} size={44} color="#FFFFFF" /> 
+            ) : currentTutorial.iconSet === 'FontAwesome5' ? ( 
+              <FontAwesome5 name={currentTutorial.icon} size={40} color="#FFFFFF" /> 
+            ) : ( 
+              <Feather name={currentTutorial.icon} size={40} color="#FFFFFF" /> 
+            )} 
+          </View> 
+          <Text style={styles.tutorialTitle}>{currentTutorial.title}</Text> 
+          <Text style={styles.tutorialSubtitle}>{currentTutorial.message}</Text>
+        </View>
+        
+        <View style={styles.tutorialProgress}>
+          {tutorialSteps.map((_, index) => (
+            <View 
+              key={index} 
+              style={[
+                styles.progressDot,
+                index === currentStep && [styles.progressDotActive, { backgroundColor: currentTutorial.color }]
+              ]} 
+            />
+          ))}
+        </View>
+        
+        <View style={styles.tutorialButtons}>
+          <TouchableOpacity onPress={skipTutorial} style={[styles.nextButton, { backgroundColor: '#F2F2F7' }]}> 
+            <Text style={[styles.nextButtonText, { color: '#1D1D1F' }]}>Skip</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={nextStep} style={[styles.nextButton, { backgroundColor: currentTutorial.color }]}> 
+            <Text style={styles.nextButtonText}>
+              {currentStep === tutorialSteps.length - 1 ? "Get Started" : "Next"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </Animated.View>
     </View>
   );
 };
 
 // Enhanced Small Card Component
-const SmallCard = ({ item, isRevealed, onPress }) => {
+const SmallCard = ({ item, sequenceNumber, isRevealed, onPress }) => {
+  const CardTouchable = Platform.OS === 'ios' ? TouchableHighlight : TouchableOpacity;
   return (
-    <TouchableOpacity style={styles.smallCard} onPress={onPress} activeOpacity={0.85}>
-      <View style={styles.cardHeader}>
-        <Text style={styles.cardNumber}>#{item.id}</Text>
-        <CategoryIcon category={item.category} size={16} />
-      </View>
-      <View style={styles.cardContent}>
-        {!isRevealed ? (
-          <View style={styles.mysteryContainer}>
-            <Text style={styles.mysteryIcon}>💫</Text>
-            <Text style={styles.tapToReveal}>Tap to reveal</Text>
-          </View>
-        ) : (
-          <Text style={styles.ideaText} numberOfLines={3}>
-            {item.idea}
-          </Text>
+    <CardTouchable
+      onPress={onPress}
+      style={[
+        styles.smallCard,
+        { justifyContent: 'center', alignItems: 'center' },
+        isRevealed && {
+          backgroundColor: '#F0F0F0',
+          opacity: 0.8,
+          borderColor: '#7FB069',
+          borderWidth: 2
+        }
+      ]}
+      underlayColor={Platform.OS === 'ios' ? '#f0f0f0' : undefined}
+      activeOpacity={Platform.OS === 'android' ? 0.85 : undefined}
+    >
+      <View style={{ alignItems: 'center' }}>
+        <Text style={[
+          { fontSize: 24, fontWeight: 'bold', textAlign: 'center' },
+          isRevealed && { color: '#07F' }
+        ]}>
+          {sequenceNumber}
+        </Text>
+        {isRevealed && (
+          <MaterialCommunityIcons 
+            name="check-circle" 
+            size={16} 
+            color="#007F" 
+            style={{ marginTop: 4 }}
+          />
         )}
       </View>
-      {isRevealed && (
-        <View style={styles.cardFooter}>
-          <BudgetIcon budget={item.budget} size={12} />
-          <LocationIcon location={item.location} size={12} />
-        </View>
-      )}
-    </TouchableOpacity>
+    </CardTouchable>
   );
 };
 
@@ -396,7 +768,7 @@ const SpinningWheel = ({ visible, onClose, onSelectCard }) => {
           
           {selectedNumber && (
             <View style={styles.resultContainer}>
-              <Text style={styles.resultText}>🎉 Card #{selectedNumber} Selected! 🎉</Text>
+              <Text style={styles.resultText}>🎉 Card {selectedNumber} Selected! 🎉</Text>
             </View>
           )}
           
@@ -426,31 +798,9 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect, onRandomSelect }) 
           ]}
           onPress={() => onCategorySelect(null)}
         >
-          <View style={{ 
-            marginBottom: 4,
-            backgroundColor: !selectedCategory ? 'rgba(255,255,255,0.2)' : '#fff',
-            borderRadius: 14,
-            width: 28,
-            height: 28,
-            alignItems: 'center',
-            justifyContent: 'center',
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: !selectedCategory ? 0.2 : 0.1,
-            shadowRadius: !selectedCategory ? 3 : 2,
-            elevation: !selectedCategory ? 3 : 2,
-            borderWidth: !selectedCategory ? 1 : 0,
-            borderColor: !selectedCategory ? 'rgba(255,255,255,0.3)' : 'transparent',
-          }}>
-            <MaterialCommunityIcons 
-              name="heart-multiple" 
-              size={20} 
-              color={!selectedCategory ? "#fff" : "#3F51B5"} 
-            />
-          </View>
           <Text style={[
             styles.categoryFilterText,
-            !selectedCategory && { color: '#ffffff' }
+            !selectedCategory && styles.categoryFilterTextActive
           ]}>All</Text>
         </TouchableOpacity>
         
@@ -459,7 +809,7 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect, onRandomSelect }) 
             key={key}
             style={[
               styles.categoryFilterButton,
-              selectedCategory === key && [styles.categoryFilterButtonActive, { backgroundColor: category.color }]
+              selectedCategory === key && styles.categoryFilterButtonActive
             ]}
             onPress={() => {
               if (key === 'random') {
@@ -469,23 +819,30 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect, onRandomSelect }) 
               }
             }}
           >
-            <View style={{ marginBottom: 4 }}>
-              <CategoryIcon 
-                category={key} 
-                size={20} 
-                color={selectedCategory === key ? "#fff" : category.color}
-                isSelected={selectedCategory === key}
-              />
-            </View>
             <Text style={[
               styles.categoryFilterText,
-              selectedCategory === key && { color: '#ffffff' }
+              selectedCategory === key && styles.categoryFilterTextActive
             ]}>{category.name}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
   );
+};
+
+// Add share function
+const shareDateIdea = async (item) => {
+  try {
+    const categoryInfo = categories[item.category] || categories.romantic;
+    const shareMessage = `I just discovered this amazing date idea: ${item.idea}\n\nCategory: ${categoryInfo.name}\nBudget: ${item.budget === 'low' ? '$' : item.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${item.location}\n\nShared via DateUnveil\n\nLet's make it happen!`;
+    
+    await Share.share({
+      message: shareMessage,
+      title: 'Amazing Date Idea',
+    });
+  } catch (error) {
+    console.error('Share error:', error);
+  }
 };
 
 // Enhanced Expanded Card Component
@@ -503,7 +860,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
     luxury: { name: 'Luxury', icon: '💎', color: '#C9A87D' },
     random: { name: 'Random', icon: '🎰', color: '#D4A5A5' },
   };
-  const categoryInfo = categories[item.category] || categories.romantic; // Fallback to romantic if category not found
+  const categoryInfo = categories[item.category] || categories.random;
   
   return (
     <View style={styles.expandedCardOverlay}>
@@ -511,60 +868,67 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
         {/* Header */}
         <View style={styles.expandedCardHeader}>
           <View style={styles.headerLeft}>
-            <Text style={styles.cardNumber}>#{item.id}</Text>
-            <View style={[styles.categoryBadge, { backgroundColor: categoryInfo.color }]}>
-              <Text style={styles.categoryIcon}>{categoryInfo.icon}</Text>
+            <Text style={styles.expandedCardNumber}>#{item.sequenceNumber}</Text>
+            <View style={[styles.categoryBadge, { backgroundColor: categoryInfo.color }]}> 
+              <Text style={styles.categoryBadgeText}>{categoryInfo.icon}</Text>
             </View>
           </View>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <MaterialCommunityIcons name="close" size={24} color="#757575" />
+            <MaterialCommunityIcons name="close" size={24} color="#86868B" />
           </TouchableOpacity>
         </View>
         
         {/* Main Content */}
-        <View style={[styles.expandedCardBody, { backgroundColor: '#FFF5F7' }]}>
-          <Text style={styles.dateIdea}>{item.idea || 'No idea found'}</Text>
-          <Text style={{ fontSize: 12, color: '#666', marginTop: 8 }}>Debug: Card #{item.id}</Text>
+        <View style={styles.expandedCardBody}>
+          {typeof item.idea === 'undefined' ? (
+            <Text style={styles.dateIdeaText}>Loading...</Text>
+          ) : (
+            <Text style={styles.dateIdeaText}>
+              {item.placeholder ? 'Date idea coming soon!' : (item.idea || 'No idea found')}
+            </Text>
+          )}
           
           {/* Quick Info */}
-          <View style={styles.quickInfo}>
-            <BudgetIcon budget={item.budget} />
-            <LocationIcon location={item.location} />
+          <View style={styles.quickInfoContainer}>
+            <View style={styles.infoItem}>
+              <Text style={styles.infoLabel}>Budget</Text>
+              <Text style={styles.infoValue}>
+                {item.budget === 'low' ? '$' : item.budget === 'medium' ? '$$' : '$$$'}
+              </Text>
+            </View>
+            <View style={styles.infoItem}>
+              <Text style={styles.infoLabel}>Location</Text>
+              <Text style={styles.infoValue}>
+                {item.location === 'indoor' ? 'Indoor' : 'Outdoor'}
+              </Text>
+            </View>
           </View>
         </View>
 
         {/* Action Buttons */}
-        <View style={styles.actionButtons}>
+        <View style={styles.expandedActionButtons}>
           <TouchableOpacity 
-            style={[styles.actionButton, { backgroundColor: '#FF6B8A' }]} 
-            onPress={onShareEmail}
+            style={[styles.expandedActionButton, { backgroundColor: '#007AFF' }]} 
+            onPress={() => shareDateIdea(item)}
           >
-            <MaterialCommunityIcons name="email" size={18} color="#ffffff" />
-            <Text style={styles.actionButtonText}>Email</Text>
+            <MaterialCommunityIcons name="share-variant" size={18} color="#FFFFFF" />
+            <Text style={styles.expandedActionButtonText}>Share</Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
-            style={[styles.actionButton, { backgroundColor: '#7FB069' }]} 
-            onPress={onShareSMS}
-          >
-            <MaterialCommunityIcons name="message" size={18} color="#ffffff" />
-            <Text style={styles.actionButtonText}>SMS</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={[styles.actionButton, { backgroundColor: '#F4A261' }]} 
+            style={[styles.expandedActionButton, { backgroundColor: '#FF9500' }]} 
             onPress={onAddToCalendar}
           >
-            <MaterialCommunityIcons name="calendar" size={18} color="#ffffff" />
-            <Text style={styles.actionButtonText}>Calendar</Text>
+            <MaterialCommunityIcons name="calendar" size={18} color="#FFFFFF" />
+            <Text style={styles.expandedActionButtonText}>Calendar</Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
-            style={[styles.actionButton, { backgroundColor: '#A67DB8' }]} 
+            style={[styles.expandedActionButton, { backgroundColor: '#AF52DE' }]} 
             onPress={onSetReminder}
           >
-            <MaterialCommunityIcons name="bell" size={18} color="#ffffff" />
-            <Text style={styles.actionButtonText}>Remind</Text>
+            <MaterialCommunityIcons name="bell" size={18} color="#FFFFFF" />
+            <Text style={styles.expandedActionButtonText}>Remind</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -1222,22 +1586,92 @@ const ReminderModal = ({ visible, onClose, onSchedule, dateIdea }) => {
   );
 };
 
-export default function App() {
-  const categories = {
-    romantic: { name: 'Romantic', icon: '💕', color: '#FF6B8A' },
-    adventurous: { name: 'Adventurous', icon: '🏔️', color: '#7FB069' },
-    active: { name: 'Active', icon: '⚡', color: '#5B9BD5' },
-    cozy: { name: 'Cozy', icon: '🏠', color: '#F4A261' },
-    fun: { name: 'Fun', icon: '🎉', color: '#E76F51' },
-    foodie: { name: 'Foodie', icon: '🍕', color: '#E9C46A' },
-    chill: { name: 'Chill', icon: '😌', color: '#8B9DC3' },
-    spontaneous: { name: 'Spontaneous', icon: '🎲', color: '#F7931E' },
-    budget: { name: 'Budget-Friendly', icon: '💰', color: '#6A994E' },
-    luxury: { name: 'Luxury', icon: '💎', color: '#C9A87D' },
-    random: { name: 'Random', icon: '🎰', color: '#D4A5A5' },
-  };
+// Refactored Header - Fix theme integration
+const AppHeader = ({ revealedCards, theme, platformStyles }) => {
+  const revealedCount = revealedCards?.length || 0;
   
-  const [revealedCards, setRevealedCards] = useState(new Set());
+  if (!theme || !platformStyles) {
+    return (
+      <View style={styles.header}> 
+        <View style={styles.headerContent}>
+          {/* Removed app name and subtitle for a clean header */}
+          <View style={styles.progressContainer}>
+            <Text style={styles.progressText}>
+              {revealedCount} / 100 Revealed
+            </Text>
+            <View style={styles.progressBar}>
+              <View style={[styles.progressFill, { width: `${(revealedCount / 100) * 100}%` }]} />
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  return (
+    <View style={[styles.header, { backgroundColor: '#fff' }]}> 
+      <View style={styles.headerContent}>
+        {/* Removed app name and subtitle for a clean header */}
+        <View style={styles.progressContainer}>
+          <Text style={[styles.progressText, { color: '#1D1D1F', fontFamily: 'System' }]}> 
+            {revealedCount} / 100 Revealed
+          </Text>
+          <View style={[styles.progressBar, { backgroundColor: '#E5E5E7' }]}> 
+            <View style={[styles.progressFill, { 
+              backgroundColor: '#007AFF',
+              width: `${(revealedCount / 100) * 100}%` 
+            }]} />
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+// Refactored Button - Fix TouchableHighlight child issue and theme access
+const PlatformButton = ({ onPress, children, style, icon, iconColor, theme, platformStyles, buttonColor }) => {
+  const buttonContent = (
+    <View style={[
+      styles.tabBarButton, 
+      style
+    ]}> 
+      {icon && (
+        <View style={styles.tabBarIconContainer}>
+          {icon}
+        </View>
+      )}
+      <Text style={[
+        styles.tabBarButtonText, 
+        { 
+          fontFamily: 'System',
+          color: '#800000000',
+          fontWeight: '400',
+          fontSize: 10,
+          marginTop:2
+        }
+      ]}> 
+        {children}
+      </Text>
+    </View>
+  );
+
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={{ flex: 1, alignItems: 'center' }}
+      activeOpacity={0.7}
+    >
+      {buttonContent}
+    </TouchableOpacity>
+  );
+};
+
+export default function App() {
+  const colorScheme = useColorScheme();
+  const theme = createTheme(colorScheme);
+  
+  // Replace revealedCards state with an array to preserve order
+  const [revealedCards, setRevealedCards] = useState([]);
   const [expandedCard, setExpandedCard] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -1253,8 +1687,23 @@ export default function App() {
     // Load revealed cards from AsyncStorage on mount
     AsyncStorage.getItem('revealedCards').then(data => {
       if (data) {
-        const revealed = JSON.parse(data);
-        setRevealedCards(new Set(revealed));
+        try {
+          const parsed = JSON.parse(data);
+          // If old format (array of ids), convert to array of card objects
+          if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === 'number') {
+            // Map ids to card objects using dateIdeasData
+            const converted = parsed.map(id => {
+              const found = dateIdeasData.find(card => card.id === id);
+              return found ? { ...found } : { id, idea: `Date idea #${id} - Coming soon!` };
+            });
+            setRevealedCards(converted);
+            AsyncStorage.setItem('revealedCards', JSON.stringify(converted));
+          } else {
+            setRevealedCards(parsed);
+          }
+        } catch {
+          setRevealedCards([]);
+        }
       }
     });
     
@@ -1269,15 +1718,14 @@ export default function App() {
     Notifications.requestPermissionsAsync();
   }, []);
 
-  const handleCardPress = (item) => {
-    if (!revealedCards.has(item.id)) {
-      // First time revealing this card
-      const newRevealed = new Set([...revealedCards, item.id]);
+  const handleCardPress = (item, sequenceNumber) => {
+    // Check if card is already revealed by id
+    if (!revealedCards.some(card => card.id === item.id)) {
+      const newRevealed = [...revealedCards, { ...item, sequenceNumber }];
       setRevealedCards(newRevealed);
-      AsyncStorage.setItem('revealedCards', JSON.stringify([...newRevealed]));
+      AsyncStorage.setItem('revealedCards', JSON.stringify(newRevealed));
     }
-    // Expand the card
-    setExpandedCard(item);
+    setExpandedCard({ ...item, sequenceNumber });
   };
 
   const closeExpandedCard = () => {
@@ -1295,7 +1743,20 @@ export default function App() {
     MailComposer.composeAsync({
       subject: 'DateUnveil: Amazing Date Idea',
       body: `I just discovered this amazing date idea: ${expandedCard.idea}\n\nCategory: ${categoryInfo.name}\nBudget: ${expandedCard.budget === 'low' ? '$' : expandedCard.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${expandedCard.location}\n\nShared via DateUnveil\n\nLet's make it happen!`,
-    }).catch(() => Alert.alert('Error', 'Unable to open email composer.'));
+    }).catch(() => {
+      if (Platform.OS === 'ios') {
+        ActionSheetIOS.showActionSheetWithOptions(
+          {
+            options: ['OK'],
+            title: 'Error',
+            message: 'Unable to open email composer.',
+          },
+          () => {}
+        );
+      } else {
+        Alert.alert('Error', 'Unable to open email composer.');
+      }
+    });
   };
 
   const shareBySMS = () => {
@@ -1309,7 +1770,20 @@ export default function App() {
     } else {
       smsUrl = `sms:?body=${encodeURIComponent(message)}`;
     }
-    Linking.openURL(smsUrl).catch(() => Alert.alert('Error', 'Unable to open SMS app.'));
+    Linking.openURL(smsUrl).catch(() => {
+      if (Platform.OS === 'ios') {
+        ActionSheetIOS.showActionSheetWithOptions(
+          {
+            options: ['OK'],
+            title: 'Error',
+            message: 'Unable to open SMS app.',
+          },
+          () => {}
+        );
+      } else {
+        Alert.alert('Error', 'Unable to open SMS app.');
+      }
+    });
   };
 
   const addToCalendar = async (eventDetails) => {
@@ -1325,7 +1799,7 @@ export default function App() {
       }
       
       if (finalStatus !== 'granted') {
-        Alert.alert(
+        showPlatformAlert(
           'Calendar Permission Required', 
           'Please enable calendar access in your device settings to add date ideas to your calendar.',
           [
@@ -1378,7 +1852,7 @@ export default function App() {
       
     } catch (error) {
       console.error('Calendar error:', error);
-      Alert.alert(
+      showPlatformAlert(
         'Calendar Error', 
         'Unable to add to calendar. Please check your calendar app and try again.',
         [
@@ -1408,7 +1882,7 @@ export default function App() {
       }
       
       if (finalStatus !== 'granted') {
-        Alert.alert(
+        showPlatformAlert(
           'Notification Permission Required',
           'Please enable notifications in your device settings to set reminders.',
           [
@@ -1424,7 +1898,10 @@ export default function App() {
       
     } catch (error) {
       console.error('Reminder error:', error);
-      Alert.alert('Error', 'Unable to set reminder. Please try again.');
+      showPlatformAlert('Error', 'Unable to set reminder. Please try again.', [
+        { text: 'OK', style: 'default' },
+        { text: 'Open Settings', onPress: () => Linking.openSettings() }
+      ], null);
     }
   };
   
@@ -1475,19 +1952,24 @@ export default function App() {
         trigger: { date: triggerTime },
       });
       
-      Alert.alert(
+      showPlatformAlert(
         'Advanced Reminder Set!', 
         `You'll be reminded about "${expandedCard.idea}" ${reminderText}.`,
         [
           { text: 'Great!', style: 'default' },
           { text: 'Set Another', onPress: () => setShowReminderModal(true) },
           { text: 'View All', onPress: () => viewAllReminders() }
-        ]
+        ],
+        null
       );
       
     } catch (error) {
       console.error('Schedule reminder error:', error);
-      Alert.alert('Error', 'Could not schedule reminder. Please try again.');
+      showPlatformAlert('Error', 'Could not schedule reminder. Please try again.', [
+        { text: 'OK', style: 'default' },
+        { text: 'Set Another', onPress: () => setShowReminderModal(true) },
+        { text: 'View All', onPress: () => viewAllReminders() }
+      ], null);
     }
   };
   
@@ -1519,41 +2001,71 @@ export default function App() {
         `• ${reminder.dateIdea}\n  ${reminder.date.toLocaleDateString()} at ${reminder.date.toLocaleTimeString()}`
       ).join('\n\n');
       
-      Alert.alert(
+      showPlatformAlert(
         'Your Date Reminders',
         reminderText,
         [
           { text: 'OK', style: 'default' },
           { text: 'Clear All', onPress: () => clearAllReminders() }
-        ]
+        ],
+        null
       );
       
     } catch (error) {
       console.error('View reminders error:', error);
-      Alert.alert('Error', 'Unable to view reminders.');
+      showPlatformAlert('Error', 'Unable to view reminders.', [
+        { text: 'OK', style: 'default' },
+        { text: 'Set Another', onPress: () => setShowReminderModal(true) },
+        { text: 'View All', onPress: () => viewAllReminders() }
+      ], null);
     }
   };
   
   const clearAllReminders = async () => {
     try {
       await Notifications.cancelAllScheduledNotificationsAsync();
-      Alert.alert('Success', 'All reminders have been cleared.');
+      showPlatformAlert('Success', 'All reminders have been cleared.', [
+        { text: 'OK', style: 'default' },
+        { text: 'Set Another', onPress: () => setShowReminderModal(true) },
+        { text: 'View All', onPress: () => viewAllReminders() }
+      ], null);
     } catch (error) {
       console.error('Clear reminders error:', error);
-      Alert.alert('Error', 'Unable to clear reminders.');
+      showPlatformAlert('Error', 'Unable to clear reminders.', [
+        { text: 'OK', style: 'default' },
+        { text: 'Set Another', onPress: () => setShowReminderModal(true) },
+        { text: 'View All', onPress: () => viewAllReminders() }
+      ], null);
     }
   };
 
   const resetAppData = async () => {
     try {
+      // Clear all stored data
       await AsyncStorage.multiRemove(['revealedCards', 'tutorialShown']);
-      setRevealedCards(new Set());
-      setShowTutorial(true);
-      setTutorialKey(k => k + 1); // force remount Tutorial
-      Alert.alert('Success', 'App data has been reset! The tutorial will appear again.');
+      
+      // Reset all state
+      setRevealedCards([]);
+      setExpandedCard(null);
+      setShowHistory(false);
+      setShowCalendarModal(false);
+      setShowInvitationModal(false);
+      setShowReminderModal(false);
+      setShowSpinningWheel(false);
+      setSelectedCategory(null);
+      
+      // Ensure tutorial is completely disabled
+      setShowTutorial(false);
+      setTutorialKey(prev => prev + 1);
+      
+      showPlatformAlert('Success', 'App data has been reset! The tutorial will appear again the next time you open the app.', [
+        { text: 'OK', style: 'default' }
+      ], null);
     } catch (error) {
       console.error('Reset app data error:', error);
-      Alert.alert('Error', 'Unable to reset app data.');
+      showPlatformAlert('Error', 'Unable to reset app data.', [
+        { text: 'OK', style: 'default' }
+      ], null);
     }
   };
 
@@ -1562,52 +2074,94 @@ export default function App() {
     if (selectedCard) {
       setExpandedCard(selectedCard);
       // Reveal the card if not already revealed
-      if (!revealedCards.has(cardNumber)) {
-        const newRevealedCards = new Set(revealedCards);
-        newRevealedCards.add(cardNumber);
+      if (!revealedCards.some(card => card.id === cardNumber)) {
+        const newRevealedCards = [...revealedCards, { ...selectedCard, sequenceNumber: cardNumber }];
         setRevealedCards(newRevealedCards);
-        AsyncStorage.setItem('revealedCards', JSON.stringify(Array.from(newRevealedCards)));
+        AsyncStorage.setItem('revealedCards', JSON.stringify(newRevealedCards));
       }
     }
   };
 
-  // Filter data based on selected category and budget
-  const filteredData = dateIdeasData.filter(item => {
-    const categoryMatch = !selectedCategory || item.category === selectedCategory;
-    return categoryMatch;
-  });
+  // New gridData logic for category filtering
+  let gridData;
+  if (!selectedCategory) {
+    // No filter: show all 100 cards
+    gridData = Array.from({ length: 100 }, (_, i) => {
+      const sequenceNumber = i + 1;
+      const existingItem = dateIdeasData.find(item => item.id === sequenceNumber);
+      if (existingItem) {
+        return { ...existingItem, sequenceNumber };
+      } else {
+        return {
+          id: sequenceNumber,
+          sequenceNumber: sequenceNumber,
+          idea: `Date idea #${sequenceNumber} - Coming soon!`,
+          category: 'random',
+          budget: 'medium',
+          location: 'indoor',
+          placeholder: true
+        };
+      }
+    });
+  } else {
+    // Filtered: show only cards for the selected category
+    gridData = dateIdeasData
+      .filter(item => item.category === selectedCategory)
+      .map((item, idx) => ({ ...item, sequenceNumber: idx + 1 }));
+  }
 
-  const renderCard = ({ item }) => (
+  // Update renderCard to always show a tappable card
+  const renderCard = ({ item, index }) => (
     <SmallCard
       item={item}
-      isRevealed={revealedCards.has(item.id)}
-      onPress={() => handleCardPress(item)}
+      sequenceNumber={index + 1}
+      isRevealed={revealedCards.some(card => card.id === item.id)}
+      onPress={() => handleCardPress(item, index + 1)}
     />
   );
 
-  const revealedIdeas = dateIdeasData
-    .filter(item => revealedCards.has(item.id))
-    .map(item => item.idea);
+  // For the history modal, show all revealed cards in order
+  const revealedIdeas = revealedCards.map(card => {
+    if (!card) return 'No idea found';
+    if (card.idea) return card.idea;
+    // Try to find in dateIdeasData as fallback
+    const found = dateIdeasData.find(g => g.id === card.id);
+    return found && found.idea ? found.idea : `Date idea #${card.id} - Coming soon!`;
+  });
 
+  // Show tutorial first if it hasn't been completed
+  if (showTutorial) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <RNStatusBar 
+          barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} 
+          backgroundColor={'#FFFFFF'} 
+        />
+        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+        
+        <Tutorial 
+          key={tutorialKey}
+          visible={true}
+          onComplete={completeTutorial}
+        />
+      </SafeAreaView>
+    );
+  }
+
+  // Main app content
   return (
     <SafeAreaView style={styles.container}>
-      <RNStatusBar barStyle="light-content" backgroundColor="#FF6B9D" />
-      <StatusBar style="light" />
+      <RNStatusBar 
+        barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} 
+        backgroundColor={'#FFFFFF'} 
+      />
+      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
       
-      <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>DateUnveil</Text>
-          <Text style={styles.headerSubtitle}>Discover Your Perfect Date Idea</Text>
-          <View style={styles.progressContainer}>
-            <Text style={styles.progressText}>
-              {revealedCards.size} / 100 Revealed
-            </Text>
-            <View style={styles.progressBar}>
-              <View style={[styles.progressFill, { width: `${(revealedCards.size / 100) * 100}%` }]} />
-            </View>
-          </View>
-        </View>
-      </View>
+      <AppHeader 
+        revealedCards={revealedCards}
+        theme={theme}
+        platformStyles={{ fontFamily: 'System' }}
+      />
 
       <CategoryFilter 
         selectedCategory={selectedCategory}
@@ -1616,9 +2170,9 @@ export default function App() {
       />
 
       <FlatList
-        data={filteredData}
+        data={gridData}
         renderItem={renderCard}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item, idx) => item.id ? item.id.toString() : `placeholder-${idx}`}
         numColumns={4}
         key="4-column-grid"
         contentContainerStyle={styles.gridContainer}
@@ -1626,23 +2180,26 @@ export default function App() {
       />
 
       {/* Professional Bottom Action Bar */}
-      <View style={styles.bottomActionBar}>
-        <View style={styles.actionBarContent}>
-          <TouchableOpacity 
-            style={styles.actionBarButton}
+      <View style={styles.tabBar}>
+        <View style={styles.tabBarContent}>
+          <PlatformButton
             onPress={() => setShowHistory(true)}
+            style={{}}
+            theme={theme}
+            platformStyles={{ fontFamily: 'System' }}
           >
-            <MaterialCommunityIcons name="history" size={20} color="#FF6B8A" />
-            <Text style={styles.actionBarButtonText}>History</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={styles.actionBarButton}
+            {getActionIcon('history', 24, '#8E8E93')}
+            History
+          </PlatformButton>
+          <PlatformButton
             onPress={resetAppData}
+            style={{}}
+            theme={theme}
+            platformStyles={{ fontFamily: 'System' }}
           >
-            <MaterialCommunityIcons name="refresh" size={20} color="#FF6B8A" />
-            <Text style={styles.actionBarButtonText}>Reset</Text>
-          </TouchableOpacity>
+            {getActionIcon('reset', 24, '#8E8E93')}
+            Reset
+          </PlatformButton>
         </View>
       </View>
 
@@ -1661,19 +2218,30 @@ export default function App() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>💕 Your Date History 💕</Text>
+              <Text style={styles.modalTitle}>Your Date History</Text>
               <TouchableOpacity onPress={() => setShowHistory(false)} style={styles.closeButton}>
                 <Text style={styles.closeButtonText}>✕</Text>
               </TouchableOpacity>
             </View>
             <ScrollView style={styles.historyList}>
-              {revealedIdeas.length === 0 ? (
-                <Text style={styles.emptyHistoryText}>No date ideas revealed yet. Start your romantic journey! 💕</Text>
+              {revealedCards.length === 0 ? (
+                <Text style={styles.emptyHistoryText}>No date ideas revealed yet. Start exploring to discover amazing date ideas.</Text>
               ) : (
-                revealedIdeas.map((idea, index) => (
+                revealedCards.map((card, index) => (
                   <View key={index} style={styles.historyItem}>
-                    <Text style={styles.historyNumber}>💕 #{index + 1}</Text>
-                    <Text style={styles.historyText}>{idea}</Text>
+                    <Text style={styles.historyNumber}>#{card.sequenceNumber || card.id}</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.historyText}>
+                        {card.idea || `Date idea #${card.id} - Coming soon!`}
+                      </Text>
+                      {card.category && (
+                        <View style={[styles.historyCategory, { backgroundColor: categories[card.category]?.color + '20' }]}>
+                          <Text style={[styles.historyCategoryText, { color: categories[card.category]?.color }]}>
+                            {categories[card.category]?.name || card.category}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
                   </View>
                 ))
               )}
@@ -1701,18 +2269,11 @@ export default function App() {
         dateIdea={expandedCard}
       />
 
-      <Tutorial 
-        key={tutorialKey}
-        visible={showTutorial}
-        onComplete={completeTutorial}
-      />
-
       <SpinningWheel
         visible={showSpinningWheel}
         onClose={() => setShowSpinningWheel(false)}
         onSelectCard={handleWheelCardSelect}
       />
-
 
     </SafeAreaView>
   );
@@ -1721,677 +2282,787 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FEF7F0',
-    paddingTop: 10,
+    backgroundColor: '#F8F9FA',
   },
   header: {
-    backgroundColor: '#FF6B8A',
-    paddingTop: 20,
-    paddingBottom: 16,
-    paddingHorizontal: 20,
+    height: Platform.OS === 'ios' ? 44 : 56,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#E5E5E7', // fixed from '#E500000'
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
   },
   headerContent: {
     alignItems: 'center',
   },
-
   headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    textShadowColor: 'rgba(0, 0, 0, 0.1)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+    fontSize: 20,
+    fontWeight: 600,
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    letterSpacing: -0.5,
   },
   headerSubtitle: {
     fontSize: 13,
-    color: '#FFF5F7',
-    fontWeight: '500',
-    marginBottom: 10,
+    fontWeight: 40,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginTop: 2,
   },
   progressContainer: {
+    marginTop: 8,
     alignItems: 'center',
-    width: '100%',
   },
   progressText: {
-    fontSize: 11,
-    color: '#FFF5F7',
-    fontWeight: '600',
+    fontSize: 12,
+    fontWeight: 50,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     marginBottom: 4,
   },
   progressBar: {
-    width: '80%',
-    height: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: 2,
+    width: 120,
+    height: 3,
+    borderRadius: 1.5,
+    backgroundColor: '#E5E5E7',
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#ffffff',
-    borderRadius: 2,
+    borderRadius: 1.5,
+    backgroundColor: '#007AFF',
   },
   categoryFilterContainer: {
-    backgroundColor: '#ffffff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0E6E0',
-    shadowColor: '#FF6B8A',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#E5E5E7',
   },
   categoryFilter: {
-    backgroundColor: '#ffffff',
+    flexGrow: 1,
   },
   categoryFilterContent: {
-    paddingHorizontal: 15,
-    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingRight: 16,
   },
   categoryFilterButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#F0E6E0',
-    marginRight: 10,
-    backgroundColor: '#FEF7F0',
-    alignItems: 'center',
     minWidth: 80,
+    height: 32,
+    paddingHorizontal: 16,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#E5E5E7',
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
   categoryFilterButtonActive: {
-    backgroundColor: '#FF6B8A',
-    borderColor: '#FF6B8A',
+    backgroundColor: '#07F',
+    borderColor: '#007AFF',
   },
-
   categoryFilterText: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: '#FF6B8A',
+    fontSize: 13,
+    fontWeight: 500,
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
-
+  categoryFilterTextActive: {
+    color: '#FFFFFF',
+  },
   gridContainer: {
-    padding: 12,
+    padding: 16,
     paddingBottom: 100,
   },
   smallCard: {
     width: (width - 48) / 4,
-    height: 120,
-    backgroundColor: '#FFF',
-    borderRadius: 12,
+    height: 88,
     margin: 4,
-    padding: 8,
-    shadowColor: '#FF6B8A',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
-    borderWidth: 1,
-    borderColor: '#F0E6E0',
-    overflow: 'hidden',
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-    width: '100%',
-  },
-  cardNumber: {
-    fontSize: 7,
-    fontWeight: '500',
-    color: '#D4A5A5',
-  },
-  cardContent: {
-    flex: 1,
+    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  mysteryContainer: {
-    alignItems: 'center',
-  },
-  mysteryIcon: {
-    fontSize: 16,
-    marginBottom: 3,
-  },
-  tapToReveal: {
-    fontSize: 9,
-    color: '#D4A5A5',
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  ideaText: {
-    fontSize: 10,
-    color: '#FF6B8A',
-    fontWeight: '600',
-    textAlign: 'center',
-    lineHeight: 12,
-  },
-  cardFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 4,
-  },
-  revealedCard: {
-    backgroundColor: '#FFF5F7',
-    borderColor: '#FF6B8A',
-    borderWidth: 2,
-  },
-  expandedCard: {
-    backgroundColor: '#FFE8ED',
-    borderWidth: 2,
-    borderColor: '#FF6B8A',
-  },
-  smallCardNumber: {
-    fontSize: 7,
-    fontWeight: '500',
-    color: '#D4A5A5',
-  },
-  smallCardText: {
-    fontSize: 9,
-    color: '#FF6B8A',
-    textAlign: 'center',
-    lineHeight: 11,
-    fontWeight: '500',
-  },
-  expandedCardOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-  },
-  expandedCardContent: {
-    backgroundColor: '#ffffff',
-    borderRadius: 20,
-    width: width - 40,
-    maxHeight: height * 0.8,
-    minHeight: 400,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 15,
-  },
-  expandedCardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+    borderWidth: 0.5,
+    borderColor: '#F2F2F7',
   },
   cardNumber: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#D4A5A5',
-    marginRight: 12,
+    fontSize: 18,
+    fontWeight: 600,
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
-  categoryBadge: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
+  categoryIconContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F2F2F7',
   },
   categoryIcon: {
-    fontSize: 18,
+    fontSize: 16,
+    color: '#007AFF',
   },
-  closeButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#F5F5F5',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  expandedCardBody: {
-    padding: 24,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: 200,
-  },
-  dateIdea: {
-    fontSize: 24,
-    color: '#FF6B8A',
-    textAlign: 'center',
-    lineHeight: 32,
-    fontWeight: '700',
-    marginBottom: 24,
-    backgroundColor: '#FFF5F7',
-    padding: 16,
-    borderRadius: 12,
-  },
-  quickInfo: {
+  actionBarButton: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
-    gap: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+    minHeight: 44,
   },
-  actionButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 20,
-    gap: 8,
+  actionBarButtonText: {
+    fontSize: 15,
+    fontWeight: 500,
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginLeft: 8,
   },
   actionButton: {
-    flex: 1,
-    flexDirection: 'column',
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 8,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    backgroundColor: '#07F',
+    shadowColor: '#07F',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
-    minWidth: 70,
+    minHeight: 44,
   },
   actionButtonText: {
-    color: '#ffffff',
-    fontSize: 11,
-    fontWeight: '600',
-    marginTop: 4,
-    textAlign: 'center',
+    fontSize: 15,
+    fontWeight: 600,
+    color: '#FFFFFF',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginLeft: 8,
   },
-  footer: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  historyButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#3F51B5',
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    borderRadius: 20,
-    alignItems: 'center',
-    shadowColor: '#3F51B5',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  historyButtonText: {
-    color: '#3F51B5',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  resetButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#757575',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    alignItems: 'center',
-    marginTop: 10,
-    shadowColor: '#757575',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  resetButtonText: {
-    color: '#757575',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  modalOverlay: {
+  closeButton: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(63, 81, 181, 0.6)',
+    top: 16,
+    right: 16,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#F2F2F7',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1000,
+  },
+  closeButtonText: {
+    fontSize: 16,
+    fontWeight: 60,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: '#ffffff',
-    borderRadius: 24,
-    width: width - 40,
+    width: width - 32,
     maxHeight: height * 0.7,
-    shadowColor: '#3F51B5',
-    shadowOffset: {
-      width: 0,
-      height: 15,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 25,
-    elevation: 15,
-    borderWidth: 2,
-    borderColor: '#E0E0E0',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 20 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 10,
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 24,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    padding: 20,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#E5E5E7',
   },
   modalTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#3F51B5',
+    fontSize: 18,
+    fontWeight: 600,
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
   historyList: {
-    padding: 24,
-  },
-  emptyHistoryText: {
-    fontSize: 16,
-    color: '#757575',
-    textAlign: 'center',
-    fontStyle: 'italic',
+    padding: 20,
+    maxHeight: 30,
   },
   historyItem: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E8EAF6',
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#F2F2F7',
   },
   historyNumber: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#3F51B5',
+    fontSize: 15,
+    fontWeight: 60,
+    color: '#007AFF',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     marginRight: 12,
-    minWidth: 30,
+    minWidth: 24,
   },
   historyText: {
-    fontSize: 16,
-    color: '#3F51B5',
+    fontSize: 15,
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     flex: 1,
-    lineHeight: 22,
+    lineHeight: 20,
   },
-  // Enhanced Tutorial Styles
-  tutorialOverlay: {
+  emptyHistoryText: {
+    fontSize: 15,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    textAlign: 'center',
+    marginTop: 20,
+    fontStyle: 'italic',
+  },
+  historyCategory: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+    marginTop: 4,
+  },
+  historyCategoryText: {
+    fontSize: 11,
+    fontWeight: 500,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  tabBar: {
     position: 'absolute',
-    top: 0,
+    bottom: 0,
     left: 0,
     right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(63, 81, 181, 0.95)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 2000,
-  },
-  tutorialBackground: {
-    width: width - 40,
-    maxWidth: 400,
-  },
-  tutorialContent: {
-    backgroundColor: '#ffffff',
-    borderRadius: 28,
-    padding: 24,
-    maxHeight: height * 0.8,
-    minHeight: 340,
-    shadowColor: '#3F51B5',
-    shadowOffset: {
-      width: 0,
-      height: 20,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 30,
-    elevation: 20,
-    borderWidth: 3,
-    borderColor: '#E0E0E0',
-    marginBottom: 16,
-    justifyContent: 'space-between',
-  },
-  tutorialHeader: {
-    alignItems: 'center',
-    marginBottom: 20,
-    padding: 16,
-    borderRadius: 20,
-  },
-  tutorialIconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
+    height: 49,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 0.5,
+    borderTopColor: '#E500000',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 6,
+    shadowOffset: { width: 0, height: -1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 8,
+    paddingBottom: Platform.OS === 'ios' ? 34 : 0, // Safe area for home indicator
   },
-
-  tutorialTitle: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#3F51B5',
-    textAlign: 'center',
-    lineHeight: 32,
-  },
-  tutorialMessage: {
-    fontSize: 16,
-    color: '#3F51B5',
-    textAlign: 'center',
-    lineHeight: 24,
-    marginBottom: 20,
-  },
-  tutorialProgress: {
+  tabBarContent: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  progressDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: '#E0E0E0',
-    marginHorizontal: 5,
-  },
-  progressDotActive: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-  },
-  tutorialButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    marginTop: 24,
-    gap: 12,
-    alignSelf: 'stretch',
-  },
-  skipButton: {
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#757575',
-  },
-  skipButtonText: {
-    color: '#757575',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  nextButton: {
-    paddingVertical: 12,
+    height: 49,
     paddingHorizontal: 20,
-    borderRadius: 18,
-    shadowColor: '#3F51B5',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
   },
-  nextButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: 'bold',
+  tabBarButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 6,
+    minHeight: 44,
   },
-  // Calendar Modal Styles
-  calendarModalOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(63, 81, 181, 0.95)',
+  tabBarButtonText: {
+    fontSize: 10,
+    fontWeight: 400,
+    color: '#8E8E93',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginTop: 2,
+    textAlign: 'center',
+  },
+  tabBarIconContainer: {
+    width: 24,
+    height: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 2000,
-  },
-  calendarModalContent: {
-    backgroundColor: '#ffffff',
-    borderRadius: 24,
-    width: width - 40,
-    maxHeight: height * 0.8,
-    shadowColor: '#3F51B5',
-    shadowOffset: {
-      width: 0,
-      height: 20,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 30,
-    elevation: 20,
-    borderWidth: 3,
-    borderColor: '#E0E0E0',
-  },
-  calendarModalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 24,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
-  calendarModalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#3F51B5',
-  },
-  calendarModalBody: {
-    padding: 24,
+    marginBottom: 2,
   },
   dateTimeSection: {
     marginBottom: 24,
   },
-  detailsSection: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#FF6B9D',
-    marginBottom: 16,
-  },
   dateTimeButton: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: '#F5F5F5',
-    borderRadius: 12,
-    marginBottom: 8,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: '#E0E0E0',
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  dateTimeButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexGrow: 1,
+  },
+  dateTimeTextContainer: {
+    flex: 1,
+    marginHorizontal: 8,
   },
   dateTimeLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#3F51B5',
+    fontSize: 12,
+    color: '#666',
+    fontFamily: 'System',
   },
   dateTimeValue: {
-    fontSize: 16,
-    color: '#3F51B5',
+    fontSize: 14,
+    color: '#222',
+    fontFamily: 'System',
+  },
+  detailsSection: {
+    marginBottom: 24,
   },
   inputGroup: {
     marginBottom: 16,
   },
   inputLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#3F51B5',
-    marginBottom: 8,
+    fontSize: 12,
+    color: '#666',
+    fontFamily: 'System',
+    marginBottom: 4,
   },
   textInput: {
+    fontSize: 14,
+    color: '#222',
+    fontFamily: 'System',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     borderWidth: 1,
     borderColor: '#E0E0E0',
     borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: '#F5F5F5',
-    color: '#3F51B5',
+  },
+  calendarModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  calendarModalContent: {
+    width: '90%',
+    backgroundColor: '#fff',
+    padding: 24,
+    borderRadius: 16,
+    elevation: 4,
+  },
+  calendarModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  calendarModalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#222',
+    fontFamily: 'System',
+  },
+  calendarModalBody: {
+    marginBottom: 24,
   },
   calendarModalActions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 24,
-    borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
+    alignItems: 'center',
   },
   cancelButton: {
+    flex: 1,
     paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#757575',
-    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 8,
+    marginRight: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cancelButtonText: {
-    color: '#757575',
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 14,
+    color: '#666',
+    fontFamily: 'System',
   },
   scheduleButton: {
+    flex: 1,
     paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 20,
-    backgroundColor: '#3F51B5',
-    shadowColor: '#3F51B5',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
+    borderWidth: 1,
+    borderColor: '#FF6B8A',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scheduleButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 14,
+    color: '#fff',
+    fontFamily: 'System',
   },
-
-  // Picker Styles
+  invitationModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  invitationModalContent: {
+    width: '90%',
+    backgroundColor: '#fff',
+    padding: 24,
+    borderRadius: 16,
+    elevation: 4,
+  },
+  invitationModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  invitationModalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#222',
+    fontFamily: 'System',
+  },
+  invitationModalBody: {
+    marginBottom: 24,
+  },
+  invitationPreview: {
+    marginBottom: 16,
+  },
+  invitationPreviewTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#222',
+    fontFamily: 'System',
+    marginBottom: 8,
+  },
+  invitationPreviewText: {
+    fontSize: 14,
+    color: '#666',
+    fontFamily: 'System',
+  },
+  recipientSection: {
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#222',
+    fontFamily: 'System',
+    marginBottom: 8,
+  },
+  inputGroup: {
+    marginBottom: 16,
+  },
+  inputLabel: {
+    fontSize: 12,
+    color: '#666',
+    fontFamily: 'System',
+    marginBottom: 4,
+  },
+  textInput: {
+    fontSize: 14,
+    color: '#222',
+    fontFamily: 'System',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 8,
+  },
+  invitationModalActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  emailButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: '#FF6B8A',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emailButtonText: {
+    fontSize: 14,
+    color: '#fff',
+    fontFamily: 'System',
+    marginLeft: 8,
+  },
+  smsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: '#7FB069',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  smsButtonText: {
+    fontSize: 14,
+    color: '#fff',
+    fontFamily: 'System',
+    marginLeft: 8,
+  },
+  reminderModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  reminderModalContent: {
+    width: '90%',
+    backgroundColor: '#fff',
+    padding: 24,
+    borderRadius: 16,
+    elevation: 4,
+  },
+  reminderModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  reminderModalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#222',
+    fontFamily: 'System',
+  },
+  reminderModalBody: {
+    marginBottom: 24,
+  },
+  reminderTypeSection: {
+    marginBottom: 16,
+  },
+  reminderTypeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+  reminderTypeButtonActive: {
+    borderColor: '#FF6B9D',
+  },
+  reminderTypeContent: {
+    flex: 1,
+  },
+  reminderTypeTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#222',
+    fontFamily: 'System',
+    marginBottom: 4,
+  },
+  reminderTypeDescription: {
+    fontSize: 12,
+    color: '#666',
+    fontFamily: 'System',
+  },
+  quickReminderSection: {
+    marginBottom: 16,
+  },
+  quickOptions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  quickOptionButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  quickOptionButtonActive: {
+    borderColor: '#FF6B9D',
+  },
+  quickOptionText: {
+    fontSize: 12,
+    color: '#222',
+    fontFamily: 'System',
+  },
+  messageSection: {
+    marginBottom: 16,
+  },
+  messageInput: {
+    fontSize: 14,
+    color: '#222',
+    fontFamily: 'System',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 8,
+  },
+  reminderModalActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   pickerOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pickerContainer: {
+    width: '90%',
+    backgroundColor: '#fff',
+    padding: 24,
+    borderRadius: 16,
+    elevation: 4,
+  },
+  pickerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#222',
+    fontFamily: 'System',
+    marginBottom: 16,
+  },
+  pickerContent: {
+    marginBottom: 16,
+  },
+  pickerText: {
+    fontSize: 14,
+    color: '#222',
+    fontFamily: 'System',
+  },
+  pickerNote: {
+    fontSize: 12,
+    color: '#666',
+    fontFamily: 'System',
+    textAlign: 'center',
+  },
+  pickerButton: {
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pickerButtonText: {
+    fontSize: 14,
+    color: '#fff',
+    fontFamily: 'System',
+  },
+  wheelOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  wheelContainer: {
+    width: '90%',
+    backgroundColor: '#fff',
+    padding: 24,
+    borderRadius: 16,
+    elevation: 4,
+  },
+  wheelHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  wheelTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#222',
+    fontFamily: 'System',
+  },
+  wheelCloseButton: {
+    padding: 8,
+    borderRadius: 16,
+  },
+  wheelContent: {
+    alignItems: 'center',
+  },
+  wheelWrapper: {
+    width: '100%',
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  wheel: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  wheelPointer: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#FF6B8A',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -5 }, { translateY: -5 }],
+  },
+  resultContainer: {
+    marginBottom: 16,
+    padding: 8,
+    borderWidth: 2,
+    borderColor: '#FF6B8A',
+    borderRadius: 8,
+    backgroundColor: '#FFF5F7',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  resultText: {
+    fontSize: 14,
+    color: '#FF6B8A',
+    fontFamily: 'System',
+  },
+  wheelInstructions: {
+    marginBottom: 16,
+  },
+  wheelInstructionText: {
+    fontSize: 12,
+    color: '#666',
+    fontFamily: 'System',
+  },
+  categoryBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    backgroundColor: '#FF6B8A',
+    marginLeft: 8,
+  },
+  expandedCardOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
@@ -2400,553 +3071,207 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 3000,
-  },
-  pickerContainer: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    padding: 24,
-    width: width - 80,
-    alignItems: 'center',
-  },
-  pickerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#FF6B9D',
-    marginBottom: 16,
-  },
-  pickerContent: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  pickerText: {
-    fontSize: 18,
-    color: '#FF6B9D',
-    marginBottom: 8,
-  },
-  pickerNote: {
-    fontSize: 12,
-    color: '#FF8E8E',
-    fontStyle: 'italic',
-  },
-  pickerButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 16,
-    backgroundColor: '#FF6B9D',
-  },
-  pickerButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-
-  // Invitation Modal Styles
-  invitationModalOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(255, 107, 157, 0.95)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 2000,
-  },
-  invitationModalContent: {
-    backgroundColor: '#ffffff',
-    borderRadius: 24,
-    width: width - 40,
-    maxHeight: height * 0.8,
-    shadowColor: '#FF6B9D',
-    shadowOffset: {
-      width: 0,
-      height: 20,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 30,
-    elevation: 20,
-    borderWidth: 3,
-    borderColor: '#FFE4E1',
-  },
-  invitationModalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 24,
-    borderBottomWidth: 1,
-    borderBottomColor: '#FFE4E1',
-  },
-  invitationModalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FF6B9D',
-  },
-  invitationModalBody: {
-    padding: 24,
-  },
-  invitationPreview: {
-    backgroundColor: '#FFF8FA',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 24,
-    borderWidth: 1,
-    borderColor: '#FFE4E1',
-  },
-  invitationPreviewTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#FF6B9D',
-    marginBottom: 8,
-  },
-  invitationPreviewText: {
-    fontSize: 14,
-    color: '#FF6B9D',
-    marginBottom: 4,
-  },
-  recipientSection: {
-    marginBottom: 24,
-  },
-  invitationModalActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 24,
-    borderTopWidth: 1,
-    borderTopColor: '#FFE4E1',
-  },
-  emailButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    backgroundColor: '#4CAF50',
-    shadowColor: '#4CAF50',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-  emailButtonText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  smsButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    backgroundColor: '#2196F3',
-    shadowColor: '#2196F3',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-  smsButtonText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-
-  // Reminder Modal Styles
-  reminderModalOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(255, 107, 157, 0.95)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 2000,
-  },
-  reminderModalContent: {
-    backgroundColor: '#ffffff',
-    borderRadius: 24,
-    width: width - 40,
-    maxHeight: height * 0.8,
-    shadowColor: '#FF6B9D',
-    shadowOffset: {
-      width: 0,
-      height: 20,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 30,
-    elevation: 20,
-    borderWidth: 3,
-    borderColor: '#FFE4E1',
-  },
-  reminderModalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 24,
-    borderBottomWidth: 1,
-    borderBottomColor: '#FFE4E1',
-  },
-  reminderModalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FF6B9D',
-  },
-  reminderModalBody: {
-    padding: 24,
-  },
-  reminderTypeSection: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#FF6B9D',
-    marginBottom: 16,
-  },
-  reminderTypeButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    marginBottom: 12,
-    borderRadius: 16,
-    backgroundColor: '#FFF8FA',
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  reminderTypeButtonActive: {
-    backgroundColor: '#FFE4E1',
-    borderColor: '#FF6B9D',
-  },
-  reminderTypeIcon: {
-    fontSize: 28,
-    marginRight: 16,
-  },
-  reminderTypeContent: {
-    flex: 1,
-  },
-  reminderTypeTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#FF6B9D',
-    marginBottom: 4,
-  },
-  reminderTypeDescription: {
-    fontSize: 14,
-    color: '#FF8E8E',
-  },
-  quickReminderSection: {
-    marginBottom: 24,
-  },
-  quickOptions: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-  },
-  quickOptionButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 20,
-    backgroundColor: '#FFF8FA',
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  quickOptionButtonActive: {
-    backgroundColor: '#FF6B9D',
-    borderColor: '#FF6B9D',
-  },
-  quickOptionText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#FF6B9D',
-  },
-  customReminderSection: {
-    marginBottom: 24,
-  },
-  dateTimeButton: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    marginBottom: 12,
-    borderRadius: 12,
-    backgroundColor: '#FFF8FA',
-    borderWidth: 1,
-    borderColor: '#FFE4E1',
-  },
-  dateTimeLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#FF6B9D',
-  },
-  dateTimeValue: {
-    fontSize: 16,
-    color: '#FF8E8E',
-  },
-  dateTimeButtonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  dateTimeTextContainer: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  messageSection: {
-    marginBottom: 24,
-  },
-  messageInput: {
-    borderWidth: 1,
-    borderColor: '#FFE4E1',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontSize: 16,
-    minHeight: 80,
-    textAlignVertical: 'top',
-    backgroundColor: '#FFF8FA',
-  },
-  reminderModalActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 24,
-    borderTopWidth: 1,
-    borderTopColor: '#FFE4E1',
-  },
-  cancelButton: {
-    flex: 1,
-    paddingVertical: 12,
-    marginRight: 12,
-    borderRadius: 20,
-    backgroundColor: '#FFF8FA',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#FF8E8E',
-  },
-  cancelButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#FF8E8E',
-  },
-  scheduleButton: {
-    flex: 1,
-    paddingVertical: 12,
-    marginLeft: 12,
-    borderRadius: 20,
-    backgroundColor: '#FF6B9D',
-    alignItems: 'center',
-    shadowColor: '#FF6B9D',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-  scheduleButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#ffffff',
-  },
-
-
-
-  // Professional Bottom Action Bar Styles
-  bottomActionBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#ffffff',
-    borderTopWidth: 1,
-    borderTopColor: '#F0E6E0',
-    shadowColor: '#FF6B8A',
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 8,
     zIndex: 1000,
   },
-  actionBarContent: {
+  expandedCardContent: {
+    width: width - 32,
+    maxHeight: height * 0.8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 20 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  expandedCardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#E5E5E7',
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  expandedCardNumber: {
+    fontSize: 20,
+    fontWeight: 600,
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginRight: 12,
+  },
+  categoryBadgeText: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  closeButton: {
+    padding: 8,
+    borderRadius: 16,
+  },
+  expandedCardBody: {
+    padding: 20,
+    flex: 1,
+  },
+  dateIdeaText: {
+    fontSize: 18,
+    fontWeight: 500,
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    lineHeight: 24,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  quickInfoContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    marginBottom: 20,
   },
-  actionBarButton: {
+  infoItem: {
+    alignItems: 'center',
+  },
+  infoLabel: {
+    fontSize: 12,
+    fontWeight: 50,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 4,
+  },
+  infoValue: {
+    fontSize: 16,
+    fontWeight: 600,
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  expandedActionButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 20,
+    gap: 8,
+  },
+  expandedActionButton: {
+    flex: 1,
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    minWidth: 60,
-    backgroundColor: 'transparent',
-    transition: 'all 0.2s ease',
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    minHeight: 44,
   },
-  actionBarButtonText: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: '#FF6B8A',
+  expandedActionButtonText: {
+    fontSize: 13,
+    fontWeight: 50,
+    color: '#FFFFFF',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     marginTop: 4,
     textAlign: 'center',
   },
-
-  // Spinning Wheel Styles
-  wheelOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  tutorialFullScreen: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 3000,
+    paddingHorizontal: 32,
   },
-  wheelContainer: {
-    backgroundColor: '#ffffff',
-    borderRadius: 24,
-    width: width - 40,
-    maxHeight: height * 0.9,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 20,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 30,
-    elevation: 20,
-  },
-  wheelHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 24,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0E6E0',
-  },
-  wheelTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FF6B8A',
-  },
-  wheelCloseButton: {
-    padding: 8,
-  },
-  wheelContent: {
-    padding: 24,
-    alignItems: 'center',
-  },
-  wheelWrapper: {
-    position: 'relative',
-    marginBottom: 24,
-  },
-  wheel: {
-    width: 280,
-    height: 280,
-    borderRadius: 140,
-    position: 'relative',
-    borderWidth: 8,
-    borderColor: '#FF6B8A',
-    backgroundColor: '#FEF7F0',
-  },
-  wheelSegment: {
-    position: 'absolute',
-    width: 140,
-    height: 2,
-    left: 140,
-    top: 139,
-    transformOrigin: '0 1px',
+  tutorialContent: {
+    flex: 1,
     justifyContent: 'center',
-    alignItems: 'flex-end',
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 400,
   },
-  wheelNumber: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
-    transform: [{ rotate: '90deg' }],
+  tutorialHeader: {
+    alignItems: 'center',
+    marginBottom: 60,
+    paddingHorizontal: 16,
   },
-  wheelPointer: {
-    position: 'absolute',
-    top: -10,
-    left: '50%',
-    marginLeft: -10,
-    width: 0,
-    height: 0,
-    borderLeftWidth: 10,
-    borderRightWidth: 10,
-    borderBottomWidth: 20,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: '#FF6B8A',
-    zIndex: 10,
-  },
-  resultContainer: {
-    backgroundColor: '#FFF5F7',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 20,
+  tutorialIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#007AFF',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 20,
-    borderWidth: 2,
-    borderColor: '#7FB069',
-  },
-  resultText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#7FB069',
-    textAlign: 'center',
-  },
-  spinButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FF6B8A',
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-    borderRadius: 25,
-    shadowColor: '#FF6B8A',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 6,
   },
-  spinButtonDisabled: {
-    backgroundColor: '#D4A5A5',
+  tutorialIcon: {
+    fontSize: 32,
+    color: '#FFFFFF',
   },
-  spinButtonText: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginLeft: 8,
+  tutorialTitle: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#1D1D1F',
+    marginBottom: 12,
+    textAlign: 'center',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
-  wheelInstructions: {
-    backgroundColor: '#FFF5F7',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#FF6B8A',
+  tutorialSubtitle: {
+    fontSize: 16,
+    color: '#86868B',
+    textAlign: 'center',
+    fontWeight: '400',
+    lineHeight: 22,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
-  wheelInstructionText: {
+  tutorialProgress: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 80,
+    alignItems: 'center',
+  },
+  progressDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 6,
+    backgroundColor: '#E5E5E7',
+  },
+  progressDotActive: {
+    backgroundColor: '#007AFF',
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  tutorialButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+    width: '100%',
+  },
+  nextButton: {
+    flex: 1,
+    paddingVertical: 16,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  nextButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#FF6B8A',
-    textAlign: 'center',
+    color: '#FFFFFF',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
 });
