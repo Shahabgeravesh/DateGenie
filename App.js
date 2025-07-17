@@ -12,7 +12,6 @@ import {
   ScrollView,
   StatusBar as RNStatusBar,
   FlatList,
-  LinearGradient,
   Modal,
   TextInput,
   Easing,
@@ -22,6 +21,7 @@ import {
   Appearance,
   Share
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { StatusBar } from 'expo-status-bar';
@@ -2132,150 +2132,159 @@ export default function App() {
   // Show tutorial first if it hasn't been completed
   if (showTutorial) {
     return (
-      <SafeAreaView style={styles.container}>
-        <RNStatusBar 
-          barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} 
-          backgroundColor={'#FFFFFF'} 
-        />
-        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-        
-        <Tutorial 
-          key={tutorialKey}
-          visible={true}
-          onComplete={completeTutorial}
-        />
-      </SafeAreaView>
+      <View style={{ flex: 1 }}>
+        <LinearGradient
+          colors={["#f8fafc", "#fceabb", "#f8fafc"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{ flex: 1 }}
+        >
+          <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
+            <RNStatusBar 
+              barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} 
+              backgroundColor={'#FFFFFF'} 
+            />
+            <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+            <Tutorial 
+              key={tutorialKey}
+              visible={true}
+              onComplete={completeTutorial}
+            />
+          </SafeAreaView>
+        </LinearGradient>
+      </View>
     );
   }
 
   // Main app content
   return (
-    <SafeAreaView style={styles.container}>
-      <RNStatusBar 
-        barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} 
-        backgroundColor={'#FFFFFF'} 
-      />
-      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-      
-      <AppHeader 
-        revealedCards={revealedCards}
-        theme={theme}
-        platformStyles={{ fontFamily: 'System' }}
-      />
-
-      <CategoryFilter 
-        selectedCategory={selectedCategory}
-        onCategorySelect={setSelectedCategory}
-        onRandomSelect={() => setShowSpinningWheel(true)}
-      />
-
-      <FlatList
-        data={gridData}
-        renderItem={renderCard}
-        keyExtractor={(item, idx) => item.id ? item.id.toString() : `placeholder-${idx}`}
-        numColumns={4}
-        key="4-column-grid"
-        contentContainerStyle={styles.gridContainer}
-        showsVerticalScrollIndicator={false}
-      />
-
-      {/* Professional Bottom Action Bar */}
-      <View style={styles.tabBar}>
-        <View style={styles.tabBarContent}>
-          <PlatformButton
-            onPress={() => setShowHistory(true)}
-            style={{}}
+    <View style={{ flex: 1 }}>
+      <LinearGradient
+        colors={["#f8fafc", "#fceabb", "#f8fafc"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{ flex: 1 }}
+      >
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
+          <RNStatusBar 
+            barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} 
+            backgroundColor={'#FFFFFF'} 
+          />
+          <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+          <AppHeader 
+            revealedCards={revealedCards}
             theme={theme}
             platformStyles={{ fontFamily: 'System' }}
-          >
-            {getActionIcon('history', 24, '#8E8E93')}
-            History
-          </PlatformButton>
-          <PlatformButton
-            onPress={resetAppData}
-            style={{}}
-            theme={theme}
-            platformStyles={{ fontFamily: 'System' }}
-          >
-            {getActionIcon('reset', 24, '#8E8E93')}
-            Reset
-          </PlatformButton>
-        </View>
-      </View>
-
-      {expandedCard && (
-        <ExpandedCard
-          item={expandedCard}
-          onClose={closeExpandedCard}
-          onShareEmail={shareByEmail}
-          onShareSMS={shareBySMS}
-          onAddToCalendar={() => setShowCalendarModal(true)}
-          onSetReminder={setReminder}
-        />
-      )}
-
-      {showHistory && (
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Your Date History</Text>
-              <TouchableOpacity onPress={() => setShowHistory(false)} style={styles.closeButton}>
-                <Text style={styles.closeButtonText}>✕</Text>
-              </TouchableOpacity>
+          />
+          <CategoryFilter 
+            selectedCategory={selectedCategory}
+            onCategorySelect={setSelectedCategory}
+            onRandomSelect={() => setShowSpinningWheel(true)}
+          />
+          <FlatList
+            data={gridData}
+            renderItem={renderCard}
+            keyExtractor={(item, idx) => item.id ? item.id.toString() : `placeholder-${idx}`}
+            numColumns={4}
+            key="4-column-grid"
+            contentContainerStyle={[styles.gridContainer, { backgroundColor: 'rgba(255, 245, 230, 0.25)', borderRadius: 18, marginHorizontal: 8 }]}
+            showsVerticalScrollIndicator={false}
+          />
+          {/* Professional Bottom Action Bar */}
+          <View style={[styles.tabBar, { backgroundColor: '#fffbe6', borderTopColor: '#ffe082' }]}>
+            <View style={styles.tabBarContent}>
+              <PlatformButton
+                onPress={() => setShowHistory(true)}
+                style={{}}
+                theme={theme}
+                platformStyles={{ fontFamily: 'System' }}
+                buttonColor="#FFB300"
+              >
+                {getActionIcon('history', 24, '#FFB300')}
+                History
+              </PlatformButton>
+              <PlatformButton
+                onPress={resetAppData}
+                style={{}}
+                theme={theme}
+                platformStyles={{ fontFamily: 'System' }}
+                buttonColor="#FFB300"
+              >
+                {getActionIcon('reset', 24, '#FFB300')}
+                Reset
+              </PlatformButton>
             </View>
-            <ScrollView style={styles.historyList}>
-              {revealedCards.length === 0 ? (
-                <Text style={styles.emptyHistoryText}>No date ideas revealed yet. Start exploring to discover amazing date ideas.</Text>
-              ) : (
-                revealedCards.map((card, index) => (
-                  <View key={index} style={styles.historyItem}>
-                    <Text style={styles.historyNumber}>#{card.sequenceNumber || card.id}</Text>
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.historyText}>
-                        {card.idea || `Date idea #${card.id} - Coming soon!`}
-                      </Text>
-                      {card.category && (
-                        <View style={[styles.historyCategory, { backgroundColor: categories[card.category]?.color + '20' }]}>
-                          <Text style={[styles.historyCategoryText, { color: categories[card.category]?.color }]}>
-                            {categories[card.category]?.name || card.category}
-                          </Text>
-                        </View>
-                      )}
-                    </View>
-                  </View>
-                ))
-              )}
-            </ScrollView>
           </View>
-        </View>
-      )}
-
-      <CalendarModal
-        visible={showCalendarModal}
-        onClose={() => setShowCalendarModal(false)}
-        onSchedule={handleScheduleDate}
-        dateIdea={expandedCard}
-      />
-
-      <InvitationModal
-        visible={showInvitationModal}
-        onClose={() => setShowInvitationModal(false)}
-        invitationData={invitationData}
-      />
-      <ReminderModal
-        visible={showReminderModal}
-        onClose={() => setShowReminderModal(false)}
-        onSchedule={scheduleAdvancedReminder}
-        dateIdea={expandedCard}
-      />
-
-      <SpinningWheel
-        visible={showSpinningWheel}
-        onClose={() => setShowSpinningWheel(false)}
-        onSelectCard={handleWheelCardSelect}
-      />
-
-    </SafeAreaView>
+          {expandedCard && (
+            <ExpandedCard
+              item={expandedCard}
+              onClose={closeExpandedCard}
+              onShareEmail={shareByEmail}
+              onShareSMS={shareBySMS}
+              onAddToCalendar={() => setShowCalendarModal(true)}
+              onSetReminder={setReminder}
+            />
+          )}
+          {showHistory && (
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContent}>
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalTitle}>Your Date History</Text>
+                  <TouchableOpacity onPress={() => setShowHistory(false)} style={styles.closeButton}>
+                    <Text style={styles.closeButtonText}>✕</Text>
+                  </TouchableOpacity>
+                </View>
+                <ScrollView style={styles.historyList}>
+                  {revealedCards.length === 0 ? (
+                    <Text style={styles.emptyHistoryText}>No date ideas revealed yet. Start exploring to discover amazing date ideas.</Text>
+                  ) : (
+                    revealedCards.map((card, index) => (
+                      <View key={index} style={styles.historyItem}>
+                        <Text style={styles.historyNumber}>#{card.sequenceNumber || card.id}</Text>
+                        <View style={{ flex: 1 }}>
+                          <Text style={styles.historyText}>
+                            {card.idea || `Date idea #${card.id} - Coming soon!`}
+                          </Text>
+                          {card.category && (
+                            <View style={[styles.historyCategory, { backgroundColor: categories[card.category]?.color + '20' }]}> 
+                              <Text style={[styles.historyCategoryText, { color: categories[card.category]?.color }]}> 
+                                {categories[card.category]?.name || card.category}
+                              </Text>
+                            </View>
+                          )}
+                        </View>
+                      </View>
+                    ))
+                  )}
+                </ScrollView>
+              </View>
+            </View>
+          )}
+          <CalendarModal
+            visible={showCalendarModal}
+            onClose={() => setShowCalendarModal(false)}
+            onSchedule={handleScheduleDate}
+            dateIdea={expandedCard}
+          />
+          <InvitationModal
+            visible={showInvitationModal}
+            onClose={() => setShowInvitationModal(false)}
+            invitationData={invitationData}
+          />
+          <ReminderModal
+            visible={showReminderModal}
+            onClose={() => setShowReminderModal(false)}
+            onSchedule={scheduleAdvancedReminder}
+            dateIdea={expandedCard}
+          />
+          <SpinningWheel
+            visible={showSpinningWheel}
+            onClose={() => setShowSpinningWheel(false)}
+            onSelectCard={handleWheelCardSelect}
+          />
+        </SafeAreaView>
+      </LinearGradient>
+    </View>
   );
 }
 
@@ -2340,7 +2349,7 @@ const styles = StyleSheet.create({
   },
   categoryFilterContainer: {
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
     paddingVertical: 12,
     borderBottomWidth: 0.5,
     borderBottomColor: '#E5E5E7',
@@ -2384,11 +2393,11 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   gridContainer: {
-    padding: 16,
+    padding: 8,
     paddingBottom: 100,
   },
   smallCard: {
-    width: (width - 48) / 4,
+    width: (width - 64) / 4,
     height: 88,
     margin: 4,
     borderRadius: 12,
