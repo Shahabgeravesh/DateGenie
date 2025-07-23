@@ -244,9 +244,17 @@ const getLocationIcon = (location, size = 20) => {
 // Platform-specific action icons
 const getActionIcon = (action, size = 20, color = '#FF6B8A') => {
   const actionIcons = {
+    home: {
+      ios: 'grid-outline',
+      android: 'grid-on'
+    },
+    random: {
+      ios: 'dice-outline',
+      android: 'casino'
+    },
     history: {
-      ios: 'time-outline',
-      android: 'history'
+      ios: 'heart-outline',
+      android: 'favorite-border'
     },
     reset: {
       ios: 'refresh-outline',
@@ -670,6 +678,54 @@ const SmallCard = ({ item, sequenceNumber, isRevealed, onPress }) => {
   );
 };
 
+// History Card Component - Shows date idea text
+const HistoryCard = ({ item, sequenceNumber, onPress }) => {
+  const CardTouchable = Platform.OS === 'ios' ? TouchableHighlight : TouchableOpacity;
+  
+  // Get the actual date idea text
+  const getDateIdeaText = (item) => {
+    if (item.idea) return item.idea;
+    // Try to find in dateIdeasData as fallback
+    const found = dateIdeasData.find(g => g.id === item.id);
+    return found && found.idea ? found.idea : `Date idea #${item.id}`;
+  };
+  
+  const dateIdeaText = getDateIdeaText(item);
+  
+  return (
+    <CardTouchable
+      onPress={onPress}
+      style={[
+        styles.historyCard,
+        { justifyContent: 'center', alignItems: 'center' }
+      ]}
+      underlayColor={Platform.OS === 'ios' ? '#f8f9fa' : undefined}
+      activeOpacity={Platform.OS === 'android' ? 0.85 : undefined}
+    >
+      <View style={{ alignItems: 'center', padding: 16, flex: 1, justifyContent: 'space-between' }}>
+        <Text style={[
+          { 
+            fontSize: 18, 
+            fontWeight: 'bold', 
+            textAlign: 'center',
+            fontFamily: getFunFont(sequenceNumber),
+            color: getFunColor(sequenceNumber),
+            textShadowColor: 'rgba(0,0,0,0.1)',
+            textShadowOffset: { width: 1, height: 1 },
+            textShadowRadius: 2,
+            marginBottom: 8,
+          }
+        ]}>
+          #{sequenceNumber}
+        </Text>
+        <Text style={styles.historyCardText}>
+          {dateIdeaText}
+        </Text>
+      </View>
+    </CardTouchable>
+  );
+};
+
 // Spinning Wheel Component
 const SpinningWheel = ({ visible, onClose, onSelectCard, onSpinStart, excludedCards = [], totalCards = 100 }) => {
   const [isSpinning, setIsSpinning] = useState(false);
@@ -889,7 +945,7 @@ const SpinningWheel = ({ visible, onClose, onSelectCard, onSpinStart, excludedCa
 };
 
 // Enhanced Category Filter Component
-const CategoryFilter = ({ selectedCategory, onCategorySelect, onRandomSelect }) => {
+const CategoryFilter = ({ selectedCategory, onCategorySelect }) => {
   return (
     <View style={styles.categoryFilterContainer}>
       <ScrollView 
@@ -911,20 +967,14 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect, onRandomSelect }) 
           ]}>All</Text>
         </TouchableOpacity>
         
-        {Object.entries(categories).map(([key, category]) => (
+        {Object.entries(categories).filter(([key]) => key !== 'random').map(([key, category]) => (
           <TouchableOpacity 
             key={key}
             style={[
               styles.categoryFilterButton,
               selectedCategory === key && styles.categoryFilterButtonActive
             ]}
-            onPress={() => {
-              if (key === 'random') {
-                onRandomSelect();
-              } else {
-                onCategorySelect(key);
-              }
-            }}
+            onPress={() => onCategorySelect(key)}
           >
             <Text style={[
               styles.categoryFilterText,
@@ -971,117 +1021,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
   };
   const categoryInfo = categories[item.category] || categories.random;
 
-  // Generate detailed description based on the date idea
-  const generateDescription = (idea, category, budget, location) => {
-    const descriptions = {
-      romantic: {
-        outdoor: "Perfect for creating intimate memories under the open sky. This romantic outdoor experience will bring you closer together while enjoying nature's beauty.",
-        indoor: "A cozy indoor setting that creates the perfect atmosphere for romance. This intimate experience will strengthen your connection in a comfortable, private space."
-      },
-      adventurous: {
-        outdoor: "An exciting outdoor adventure that will get your adrenaline pumping! This thrilling experience is perfect for couples who love excitement and new challenges.",
-        indoor: "An indoor adventure that's both exciting and safe. This thrilling experience will test your teamwork and create lasting memories."
-      },
-      active: {
-        outdoor: "Get your heart racing with this energetic outdoor activity! Perfect for fitness-loving couples who want to stay active while having fun together.",
-        indoor: "Stay active and energized with this indoor fitness activity. Great for couples who want to work out together and support each other's health goals."
-      },
-      cozy: {
-        outdoor: "A warm and comfortable outdoor experience that feels like home. Perfect for couples who want to relax together in nature's embrace.",
-        indoor: "A snug and warm indoor experience that creates the perfect cozy atmosphere. Ideal for couples who love comfort and intimate moments."
-      },
-      fun: {
-        outdoor: "Lots of laughter and joy await with this fun outdoor activity! Perfect for couples who love to play and have a good time together.",
-        indoor: "Endless entertainment and laughter with this indoor fun activity. Great for couples who enjoy playful moments and creating happy memories."
-      },
-      foodie: {
-        outdoor: "A delicious outdoor culinary experience that will satisfy your taste buds. Perfect for food-loving couples who enjoy dining in unique settings.",
-        indoor: "A mouthwatering indoor dining experience that's both delicious and intimate. Ideal for couples who appreciate good food and cozy atmospheres."
-      },
-      chill: {
-        outdoor: "A peaceful outdoor experience that will help you both relax and unwind. Perfect for couples who enjoy quiet moments together in nature.",
-        indoor: "A calm and relaxing indoor experience that promotes tranquility. Great for couples who value peaceful moments and stress-free activities."
-      },
-      creative: {
-        outdoor: "Express your artistic side with this creative outdoor activity. Perfect for couples who love to create and explore their imagination together.",
-        indoor: "Unleash your creativity with this artistic indoor activity. Ideal for couples who enjoy making things together and expressing themselves."
-      },
-      cultural: {
-        outdoor: "Expand your horizons with this educational outdoor cultural experience. Perfect for couples who love learning and exploring new perspectives.",
-        indoor: "Enrich your minds with this cultural indoor experience. Great for couples who enjoy learning together and appreciating art and history."
-      }
-    };
 
-    const categoryDesc = descriptions[category] || descriptions.fun;
-    const locationDesc = categoryDesc[location] || categoryDesc.indoor;
-    
-    return locationDesc;
-  };
-
-  // Generate tips based on the date idea
-  const generateTips = (category, budget, location) => {
-    const tips = {
-      romantic: [
-        "Plan ahead to create the perfect atmosphere",
-        "Bring some romantic music or candles",
-        "Focus on quality time together",
-        "Don't forget to capture the moment"
-      ],
-      adventurous: [
-        "Check weather conditions beforehand",
-        "Bring appropriate safety gear",
-        "Start with easier challenges if new to the activity",
-        "Have a backup plan in case of bad weather"
-      ],
-      active: [
-        "Wear comfortable, appropriate clothing",
-        "Stay hydrated throughout the activity",
-        "Warm up before starting",
-        "Encourage each other and have fun!"
-      ],
-      cozy: [
-        "Create a comfortable atmosphere",
-        "Have some soft blankets or pillows ready",
-        "Choose relaxing background music",
-        "Make sure you're both comfortable"
-      ],
-      fun: [
-        "Keep an open mind and be playful",
-        "Don't take things too seriously",
-        "Be ready to laugh and have fun",
-        "Focus on enjoying each other's company"
-      ],
-      foodie: [
-        "Consider dietary preferences and restrictions",
-        "Plan for the right portion sizes",
-        "Have some wine or drinks to complement the meal",
-        "Take your time to savor the experience"
-      ],
-      chill: [
-        "Minimize distractions and interruptions",
-        "Create a peaceful environment",
-        "Take deep breaths and relax together",
-        "Enjoy the quiet moments"
-      ],
-      creative: [
-        "Don't worry about being perfect",
-        "Express yourselves freely",
-        "Support each other's creative ideas",
-        "Have fun with the process"
-      ],
-      cultural: [
-        "Do some research beforehand",
-        "Ask questions and learn together",
-        "Take photos to remember the experience",
-        "Discuss what you learned afterward"
-      ]
-    };
-
-    return tips[category] || tips.fun;
-  };
-
-  const description = generateDescription(item.idea, item.category, item.budget, item.location);
-  const tips = generateTips(item.category, item.budget, item.location);
   
   return (
     <TouchableOpacity 
@@ -1130,11 +1070,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
             </Text>
           </View>
 
-          {/* Detailed Description */}
-          <View style={styles.descriptionContainer}>
-            <Text style={styles.descriptionTitle}>About This Date</Text>
-            <Text style={styles.descriptionText}>{description}</Text>
-          </View>
+
           
           {/* Quick Info */}
           <View style={styles.quickInfoContainer}>
@@ -1158,16 +1094,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
             </View>
           </View>
 
-          {/* Tips Section */}
-          <View style={styles.tipsContainer}>
-            <Text style={styles.tipsTitle}>💡 Pro Tips</Text>
-            {tips.map((tip, index) => (
-              <View key={index} style={styles.tipItem}>
-                <Text style={styles.tipBullet}>•</Text>
-                <Text style={styles.tipText}>{tip}</Text>
-              </View>
-            ))}
-          </View>
+
         </ScrollView>
 
         {/* Action Buttons */}
@@ -1847,6 +1774,7 @@ const ReminderModal = ({ visible, onClose, onSchedule, dateIdea }) => {
 // Refactored Header - Fix theme integration
 const AppHeader = ({ revealedCards, theme, platformStyles }) => {
   const revealedCount = revealedCards?.length || 0;
+  const totalCards = dateIdeasData.length;
   
   if (!theme || !platformStyles) {
     return (
@@ -1855,10 +1783,10 @@ const AppHeader = ({ revealedCards, theme, platformStyles }) => {
           {/* Removed app name and subtitle for a clean header */}
           <View style={styles.progressContainer}>
             <Text style={styles.progressText}>
-              {revealedCount} / 100 Revealed
+              {revealedCount} / {totalCards} Revealed
             </Text>
             <View style={styles.progressBar}>
-              <View style={[styles.progressFill, { width: `${(revealedCount / 100) * 100}%` }]} />
+              <View style={[styles.progressFill, { width: `${(revealedCount / totalCards) * 100}%` }]} />
             </View>
           </View>
         </View>
@@ -1872,12 +1800,12 @@ const AppHeader = ({ revealedCards, theme, platformStyles }) => {
         {/* Removed app name and subtitle for a clean header */}
         <View style={styles.progressContainer}>
           <Text style={[styles.progressText, { color: '#1D1D1F', fontFamily: 'System' }]}> 
-            {revealedCount} / 100 Revealed
+            {revealedCount} / {totalCards} Revealed
           </Text>
           <View style={[styles.progressBar, { backgroundColor: '#E5E5E7' }]}> 
             <View style={[styles.progressFill, { 
               backgroundColor: '#007AFF',
-              width: `${(revealedCount / 100) * 100}%` 
+              width: `${(revealedCount / totalCards) * 100}%` 
             }]} />
           </View>
         </View>
@@ -1922,6 +1850,49 @@ const PlatformButton = ({ onPress, children, style, icon, iconColor, theme, plat
       {buttonContent}
     </TouchableOpacity>
   );
+};
+
+// Helper functions for history stats
+const getMostPopularCategory = (revealedCards) => {
+  if (revealedCards.length === 0) return 'None';
+  
+  const categoryCount = {};
+  revealedCards.forEach(card => {
+    if (card.category) {
+      categoryCount[card.category] = (categoryCount[card.category] || 0) + 1;
+    }
+  });
+  
+  const mostPopular = Object.entries(categoryCount).sort((a, b) => b[1] - a[1])[0];
+  return mostPopular ? mostPopular[0].charAt(0).toUpperCase() + mostPopular[0].slice(1) : 'None';
+};
+
+const getAverageBudget = (revealedCards) => {
+  if (revealedCards.length === 0) return 'None';
+  
+  const budgetValues = { low: 1, medium: 2, high: 3 };
+  const total = revealedCards.reduce((sum, card) => {
+    return sum + (budgetValues[card.budget] || 2);
+  }, 0);
+  
+  const average = total / revealedCards.length;
+  if (average <= 1.3) return '$';
+  if (average <= 2.3) return '$$';
+  return '$$$';
+};
+
+const getLocationPreference = (revealedCards) => {
+  if (revealedCards.length === 0) return 'None';
+  
+  const locationCount = {};
+  revealedCards.forEach(card => {
+    if (card.location) {
+      locationCount[card.location] = (locationCount[card.location] || 0) + 1;
+    }
+  });
+  
+  const mostPopular = Object.entries(locationCount).sort((a, b) => b[1] - a[1])[0];
+  return mostPopular ? mostPopular[0].charAt(0).toUpperCase() + mostPopular[0].slice(1) : 'None';
 };
 
 export default function App() {
@@ -2455,12 +2426,6 @@ export default function App() {
               setSelectedCategory(key);
             }
           }}
-          onRandomSelect={() => {
-            console.log('Random selected - showing wheel');
-            setShowHistory(false);
-            setShowSpinningWheel(true);
-            setExpandedCard(null); // Clear any previously selected card
-          }}
         />
         <FlatList
           data={gridData}
@@ -2481,14 +2446,50 @@ export default function App() {
                 setShowInvitationModal(false);
                 setShowReminderModal(false);
                 setShowSpinningWheel(false);
+                setShowHistory(false);
+                setSelectedCategory(null);
+              }}
+              style={{}}
+              theme={theme}
+              platformStyles={{ fontFamily: 'System' }}
+              buttonColor="#5B9BD5"
+            >
+              {getActionIcon('home', 26, '#5B9BD5')}
+              Main
+            </PlatformButton>
+            <PlatformButton
+              onPress={() => {
+                setExpandedCard(null);
+                setShowCalendarModal(false);
+                setShowInvitationModal(false);
+                setShowReminderModal(false);
+                setShowHistory(false);
+                setShowSpinningWheel(true);
+                setSelectedCategory(null);
+              }}
+              style={{}}
+              theme={theme}
+              platformStyles={{ fontFamily: 'System' }}
+              buttonColor="#F7931E"
+            >
+              {getActionIcon('random', 26, '#F7931E')}
+              Random
+            </PlatformButton>
+            <PlatformButton
+              onPress={() => {
+                setExpandedCard(null);
+                setShowCalendarModal(false);
+                setShowInvitationModal(false);
+                setShowReminderModal(false);
+                setShowSpinningWheel(false);
                 setShowHistory(true);
               }}
               style={{}}
               theme={theme}
               platformStyles={{ fontFamily: 'System' }}
-              buttonColor="#007AFF"
+              buttonColor="#FF6B8A"
             >
-              {getActionIcon('history', 24, '#007AFF')}
+              {getActionIcon('history', 26, '#FF6B8A')}
               History
             </PlatformButton>
             <PlatformButton
@@ -2496,9 +2497,9 @@ export default function App() {
               style={{}}
               theme={theme}
               platformStyles={{ fontFamily: 'System' }}
-              buttonColor="#007AFF"
+              buttonColor="#7FB069"
             >
-              {getActionIcon('reset', 24, '#007AFF')}
+              {getActionIcon('reset', 26, '#7FB069')}
               Reset
             </PlatformButton>
           </View>
@@ -2514,57 +2515,143 @@ export default function App() {
           />
         )}
         {showHistory && (
-  <TouchableOpacity 
-    style={styles.modalOverlay} 
-    activeOpacity={1} 
-    onPress={() => setShowHistory(false)}
-  >
-    <TouchableOpacity 
-      style={styles.modalContent} 
-      activeOpacity={1} 
-      onPress={(e) => e.stopPropagation()}
-    >
-                <View style={styles.modalHeader}>
-                  <Text style={styles.modalTitle}>Your Date History</Text>
-                  <TouchableOpacity onPress={() => setShowHistory(false)} style={styles.closeButton}>
-                    <Text style={styles.closeButtonText}>✕</Text>
+          <View style={styles.historyPage}>
+            <View style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
+              <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
+                <RNStatusBar 
+                  barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} 
+                  backgroundColor={'#FFFFFF'} 
+                />
+                <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+                
+                {/* Clean History Header */}
+                <View style={styles.historyTitleSection}>
+                  <View style={styles.historyTitleContainer}>
+                    <Text style={styles.historyPageTitle}>History</Text>
+                    <Text style={styles.historyPageSubtitle}>
+                      {revealedCards.length} {revealedCards.length === 1 ? 'date idea' : 'date ideas'} discovered
+                    </Text>
+                  </View>
+                  <TouchableOpacity onPress={() => setShowHistory(false)} style={styles.historyCloseButton}>
+                    <MaterialCommunityIcons name="close" size={20} color="#86868B" />
                   </TouchableOpacity>
-                      </View>
-      <ScrollView style={styles.historyList}>
-                  {revealedCards.length === 0 ? (
-                    <Text style={styles.emptyHistoryText}>No date ideas revealed yet. Start exploring to discover amazing date ideas.</Text>
-                  ) : (
-                    revealedCards.map((card, index) => (
-                      <View key={index} style={styles.historyItem}>
-                        <Text style={[
-                          styles.historyNumber,
-                          {
-                            fontFamily: getFunFont(card.sequenceNumber || card.id),
-                            color: getFunColor(card.sequenceNumber || card.id),
-                            textShadowColor: 'rgba(0,0,0,0.1)',
-                            textShadowOffset: { width: 1, height: 1 },
-                            textShadowRadius: 1,
-                          }
-                        ]}>#{card.sequenceNumber || card.id}</Text>
-                        <View style={{ flex: 1 }}>
-                          <Text style={styles.historyText}>
-                            {card.idea || `Date idea #${card.id} - Coming soon!`}
-                          </Text>
-                          {card.category && (
-                            <View style={[styles.historyCategory, { backgroundColor: categories[card.category]?.color + '20' }]}> 
-                              <Text style={[styles.historyCategoryText, { color: categories[card.category]?.color }]}> 
-                                {categories[card.category]?.name || card.category}
-                              </Text>
-                            </View>
-                          )}
-                        </View>
-                      </View>
-                    ))
-                          )}
-      </ScrollView>
-    </TouchableOpacity>
-  </TouchableOpacity>
-)}
+                </View>
+
+                {/* History Content */}
+                {revealedCards.length === 0 ? (
+                  <View style={styles.emptyHistoryContainer}>
+                    <View style={styles.emptyHistoryIconContainer}>
+                      <MaterialCommunityIcons name="heart-outline" size={48} color="#FF6B8A" />
+                    </View>
+                    <Text style={styles.emptyHistoryTitle}>No Date Ideas Yet</Text>
+                    <Text style={styles.emptyHistoryText}>
+                      Start discovering date ideas by using the Random button or exploring categories.
+                    </Text>
+                    <View style={styles.emptyHistoryActionContainer}>
+                      <TouchableOpacity 
+                        style={styles.emptyHistoryActionButton}
+                        onPress={() => {
+                          setShowHistory(false);
+                          setShowSpinningWheel(true);
+                        }}
+                      >
+                        <MaterialCommunityIcons name="dice-multiple" size={20} color="#FF6B8A" />
+                        <Text style={styles.emptyHistoryActionText}>Try Random</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                ) : (
+                  <View style={styles.historyContentWrapper}>
+                    <FlatList
+                      data={revealedCards}
+                      renderItem={({ item, index }) => (
+                        <HistoryCard
+                          item={item}
+                          sequenceNumber={item.id}
+                          onPress={() => handleCardPress(item, item.id)}
+                        />
+                      )}
+                      keyExtractor={(item, index) => item.id ? item.id.toString() : `history-${index}`}
+                      numColumns={2}
+                      key="history-grid"
+                      contentContainerStyle={styles.historyGridContainer}
+                      showsVerticalScrollIndicator={false}
+                    />
+                  </View>
+                )}
+
+                {/* Tab Bar - Always Visible */}
+                <View style={styles.tabBar}>
+                  <View style={styles.tabBarContent}>
+                    <PlatformButton
+                      onPress={() => {
+                        setExpandedCard(null);
+                        setShowCalendarModal(false);
+                        setShowInvitationModal(false);
+                        setShowReminderModal(false);
+                        setShowSpinningWheel(false);
+                        setShowHistory(false);
+                        setSelectedCategory(null);
+                      }}
+                      style={{}}
+                      theme={theme}
+                      platformStyles={{ fontFamily: 'System' }}
+                      buttonColor="#5B9BD5"
+                    >
+                      {getActionIcon('home', 26, '#5B9BD5')}
+                      Main
+                    </PlatformButton>
+                    <PlatformButton
+                      onPress={() => {
+                        setExpandedCard(null);
+                        setShowCalendarModal(false);
+                        setShowInvitationModal(false);
+                        setShowReminderModal(false);
+                        setShowHistory(false);
+                        setShowSpinningWheel(true);
+                        setSelectedCategory(null);
+                      }}
+                      style={{}}
+                      theme={theme}
+                      platformStyles={{ fontFamily: 'System' }}
+                      buttonColor="#F7931E"
+                    >
+                      {getActionIcon('random', 26, '#F7931E')}
+                      Random
+                    </PlatformButton>
+                    <PlatformButton
+                      onPress={() => {
+                        setExpandedCard(null);
+                        setShowCalendarModal(false);
+                        setShowInvitationModal(false);
+                        setShowReminderModal(false);
+                        setShowSpinningWheel(false);
+                        setShowHistory(true);
+                      }}
+                      style={{}}
+                      theme={theme}
+                      platformStyles={{ fontFamily: 'System' }}
+                      buttonColor="#FF6B8A"
+                    >
+                      {getActionIcon('history', 26, '#FF6B8A')}
+                      History
+                    </PlatformButton>
+                    <PlatformButton
+                      onPress={resetAppData}
+                      style={{}}
+                      theme={theme}
+                      platformStyles={{ fontFamily: 'System' }}
+                      buttonColor="#7FB069"
+                    >
+                      {getActionIcon('reset', 26, '#7FB069')}
+                      Reset
+                    </PlatformButton>
+                  </View>
+                </View>
+              </SafeAreaView>
+            </View>
+          </View>
+        )}
         <CalendarModal
           visible={showCalendarModal}
           onClose={() => setShowCalendarModal(false)}
@@ -2719,11 +2806,46 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: '#F2F2F7',
   },
+  historyCard: {
+    width: (width - 48) / 2,
+    height: 200,
+    margin: 8,
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 6,
+    borderWidth: 0,
+  },
   cardNumber: {
     fontSize: 18,
     fontWeight: 600,
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  historyCardText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    textAlign: 'center',
+    lineHeight: 18,
+    flex: 1,
+    paddingHorizontal: 12,
+    flexWrap: 'wrap',
+  },
+  historyContentWrapper: {
+    flex: 1,
+    backgroundColor: '#F8F9FA',
+    paddingTop: 16,
+  },
+  historyGridContainer: {
+    padding: 16,
+    paddingBottom: 120,
   },
   categoryIconContainer: {
     width: 32,
@@ -2876,6 +2998,202 @@ const styles = StyleSheet.create({
   historyCategoryText: {
     fontSize: 11,
     fontWeight: 500,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  // New History Page Styles
+  historyPage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#F8F9FA',
+    zIndex: 1000,
+  },
+  historyTitleSection: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  historyTitleContainer: {
+    flex: 1,
+  },
+  historyTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  historyTitleIcon: {
+    marginRight: 8,
+  },
+  historyPageTitle: {
+    fontSize: 20,
+    fontWeight: 700,
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    letterSpacing: -0.5,
+  },
+  historyPageSubtitle: {
+    fontSize: 13,
+    fontWeight: 400,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginTop: 2,
+  },
+  historyStatsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  historyStatItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  historyStatText: {
+    fontSize: 13,
+    fontWeight: 500,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginLeft: 4,
+  },
+  historyStatDivider: {
+    width: 1,
+    height: 12,
+    backgroundColor: '#E5E5E7',
+    marginHorizontal: 12,
+  },
+  historyCloseButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F2F2F7',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: '#E5E5E7',
+  },
+  emptyHistoryContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+  },
+  emptyHistoryIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#F2F2F7',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  emptyHistoryTitle: {
+    fontSize: 20,
+    fontWeight: 600,
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  emptyHistoryActionContainer: {
+    marginTop: 24,
+  },
+  emptyHistoryActionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FF6B8A',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 20,
+    shadowColor: '#FF6B8A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  emptyHistoryActionText: {
+    fontSize: 16,
+    fontWeight: 600,
+    color: '#FFFFFF',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginLeft: 8,
+  },
+  historyStatsContainer: {
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 8,
+    marginVertical: 8,
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  statItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  statNumber: {
+    fontSize: 20,
+    fontWeight: 700,
+    color: '#FF6B8A',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 4,
+  },
+  statLabel: {
+    fontSize: 12,
+    fontWeight: 500,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    textAlign: 'center',
+  },
+  historyContentContainer: {
+    flex: 1,
+  },
+  historySectionHeader: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 8,
+    marginTop: 8,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  historySectionTitle: {
+    fontSize: 16,
+    fontWeight: 600,
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 4,
+  },
+  historySectionSubtitle: {
+    fontSize: 13,
+    fontWeight: 400,
+    color: '#86868B',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
   tabBar: {
@@ -3533,8 +3851,8 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   expandedCardContent: {
-    width: width - 10,
-    height: height * 0.95,
+    width: width - 16,
+    maxHeight: height * 0.95,
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
     shadowColor: '#000',
@@ -3572,28 +3890,27 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   expandedCardBody: {
-    padding: 20,
+    padding: 24,
     flex: 1,
-    maxHeight: height * 0.7,
   },
   dateIdeaText: {
-    fontSize: 20,
+    fontSize: 26,
     fontWeight: 600,
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    lineHeight: 26,
-    marginBottom: 16,
+    lineHeight: 32,
+    marginBottom: 20,
     textAlign: 'center',
   },
   categoryDescriptionContainer: {
     backgroundColor: '#F8F9FA',
-    padding: 8,
-    borderRadius: 8,
-    marginBottom: 12,
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 16,
     alignItems: 'center',
   },
   categoryDescriptionText: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#6C757D',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     textAlign: 'center',
@@ -3653,20 +3970,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 20,
+    paddingVertical: 16,
+    backgroundColor: '#F8F9FA',
+    borderRadius: 12,
   },
   infoItem: {
     alignItems: 'center',
   },
   infoLabel: {
-    fontSize: 12,
-    fontWeight: 50,
+    fontSize: 16,
+    fontWeight: 500,
     color: '#86868B',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    marginBottom: 4,
+    marginBottom: 8,
   },
   infoValue: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 600,
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
@@ -3674,7 +3994,7 @@ const styles = StyleSheet.create({
   expandedActionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 16,
+    padding: 24,
     gap: 12,
   },
   expandedActionButton: {
