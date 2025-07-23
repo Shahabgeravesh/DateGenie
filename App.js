@@ -673,94 +673,76 @@ const SmallCard = ({ item, sequenceNumber, isRevealed, onPress }) => {
 // Spinning Wheel Component
 const SpinningWheel = ({ visible, onClose, onSelectCard }) => {
   const [isSpinning, setIsSpinning] = useState(false);
-  const [rotation, setRotation] = useState(0);
   const [selectedNumber, setSelectedNumber] = useState(null);
+  const [spinCount, setSpinCount] = useState(0);
   const spinAnim = useRef(new Animated.Value(0)).current;
-  const [lastPanValue, setLastPanValue] = useState(0);
-  const [velocity, setVelocity] = useState(0);
-  const lastPanTime = useRef(Date.now());
-  const lastPanPosition = useRef({ x: 0, y: 0 });
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const glowAnim = useRef(new Animated.Value(0)).current;
 
-  const spinWheel = (initialVelocity = 0) => {
+  // Romantic colors for wheel segments
+  const romanticColors = [
+    '#FF6B8A', '#FF8E8E', '#FFB347', '#FFD700', '#98FB98', 
+    '#87CEEB', '#DDA0DD', '#F0E68C', '#FF69B4', '#00CED1'
+  ];
+
+  const spinWheel = () => {
     if (isSpinning) return;
     
     setIsSpinning(true);
     setSelectedNumber(null);
+    setSpinCount(prev => prev + 1);
     
-    // Random number between 1-100
-    const randomNumber = Math.floor(Math.random() * 100) + 1;
+    // Random number between 1-12 (matching wheel segments)
+    const randomNumber = Math.floor(Math.random() * 12) + 1;
     
-    // Calculate rotation based on velocity or use default
-    const baseVelocity = Math.abs(initialVelocity) > 0.5 ? Math.abs(initialVelocity) * 2000 : 1500;
-    const fullSpins = 3 + Math.random() * 4; // 3-7 full spins
-    const targetAngle = (randomNumber - 1) * 3.6; // 360° / 100 = 3.6° per number
+    // Calculate the target angle for the selected segment
+    const segmentAngle = 360 / 12; // 30 degrees per segment
+    const targetAngle = (randomNumber - 1) * segmentAngle;
+    
+    // Add multiple full rotations for dramatic effect
+    const fullSpins = 5 + Math.random() * 5; // 5-10 full spins
     const totalRotation = fullSpins * 360 + targetAngle;
     
+    // Reset animation value to current position
+    spinAnim.setValue(0);
+    
+    // Smooth spinning animation with easing
     Animated.timing(spinAnim, {
       toValue: totalRotation,
-      duration: baseVelocity,
+      duration: 3000 + Math.random() * 1000, // 3-4 seconds
       useNativeDriver: true,
       easing: Easing.out(Easing.cubic),
     }).start(() => {
       setIsSpinning(false);
       setSelectedNumber(randomNumber);
       
-      // Auto-close after showing result
+      // Show result and close after delay
       setTimeout(() => {
-        onSelectCard(randomNumber);
-        onClose();
-      }, 2000);
+        try {
+          onSelectCard(randomNumber);
+          onClose();
+        } catch (error) {
+          console.error('Error in wheel callback:', error);
+          onClose();
+        }
+      }, 1500);
     });
   };
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => !isSpinning,
-      onMoveShouldSetPanResponder: () => !isSpinning,
-      onPanResponderGrant: (evt) => {
-        lastPanPosition.current = { x: evt.nativeEvent.pageX, y: evt.nativeEvent.pageY };
-        lastPanTime.current = Date.now();
-      },
-      onPanResponderMove: (evt) => {
-        if (isSpinning) return;
-        
-        const currentPosition = { x: evt.nativeEvent.pageX, y: evt.nativeEvent.pageY };
-        const currentTime = Date.now();
-        
-        // Calculate distance moved
-        const deltaX = currentPosition.x - lastPanPosition.current.x;
-        const deltaY = currentPosition.y - lastPanPosition.current.y;
-        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        
-        // Calculate velocity
-        const timeDelta = currentTime - lastPanTime.current;
-        const velocityMagnitude = timeDelta > 0 ? distance / timeDelta : 0;
-        setVelocity(velocityMagnitude);
-        
-        // Calculate rotation based on movement
-        const newRotation = lastPanValue + distance * 0.3;
-        setLastPanValue(newRotation);
-        
-        // Update wheel rotation in real-time
-        spinAnim.setValue(newRotation);
-        
-        lastPanPosition.current = currentPosition;
-        lastPanTime.current = currentTime;
-      },
-      onPanResponderRelease: () => {
-        if (isSpinning) return;
-        
-        // Start spinning with the calculated velocity
-        spinWheel(velocity / 50);
-      },
-    })
-  ).current;
-
   const renderWheelSegments = () => {
     const segments = [];
-    for (let i = 1; i <= 100; i++) {
-      const angle = (i - 1) * 3.6;
-      const isEven = i % 2 === 0;
+    const segmentAngle = 360 / 12; // 12 segments for better performance
+    
+    // Modern color palette for segments
+    const modernColors = [
+      '#FF6B8A', '#7FB069', '#5B9BD5', '#F4A261', 
+      '#E76F51', '#E9C46A', '#8B9DC3', '#9B59B6',
+      '#34495E', '#F7931E', '#6A994E', '#C9A87D'
+    ];
+    
+    for (let i = 0; i < 12; i++) {
+      const startAngle = i * segmentAngle;
+      const colorIndex = i % modernColors.length;
       
       segments.push(
         <View
@@ -768,21 +750,16 @@ const SpinningWheel = ({ visible, onClose, onSelectCard }) => {
           style={[
             styles.wheelSegment,
             {
-              transform: [{ rotate: `${angle}deg` }],
-              backgroundColor: isEven ? '#FF6B9D' : '#FF8E8E',
+              transform: [{ rotate: `${startAngle}deg` }],
+              backgroundColor: modernColors[colorIndex],
             }
           ]}
         >
-          <Text style={[
-            styles.wheelNumber,
-            {
-              fontFamily: getFunFont(i),
-              color: getFunColor(i),
-              textShadowColor: 'rgba(0,0,0,0.2)',
-              textShadowOffset: { width: 1, height: 1 },
-              textShadowRadius: 2,
-            }
-          ]}>{i}</Text>
+          <View style={styles.wheelSegmentInner}>
+            <Text style={styles.wheelSegmentText}>
+              {i + 1}
+            </Text>
+          </View>
         </View>
       );
     }
@@ -792,48 +769,94 @@ const SpinningWheel = ({ visible, onClose, onSelectCard }) => {
   if (!visible) return null;
 
   return (
-    <View style={styles.wheelOverlay}>
-      <View style={styles.wheelContainer}>
-        <View style={styles.wheelHeader}>
-          <Text style={styles.wheelTitle}>🎰 Spin the Wheel! 🎰</Text>
-          <TouchableOpacity onPress={onClose} style={styles.wheelCloseButton}>
-            <MaterialCommunityIcons name="close" size={24} color="#3F51B5" />
-          </TouchableOpacity>
-        </View>
+    <Modal
+      visible={visible}
+      transparent={true}
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <View style={styles.wheelOverlay}>
+        <View style={styles.wheelContainer}>
+          <View style={styles.wheelHeader}>
+            <View style={styles.wheelHeaderContent}>
+              <Text style={styles.wheelTitle}>Random Date</Text>
+              <Text style={styles.wheelSubtitle}>Discover something new</Text>
+            </View>
+            <TouchableOpacity onPress={onClose} style={styles.wheelCloseButton}>
+              <MaterialCommunityIcons name="close" size={20} color="#8E8E93" />
+            </TouchableOpacity>
+          </View>
         
         <View style={styles.wheelContent}>
+          <View style={styles.wheelStats}>
+            <Text style={styles.wheelStatsText}>Spins: {spinCount}</Text>
+          </View>
+          
           <View style={styles.wheelWrapper}>
             <Animated.View
-              {...panResponder.panHandlers}
               style={[
                 styles.wheel,
                 {
-                  transform: [{ rotate: spinAnim.interpolate({
-                    inputRange: [0, 360],
-                    outputRange: ['0deg', '360deg'],
-                  }) }],
+                  transform: [
+                    { rotate: spinAnim.interpolate({
+                      inputRange: [0, 360],
+                      outputRange: ['0deg', '360deg'],
+                    }) },
+                    { scale: scaleAnim }
+                  ],
+                  shadowOpacity: glowAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0.3, 0.8],
+                  }),
                 }
               ]}
             >
               {renderWheelSegments()}
+              
+              {/* Simple center */}
+              <View style={styles.wheelCenter}>
+                <Text style={styles.wheelCenterText}>•</Text>
+              </View>
             </Animated.View>
             
-            {/* Center pointer */}
-            <View style={styles.wheelPointer} />
+            {/* Casino-style pointer */}
+            <View style={styles.wheelPointer}>
+              <View style={styles.wheelPointerInner} />
+            </View>
           </View>
           
           {selectedNumber && (
-            <View style={styles.resultContainer}>
-              <Text style={styles.resultText}>🎉 Card {selectedNumber} Selected! 🎉</Text>
-            </View>
+            <Animated.View 
+              style={[
+                styles.resultContainer,
+                {
+                  transform: [{ scale: scaleAnim }],
+                }
+              ]}
+            >
+              <Text style={styles.resultText}>Selected: #{selectedNumber}</Text>
+              <Text style={styles.resultSubtext}>Finding your perfect date...</Text>
+            </Animated.View>
           )}
           
+          <TouchableOpacity 
+            style={[styles.spinButton, isSpinning && styles.spinButtonDisabled]}
+            onPress={spinWheel}
+            disabled={isSpinning}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.spinButtonText}>
+              {isSpinning ? 'Finding your date...' : 'Find a Date'}
+            </Text>
+          </TouchableOpacity>
+          
           <View style={styles.wheelInstructions}>
-            <Text style={styles.wheelInstructionText}>👆 Swipe to spin the wheel!</Text>
+            <Text style={styles.wheelInstructionText}>Tap to generate a random date idea</Text>
           </View>
         </View>
       </View>
     </View>
+    </Modal>
   );
 };
 
@@ -2269,15 +2292,22 @@ export default function App() {
   };
 
   const handleWheelCardSelect = (cardNumber) => {
-    const selectedCard = dateIdeasData.find(item => item.id === cardNumber);
-    if (selectedCard) {
-      setExpandedCard(selectedCard);
-      // Reveal the card if not already revealed
-      if (!revealedCards.some(card => card.id === cardNumber)) {
-        const newRevealedCards = [...revealedCards, { ...selectedCard, sequenceNumber: cardNumber }];
-        setRevealedCards(newRevealedCards);
-        AsyncStorage.setItem('revealedCards', JSON.stringify(newRevealedCards));
+    try {
+      console.log('Wheel selected card:', cardNumber);
+      const selectedCard = dateIdeasData.find(item => item.id === cardNumber);
+      if (selectedCard) {
+        setExpandedCard(selectedCard);
+        // Reveal the card if not already revealed
+        if (!revealedCards.some(card => card.id === cardNumber)) {
+          const newRevealedCards = [...revealedCards, { ...selectedCard, sequenceNumber: cardNumber }];
+          setRevealedCards(newRevealedCards);
+          AsyncStorage.setItem('revealedCards', JSON.stringify(newRevealedCards));
+        }
+      } else {
+        console.log('Card not found for number:', cardNumber);
       }
+    } catch (error) {
+      console.error('Error in handleWheelCardSelect:', error);
     }
   };
 
@@ -2372,12 +2402,15 @@ export default function App() {
         <CategoryFilter 
           selectedCategory={selectedCategory}
           onCategorySelect={(key) => {
+            console.log('Category selected:', key);
             if (key !== selectedCategory) {
               setShowHistory(false);
+              setShowSpinningWheel(false); // Ensure wheel is hidden for non-random categories
               setSelectedCategory(key);
             }
           }}
           onRandomSelect={() => {
+            console.log('Random selected - showing wheel');
             setShowHistory(false);
             setShowSpinningWheel(true);
           }}
@@ -3226,74 +3259,210 @@ const styles = StyleSheet.create({
   },
   wheelContainer: {
     width: '90%',
-    backgroundColor: '#fff',
-    padding: 24,
+    maxWidth: 380,
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 10,
+    maxHeight: height * 0.8,
   },
   wheelHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F2F2F7',
+  },
+  wheelHeaderContent: {
+    flex: 1,
   },
   wheelTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#222',
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#1C1C1E',
+    fontFamily: 'System',
+    marginBottom: 2,
+  },
+  wheelSubtitle: {
+    fontSize: 14,
+    color: '#8E8E93',
     fontFamily: 'System',
   },
   wheelCloseButton: {
     padding: 8,
-    borderRadius: 16,
+    borderRadius: 20,
+    backgroundColor: '#F2F2F7',
   },
   wheelContent: {
     alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingVertical: 20,
+  },
+  wheelStats: {
+    marginBottom: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#F2F2F7',
+    borderRadius: 8,
+  },
+  wheelStatsText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#8E8E93',
+    fontFamily: 'System',
   },
   wheelWrapper: {
     width: '100%',
-    height: 200,
+    height: 250,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 16,
   },
   wheel: {
-    width: '100%',
-    height: '100%',
+    width: 200,
+    height: 200,
+    borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
   },
   wheelPointer: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: '#FF6B8A',
     position: 'absolute',
-    top: '50%',
+    top: -12,
     left: '50%',
-    transform: [{ translateX: -5 }, { translateY: -5 }],
-  },
-  resultContainer: {
-    marginBottom: 16,
-    padding: 8,
-    borderWidth: 2,
-    borderColor: '#FF6B8A',
-    borderRadius: 8,
-    backgroundColor: '#FFF5F7',
+    transform: [{ translateX: -12 }],
+    width: 24,
+    height: 24,
+    backgroundColor: '#007AFF',
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  wheelPointerInner: {
+    width: 16,
+    height: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+  },
+  resultContainer: {
+    marginBottom: 20,
+    padding: 16,
+    backgroundColor: '#F2F2F7',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E5E5EA',
+    shadowOpacity: 0.6,
+    shadowRadius: 8,
+    elevation: 6,
   },
   resultText: {
-    fontSize: 14,
-    color: '#FF6B8A',
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1C1C1E',
     fontFamily: 'System',
+    textAlign: 'center',
+  },
+  resultSubtext: {
+    fontSize: 14,
+    color: '#8E8E93',
+    fontFamily: 'System',
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  wheelSegment: {
+    position: 'absolute',
+    width: 0,
+    height: 0,
+    borderStyle: 'solid',
+    borderLeftWidth: 100,
+    borderRightWidth: 100,
+    borderBottomWidth: 100,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    transform: [{ rotate: '0deg' }],
+  },
+  wheelSegmentInner: {
+    position: 'absolute',
+    top: 35,
+    left: -12,
+    width: 24,
+    alignItems: 'center',
+  },
+  wheelSegmentText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    fontFamily: 'System',
+    textShadowColor: 'rgba(0,0,0,0.5)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 1,
+  },
+  wheelCenter: {
+    position: 'absolute',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F2F2F7',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E5E5EA',
+  },
+  wheelCenterText: {
+    fontSize: 16,
+    color: '#8E8E93',
+  },
+  spinButton: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 12,
+    marginBottom: 16,
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  spinButtonDisabled: {
+    backgroundColor: '#C7C7CC',
+    shadowOpacity: 0.1,
+  },
+  spinButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    fontFamily: 'System',
+    textAlign: 'center',
   },
   wheelInstructions: {
     marginBottom: 16,
   },
   wheelInstructionText: {
-    fontSize: 12,
-    color: '#666',
+    fontSize: 13,
+    color: '#8E8E93',
     fontFamily: 'System',
+    textAlign: 'center',
+    textShadowColor: '#FFD700',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   categoryBadge: {
     paddingHorizontal: 8,
