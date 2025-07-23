@@ -57,190 +57,190 @@
   },
   {
     "id": 9,
-    "idea": "Karaoke night at home with cocktails",
+    "idea": "Karaoke night at a private room",
     "category": "fun",
-    "budget": "low",
+    "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 10,
-    "idea": "Bike ride through the city with ice cream stops",
-    "category": "active",
-    "budget": "low",
-    "location": "outdoor"
+    "idea": "Sushi making workshop",
+    "category": "foodie",
+    "budget": "medium",
+    "location": "indoor"
   },
   {
     "id": 11,
-    "idea": "Pottery making workshop - create something together",
+    "idea": "Meditation and yoga session together",
+    "category": "chill",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 12,
+    "idea": "Rock climbing at an indoor gym",
+    "category": "adventurous",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 13,
+    "idea": "Pottery making class",
     "category": "creative",
     "budget": "medium",
     "location": "indoor"
   },
   {
-    "id": 12,
-    "idea": "Movie marathon with popcorn and cuddles",
-    "category": "cozy",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 13,
-    "idea": "Spa day at home with face masks and massages",
-    "category": "romantic",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
     "id": 14,
-    "idea": "Photography walk - capture beautiful moments",
-    "category": "creative",
+    "idea": "Sunrise beach walk with breakfast",
+    "category": "romantic",
     "budget": "low",
     "location": "outdoor"
   },
   {
     "id": 15,
-    "idea": "Bookstore date with coffee and deep conversations",
-    "category": "intellectual",
-    "budget": "low",
+    "idea": "Escape room challenge",
+    "category": "fun",
+    "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 16,
-    "idea": "Mini golf challenge with playful betting",
-    "category": "fun",
-    "budget": "low",
-    "location": "outdoor"
-  },
-  {
-    "id": 17,
     "idea": "Farmers market visit and cooking together",
     "category": "foodie",
     "budget": "low",
     "location": "outdoor"
   },
   {
-    "id": 18,
-    "idea": "DIY pizza night with wine and music",
-    "category": "foodie",
+    "id": 17,
+    "idea": "Bike ride through scenic trails",
+    "category": "active",
     "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 19,
-    "idea": "Sunrise breakfast in bed",
-    "category": "romantic",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 20,
-    "idea": "Escape room adventure - solve puzzles together",
-    "category": "adventurous",
-    "budget": "medium",
-    "location": "indoor"
-  },
-  {
-    "id": 21,
-    "idea": "Concert under the stars with a blanket",
-    "category": "romantic",
-    "budget": "medium",
     "location": "outdoor"
   },
   {
-    "id": 22,
-    "idea": "Baking cookies together with Christmas music",
+    "id": 18,
+    "idea": "Movie marathon with homemade popcorn",
     "category": "cozy",
     "budget": "low",
     "location": "indoor"
   },
   {
-    "id": 23,
-    "idea": "Park bench people watching with coffee",
+    "id": 19,
+    "idea": "Hot air balloon ride at sunset",
+    "category": "luxury",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 20,
+    "idea": "Volunteer together at a local charity",
     "category": "chill",
     "budget": "low",
     "location": "outdoor"
   },
   {
+    "id": 21,
+    "idea": "Paint and sip class",
+    "category": "creative",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 22,
+    "idea": "Concert under the stars",
+    "category": "romantic",
+    "budget": "medium",
+    "location": "outdoor"
+  },
+  {
+    "id": 23,
+    "idea": "Trampoline park adventure",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
     "id": 24,
-    "idea": "Thrift store treasure hunt for unique finds",
-    "category": "adventurous",
+    "idea": "Museum scavenger hunt",
+    "category": "cultural",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 25,
-    "idea": "Sunset rooftop dinner with city views",
-    "category": "romantic",
-    "budget": "high",
-    "location": "outdoor"
+    "idea": "DIY pizza night with wine",
+    "category": "foodie",
+    "budget": "low",
+    "location": "indoor"
   },
   {
     "id": 26,
-    "idea": "Beach bonfire with s'mores and stories",
-    "category": "romantic",
-    "budget": "low",
-    "location": "outdoor"
-  },
-  {
-    "id": 27,
-    "idea": "Indoor rock climbing challenge",
-    "category": "active",
-    "budget": "medium",
-    "location": "indoor"
-  },
-  {
-    "id": 28,
-    "idea": "Candlelit dinner at home with homemade pasta",
-    "category": "romantic",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 29,
-    "idea": "Sunrise yoga session in the park",
-    "category": "active",
-    "budget": "low",
-    "location": "outdoor"
-  },
-  {
-    "id": 30,
-    "idea": "Arcade night with retro games and prizes",
-    "category": "fun",
-    "budget": "medium",
-    "location": "indoor"
-  },
-  {
-    "id": 31,
-    "idea": "Botanical garden stroll with tea ceremony",
-    "category": "chill",
-    "budget": "low",
-    "location": "outdoor"
-  },
-  {
-    "id": 32,
-    "idea": "DIY candle making workshop",
-    "category": "creative",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 33,
-    "idea": "Sunset kayaking adventure",
+    "idea": "Sunset kayaking on a lake",
     "category": "adventurous",
     "budget": "medium",
     "location": "outdoor"
   },
   {
-    "id": 34,
-    "idea": "Wine and paint night at home",
-    "category": "creative",
+    "id": 27,
+    "idea": "Comedy club night",
+    "category": "fun",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 28,
+    "idea": "Spa day with couples massage",
+    "category": "luxury",
+    "budget": "high",
+    "location": "indoor"
+  },
+  {
+    "id": 29,
+    "idea": "Book club for two with coffee",
+    "category": "chill",
     "budget": "low",
     "location": "indoor"
   },
   {
+    "id": 30,
+    "idea": "Photography walk in the city",
+    "category": "creative",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 31,
+    "idea": "Candlelit dinner at home",
+    "category": "romantic",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 32,
+    "idea": "Bowling tournament",
+    "category": "fun",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 33,
+    "idea": "Cooking competition - mystery ingredients",
+    "category": "foodie",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 34,
+    "idea": "Mountain biking adventure",
+    "category": "adventurous",
+    "budget": "medium",
+    "location": "outdoor"
+  },
+  {
     "id": 35,
-    "idea": "Midnight snack run to 24-hour diner",
-    "category": "spontaneous",
+    "idea": "Flea market treasure hunt",
+    "category": "budget",
     "budget": "low",
     "location": "outdoor"
   },
@@ -387,7 +387,7 @@
   {
     "id": 56,
     "idea": "Sunset helicopter tour of the city",
-    "category": "romantic",
+    "category": "luxury",
     "budget": "high",
     "location": "outdoor"
   },
@@ -556,7 +556,7 @@
     "id": 80,
     "idea": "Sunset snorkeling adventure",
     "category": "adventurous",
-    "budget": "medium",
+    "budget": "high",
     "location": "outdoor"
   },
   {

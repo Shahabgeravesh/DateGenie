@@ -901,22 +901,136 @@ const shareDateIdea = async (item) => {
   }
 };
 
-// Enhanced Expanded Card Component
+// Enhanced Expanded Card Component with detailed descriptions
 const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar, onSetReminder }) => {
   const categories = {
-    romantic: { name: 'Romantic', icon: '💕', color: '#FF6B8A' },
-    adventurous: { name: 'Adventurous', icon: '🏔️', color: '#7FB069' },
-    active: { name: 'Active', icon: '⚡', color: '#5B9BD5' },
-    cozy: { name: 'Cozy', icon: '🏠', color: '#F4A261' },
-    fun: { name: 'Fun', icon: '🎉', color: '#E76F51' },
-    foodie: { name: 'Foodie', icon: '🍕', color: '#E9C46A' },
-    chill: { name: 'Chill', icon: '😌', color: '#8B9DC3' },
-    spontaneous: { name: 'Spontaneous', icon: '🎲', color: '#F7931E' },
-    budget: { name: 'Budget-Friendly', icon: '💰', color: '#6A994E' },
-    luxury: { name: 'Luxury', icon: '💎', color: '#C9A87D' },
-    random: { name: 'Random', icon: '🎰', color: '#D4A5A5' },
+    romantic: { name: 'Romantic', icon: '❤️', color: '#FF6B8A', description: 'Sweet & Intimate moments' },
+    adventurous: { name: 'Adventurous', icon: '🏔️', color: '#7FB069', description: 'Thrilling & Bold experiences' },
+    active: { name: 'Active', icon: '⚡', color: '#5B9BD5', description: 'Energetic & Sporty activities' },
+    cozy: { name: 'Cozy', icon: '🏠', color: '#F4A261', description: 'Comfortable & Warm settings' },
+    fun: { name: 'Fun', icon: '🎉', color: '#E76F51', description: 'Playful & Entertaining activities' },
+    foodie: { name: 'Foodie', icon: '🍽️', color: '#E9C46A', description: 'Culinary & Delicious experiences' },
+    chill: { name: 'Chill', icon: '😌', color: '#8B9DC3', description: 'Relaxed & Peaceful moments' },
+    creative: { name: 'Creative', icon: '🎨', color: '#9B59B6', description: 'Artistic & Imaginative activities' },
+    cultural: { name: 'Cultural', icon: '🏛️', color: '#34495E', description: 'Educational & Enriching experiences' },
+    spontaneous: { name: 'Spontaneous', icon: '🎲', color: '#F7931E', description: 'Impulsive & Exciting adventures' },
+    budget: { name: 'Budget-Friendly', icon: '💰', color: '#6A994E', description: 'Affordable & Smart choices' },
+    luxury: { name: 'Luxury', icon: '💎', color: '#C9A87D', description: 'Premium & Exclusive experiences' },
+    random: { name: 'Random', icon: '🎰', color: '#D4A5A5', description: 'Spin & Discover surprises' },
   };
   const categoryInfo = categories[item.category] || categories.random;
+
+  // Generate detailed description based on the date idea
+  const generateDescription = (idea, category, budget, location) => {
+    const descriptions = {
+      romantic: {
+        outdoor: "Perfect for creating intimate memories under the open sky. This romantic outdoor experience will bring you closer together while enjoying nature's beauty.",
+        indoor: "A cozy indoor setting that creates the perfect atmosphere for romance. This intimate experience will strengthen your connection in a comfortable, private space."
+      },
+      adventurous: {
+        outdoor: "An exciting outdoor adventure that will get your adrenaline pumping! This thrilling experience is perfect for couples who love excitement and new challenges.",
+        indoor: "An indoor adventure that's both exciting and safe. This thrilling experience will test your teamwork and create lasting memories."
+      },
+      active: {
+        outdoor: "Get your heart racing with this energetic outdoor activity! Perfect for fitness-loving couples who want to stay active while having fun together.",
+        indoor: "Stay active and energized with this indoor fitness activity. Great for couples who want to work out together and support each other's health goals."
+      },
+      cozy: {
+        outdoor: "A warm and comfortable outdoor experience that feels like home. Perfect for couples who want to relax together in nature's embrace.",
+        indoor: "A snug and warm indoor experience that creates the perfect cozy atmosphere. Ideal for couples who love comfort and intimate moments."
+      },
+      fun: {
+        outdoor: "Lots of laughter and joy await with this fun outdoor activity! Perfect for couples who love to play and have a good time together.",
+        indoor: "Endless entertainment and laughter with this indoor fun activity. Great for couples who enjoy playful moments and creating happy memories."
+      },
+      foodie: {
+        outdoor: "A delicious outdoor culinary experience that will satisfy your taste buds. Perfect for food-loving couples who enjoy dining in unique settings.",
+        indoor: "A mouthwatering indoor dining experience that's both delicious and intimate. Ideal for couples who appreciate good food and cozy atmospheres."
+      },
+      chill: {
+        outdoor: "A peaceful outdoor experience that will help you both relax and unwind. Perfect for couples who enjoy quiet moments together in nature.",
+        indoor: "A calm and relaxing indoor experience that promotes tranquility. Great for couples who value peaceful moments and stress-free activities."
+      },
+      creative: {
+        outdoor: "Express your artistic side with this creative outdoor activity. Perfect for couples who love to create and explore their imagination together.",
+        indoor: "Unleash your creativity with this artistic indoor activity. Ideal for couples who enjoy making things together and expressing themselves."
+      },
+      cultural: {
+        outdoor: "Expand your horizons with this educational outdoor cultural experience. Perfect for couples who love learning and exploring new perspectives.",
+        indoor: "Enrich your minds with this cultural indoor experience. Great for couples who enjoy learning together and appreciating art and history."
+      }
+    };
+
+    const categoryDesc = descriptions[category] || descriptions.fun;
+    const locationDesc = categoryDesc[location] || categoryDesc.indoor;
+    
+    return locationDesc;
+  };
+
+  // Generate tips based on the date idea
+  const generateTips = (category, budget, location) => {
+    const tips = {
+      romantic: [
+        "Plan ahead to create the perfect atmosphere",
+        "Bring some romantic music or candles",
+        "Focus on quality time together",
+        "Don't forget to capture the moment"
+      ],
+      adventurous: [
+        "Check weather conditions beforehand",
+        "Bring appropriate safety gear",
+        "Start with easier challenges if new to the activity",
+        "Have a backup plan in case of bad weather"
+      ],
+      active: [
+        "Wear comfortable, appropriate clothing",
+        "Stay hydrated throughout the activity",
+        "Warm up before starting",
+        "Encourage each other and have fun!"
+      ],
+      cozy: [
+        "Create a comfortable atmosphere",
+        "Have some soft blankets or pillows ready",
+        "Choose relaxing background music",
+        "Make sure you're both comfortable"
+      ],
+      fun: [
+        "Keep an open mind and be playful",
+        "Don't take things too seriously",
+        "Be ready to laugh and have fun",
+        "Focus on enjoying each other's company"
+      ],
+      foodie: [
+        "Consider dietary preferences and restrictions",
+        "Plan for the right portion sizes",
+        "Have some wine or drinks to complement the meal",
+        "Take your time to savor the experience"
+      ],
+      chill: [
+        "Minimize distractions and interruptions",
+        "Create a peaceful environment",
+        "Take deep breaths and relax together",
+        "Enjoy the quiet moments"
+      ],
+      creative: [
+        "Don't worry about being perfect",
+        "Express yourselves freely",
+        "Support each other's creative ideas",
+        "Have fun with the process"
+      ],
+      cultural: [
+        "Do some research beforehand",
+        "Ask questions and learn together",
+        "Take photos to remember the experience",
+        "Discuss what you learned afterward"
+      ]
+    };
+
+    return tips[category] || tips.fun;
+  };
+
+  const description = generateDescription(item.idea, item.category, item.budget, item.location);
+  const tips = generateTips(item.category, item.budget, item.location);
   
   return (
     <View style={styles.expandedCardOverlay}>
@@ -944,14 +1058,24 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
         </View>
         
         {/* Main Content */}
-        <View style={styles.expandedCardBody}>
-          {typeof item.idea === 'undefined' ? (
-            <Text style={styles.dateIdeaText}>Loading...</Text>
-          ) : (
-            <Text style={styles.dateIdeaText}>
-              {item.placeholder ? 'Date idea coming soon!' : (item.idea || 'No idea found')}
+        <ScrollView style={styles.expandedCardBody} showsVerticalScrollIndicator={false}>
+          {/* Date Idea Title */}
+          <Text style={styles.dateIdeaText}>
+            {item.placeholder ? 'Date idea coming soon!' : (item.idea || 'No idea found')}
+          </Text>
+
+          {/* Category Description */}
+          <View style={styles.categoryDescriptionContainer}>
+            <Text style={styles.categoryDescriptionText}>
+              {categoryInfo.description}
             </Text>
-          )}
+          </View>
+
+          {/* Detailed Description */}
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.descriptionTitle}>About This Date</Text>
+            <Text style={styles.descriptionText}>{description}</Text>
+          </View>
           
           {/* Quick Info */}
           <View style={styles.quickInfoContainer}>
@@ -967,8 +1091,25 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
                 {item.location === 'indoor' ? 'Indoor' : 'Outdoor'}
               </Text>
             </View>
+            <View style={styles.infoItem}>
+              <Text style={styles.infoLabel}>Category</Text>
+              <Text style={[styles.infoValue, { color: categoryInfo.color }]}>
+                {categoryInfo.name}
+              </Text>
+            </View>
           </View>
-        </View>
+
+          {/* Tips Section */}
+          <View style={styles.tipsContainer}>
+            <Text style={styles.tipsTitle}>💡 Pro Tips</Text>
+            {tips.map((tip, index) => (
+              <View key={index} style={styles.tipItem}>
+                <Text style={styles.tipBullet}>•</Text>
+                <Text style={styles.tipText}>{tip}</Text>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
 
         {/* Action Buttons */}
         <View style={[styles.expandedActionButtons, { flexDirection: 'row', gap: 12, marginTop: 8 }]}> 
@@ -3223,6 +3364,70 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     marginBottom: 20,
     textAlign: 'center',
+  },
+  categoryDescriptionContainer: {
+    backgroundColor: '#F8F9FA',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  categoryDescriptionText: {
+    fontSize: 14,
+    color: '#6C757D',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    textAlign: 'center',
+    fontStyle: 'italic',
+  },
+  descriptionContainer: {
+    marginBottom: 20,
+  },
+  descriptionTitle: {
+    fontSize: 16,
+    fontWeight: 600,
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 8,
+  },
+  descriptionText: {
+    fontSize: 14,
+    color: '#495057',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    lineHeight: 20,
+  },
+  tipsContainer: {
+    backgroundColor: '#FFF8E1',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 20,
+    borderLeftWidth: 4,
+    borderLeftColor: '#FFC107',
+  },
+  tipsTitle: {
+    fontSize: 16,
+    fontWeight: 600,
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 12,
+  },
+  tipItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 8,
+  },
+  tipBullet: {
+    fontSize: 16,
+    color: '#FFC107',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginRight: 8,
+    marginTop: 2,
+  },
+  tipText: {
+    fontSize: 14,
+    color: '#495057',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    lineHeight: 20,
+    flex: 1,
   },
   quickInfoContainer: {
     flexDirection: 'row',
