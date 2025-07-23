@@ -686,7 +686,7 @@ const SpinningWheel = ({ visible, onClose, onSelectCard }) => {
       setIsSpinning(false);
       spinAnim.setValue(0);
     }
-  }, [visible, spinAnim]);
+  }, [visible]);
 
   // Romantic colors for wheel segments
   const romanticColors = [
