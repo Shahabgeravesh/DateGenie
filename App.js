@@ -1057,7 +1057,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
         </View>
         
         {/* Main Content */}
-        <ScrollView style={styles.expandedCardBody} showsVerticalScrollIndicator={false}>
+        <ScrollView style={styles.expandedCardBody} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }}>
           {/* Date Idea Title */}
           <Text style={styles.dateIdeaText}>
             {item.placeholder ? 'Date idea coming soon!' : (item.idea || 'No idea found')}
@@ -1098,7 +1098,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
         </ScrollView>
 
         {/* Action Buttons */}
-        <View style={[styles.expandedActionButtons, { flexDirection: 'row', gap: 12, marginTop: 8 }]}> 
+        <View style={[styles.expandedActionButtons, { flexDirection: 'row', gap: 12, marginTop: 16 }]}> 
           <TouchableOpacity 
             style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 48, borderRadius: 12, backgroundColor: '#007AFF' }} 
             onPress={() => shareDateIdea(item)}
@@ -2532,9 +2532,7 @@ export default function App() {
                       {revealedCards.length} {revealedCards.length === 1 ? 'date idea' : 'date ideas'} discovered
                     </Text>
                   </View>
-                  <TouchableOpacity onPress={() => setShowHistory(false)} style={styles.historyCloseButton}>
-                    <MaterialCommunityIcons name="close" size={20} color="#86868B" />
-                  </TouchableOpacity>
+
                 </View>
 
                 {/* History Content */}
@@ -3706,26 +3704,28 @@ const styles = StyleSheet.create({
   },
   wheelPointer: {
     position: 'absolute',
-    top: -12,
+    top: -8,
     left: '50%',
-    transform: [{ translateX: -12 }],
-    width: 24,
-    height: 24,
-    backgroundColor: '#007AFF',
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  wheelPointerInner: {
+    transform: [{ translateX: -8 }],
     width: 16,
     height: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FF6B8A',
     borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#FF6B8A',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 4,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  wheelPointerInner: {
+    width: 8,
+    height: 8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 4,
   },
   resultContainer: {
     marginBottom: 20,
@@ -3851,8 +3851,8 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   expandedCardContent: {
-    width: width - 16,
-    maxHeight: height * 0.95,
+    width: width - 8,
+    maxHeight: height * 0.98,
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
     shadowColor: '#000',
@@ -3890,17 +3890,18 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   expandedCardBody: {
-    padding: 24,
+    padding: 28,
     flex: 1,
   },
   dateIdeaText: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: 600,
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    lineHeight: 32,
-    marginBottom: 20,
+    lineHeight: 36,
+    marginBottom: 24,
     textAlign: 'center',
+    flexWrap: 'wrap',
   },
   categoryDescriptionContainer: {
     backgroundColor: '#F8F9FA',
