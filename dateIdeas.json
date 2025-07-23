@@ -698,5 +698,110 @@
     "category": "romantic",
     "budget": "medium",
     "location": "indoor"
+  },
+  {
+    "id": 101,
+    "idea": "Dollar store challenge: Each person gets $5 to buy items for a creative date. Combine your purchases for a unique experience.",
+    "category": "budget",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 102,
+    "idea": "Free museum day: Many museums offer free admission on certain days. Explore art, history, or science together.",
+    "category": "budget",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 103,
+    "idea": "Library date: Browse books together, find a cozy corner, and read to each other from your favorite passages.",
+    "category": "budget",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 104,
+    "idea": "Park picnic with homemade sandwiches and games. Bring a frisbee or cards for extra fun.",
+    "category": "budget",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 105,
+    "idea": "Window shopping adventure: Walk through a mall or shopping district, create wish lists for each other.",
+    "category": "budget",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 106,
+    "idea": "Helicopter tour over the city with champagne service and luxury transportation.",
+    "category": "luxury",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 107,
+    "idea": "Private chef experience at home with a professional chef preparing a multi-course meal.",
+    "category": "luxury",
+    "budget": "high",
+    "location": "indoor"
+  },
+  {
+    "id": 108,
+    "idea": "Luxury spa day with couples massage, facials, and relaxation treatments.",
+    "category": "luxury",
+    "budget": "high",
+    "location": "indoor"
+  },
+  {
+    "id": 109,
+    "idea": "Private yacht charter for a sunset cruise with gourmet dining and live music.",
+    "category": "luxury",
+    "budget": "high",
+    "location": "outdoor"
+  },
+  {
+    "id": 110,
+    "idea": "Michelin-starred restaurant experience with wine pairing and private dining room.",
+    "category": "luxury",
+    "budget": "high",
+    "location": "indoor"
+  },
+  {
+    "id": 111,
+    "idea": "Book a last-minute flight to a nearby city and explore together for the weekend.",
+    "category": "spontaneous",
+    "budget": "medium",
+    "location": "outdoor"
+  },
+  {
+    "id": 112,
+    "idea": "Drive to a random location using a dice roll for directions - left, right, or straight.",
+    "category": "spontaneous",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 113,
+    "idea": "Try a new restaurant you've never heard of - pick by closing your eyes and pointing at a menu.",
+    "category": "spontaneous",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 114,
+    "idea": "Attend a random event or festival happening in your city this weekend.",
+    "category": "spontaneous",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 115,
+    "idea": "Take a different route home and stop at the first interesting place you see.",
+    "category": "spontaneous",
+    "budget": "low",
+    "location": "outdoor"
   }
 ]

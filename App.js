@@ -679,6 +679,15 @@ const SpinningWheel = ({ visible, onClose, onSelectCard }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const glowAnim = useRef(new Animated.Value(0)).current;
 
+  // Reset state when modal becomes visible
+  useEffect(() => {
+    if (visible) {
+      setSelectedNumber(null);
+      setIsSpinning(false);
+      spinAnim.setValue(0);
+    }
+  }, [visible, spinAnim]);
+
   // Romantic colors for wheel segments
   const romanticColors = [
     '#FF6B8A', '#FF8E8E', '#FFB347', '#FFD700', '#98FB98', 
@@ -1056,8 +1065,16 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
   const tips = generateTips(item.category, item.budget, item.location);
   
   return (
-    <View style={styles.expandedCardOverlay}>
-      <View style={styles.expandedCardContent}>
+    <TouchableOpacity 
+      style={styles.expandedCardOverlay} 
+      activeOpacity={1} 
+      onPress={onClose}
+    >
+      <TouchableOpacity 
+        style={styles.expandedCardContent} 
+        activeOpacity={1} 
+        onPress={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <View style={styles.expandedCardHeader}>
           <View style={styles.headerLeft}>
@@ -1153,8 +1170,8 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
             <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', fontFamily: 'System' }}>Calendar</Text>
           </TouchableOpacity>
         </View>
-      </View>
-    </View>
+      </TouchableOpacity>
+    </TouchableOpacity>
   );
 };
 
@@ -2413,6 +2430,7 @@ export default function App() {
             console.log('Random selected - showing wheel');
             setShowHistory(false);
             setShowSpinningWheel(true);
+            setExpandedCard(null); // Clear any previously selected card
           }}
         />
         <FlatList
