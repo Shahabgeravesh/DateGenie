@@ -671,7 +671,7 @@ const SmallCard = ({ item, sequenceNumber, isRevealed, onPress }) => {
 };
 
 // Spinning Wheel Component
-const SpinningWheel = ({ visible, onClose, onSelectCard }) => {
+const SpinningWheel = ({ visible, onClose, onSelectCard, onSpinStart, excludedCards = [], totalCards = 100 }) => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState(null);
   const [spinCount, setSpinCount] = useState(0);
@@ -697,16 +697,35 @@ const SpinningWheel = ({ visible, onClose, onSelectCard }) => {
   const spinWheel = () => {
     if (isSpinning) return;
     
+    // Clear any previously expanded card immediately when spin starts
+    if (onSpinStart) {
+      onSpinStart();
+    }
+    
     setIsSpinning(true);
     setSelectedNumber(null);
     setSpinCount(prev => prev + 1);
     
-    // Random number between 1-12 (matching wheel segments)
-    const randomNumber = Math.floor(Math.random() * 12) + 1;
+    // Get available card numbers (excluding already selected ones)
+    const availableCards = Array.from({ length: totalCards }, (_, i) => i + 1)
+      .filter(cardNumber => !excludedCards.includes(cardNumber));
+    
+    let randomNumber;
+    // If all cards have been selected, reset the selection
+    if (availableCards.length === 0) {
+      // Reset all cards as available
+      const allCards = Array.from({ length: totalCards }, (_, i) => i + 1);
+      randomNumber = allCards[Math.floor(Math.random() * allCards.length)];
+    } else {
+      // Select from available cards
+      randomNumber = availableCards[Math.floor(Math.random() * availableCards.length)];
+    }
     
     // Calculate the target angle for the selected segment
-    const segmentAngle = 360 / 12; // 30 degrees per segment
-    const targetAngle = (randomNumber - 1) * segmentAngle;
+    const segmentAngle = 360 / 12; // 12 segments for visual wheel
+    // Map the selected card number to one of the 12 wheel segments
+    const wheelSegment = (randomNumber - 1) % 12;
+    const targetAngle = wheelSegment * segmentAngle;
     
     // Add multiple full rotations for dramatic effect
     const fullSpins = 5 + Math.random() * 5; // 5-10 full spins
@@ -1921,6 +1940,7 @@ export default function App() {
   const [invitationData, setInvitationData] = useState(null);
   const [tutorialKey, setTutorialKey] = useState(0);
   const [showSpinningWheel, setShowSpinningWheel] = useState(false);
+  const [wheelSelectedCards, setWheelSelectedCards] = useState([]);
 
   useEffect(() => {
     // Load revealed cards from AsyncStorage on mount
@@ -1950,6 +1970,18 @@ export default function App() {
     AsyncStorage.getItem('tutorialShown').then(data => {
       if (!data) {
         setShowTutorial(true);
+      }
+    });
+    
+    // Load wheel selected cards from AsyncStorage
+    AsyncStorage.getItem('wheelSelectedCards').then(data => {
+      if (data) {
+        try {
+          const parsed = JSON.parse(data);
+          setWheelSelectedCards(parsed);
+        } catch {
+          setWheelSelectedCards([]);
+        }
       }
     });
     
@@ -2281,7 +2313,7 @@ export default function App() {
   const resetAppData = async () => {
     try {
       // Clear all stored data
-      await AsyncStorage.multiRemove(['revealedCards', 'tutorialShown']);
+      await AsyncStorage.multiRemove(['revealedCards', 'tutorialShown', 'wheelSelectedCards']);
       
       // Reset all state
       setRevealedCards([]);
@@ -2292,6 +2324,7 @@ export default function App() {
       setShowReminderModal(false);
       setShowSpinningWheel(false);
       setSelectedCategory(null);
+      setWheelSelectedCards([]);
       
       // Ensure tutorial is completely disabled
       setShowTutorial(false);
@@ -2314,6 +2347,15 @@ export default function App() {
       const selectedCard = dateIdeasData.find(item => item.id === cardNumber);
       if (selectedCard) {
         setExpandedCard(selectedCard);
+        
+        // Add to wheel selected cards to prevent re-selection
+        setWheelSelectedCards(prev => {
+          const newSelected = [...prev, cardNumber];
+          // Store in AsyncStorage for persistence
+          AsyncStorage.setItem('wheelSelectedCards', JSON.stringify(newSelected));
+          return newSelected;
+        });
+        
         // Reveal the card if not already revealed
         if (!revealedCards.some(card => card.id === cardNumber)) {
           const newRevealedCards = [...revealedCards, { ...selectedCard, sequenceNumber: cardNumber }];
@@ -2331,24 +2373,11 @@ export default function App() {
   // New gridData logic for category filtering
   let gridData;
   if (!selectedCategory) {
-    // No filter: show all 100 cards
-    gridData = Array.from({ length: 100 }, (_, i) => {
-      const sequenceNumber = i + 1;
-      const existingItem = dateIdeasData.find(item => item.id === sequenceNumber);
-      if (existingItem) {
-        return { ...existingItem, sequenceNumber };
-      } else {
-        return {
-          id: sequenceNumber,
-          sequenceNumber: sequenceNumber,
-          idea: `Date idea #${sequenceNumber} - Coming soon!`,
-          category: 'random',
-          budget: 'medium',
-          location: 'indoor',
-          placeholder: true
-        };
-      }
-    });
+    // No filter: show all actual cards from dateIdeasData
+    gridData = dateIdeasData.map((item, idx) => ({ 
+      ...item, 
+      sequenceNumber: idx + 1 
+    }));
   } else {
     // Filtered: show only cards for the selected category
     gridData = dateIdeasData
@@ -2360,9 +2389,9 @@ export default function App() {
   const renderCard = ({ item, index }) => (
     <SmallCard
       item={item}
-      sequenceNumber={index + 1}
+      sequenceNumber={item.id}
       isRevealed={revealedCards.some(card => card.id === item.id)}
-      onPress={() => handleCardPress(item, index + 1)}
+      onPress={() => handleCardPress(item, item.id)}
     />
   );
 
@@ -2557,6 +2586,9 @@ export default function App() {
           visible={showSpinningWheel}
           onClose={() => setShowSpinningWheel(false)}
           onSelectCard={handleWheelCardSelect}
+          onSpinStart={closeExpandedCard}
+          excludedCards={wheelSelectedCards}
+          totalCards={dateIdeasData.length}
         />
       </SafeAreaView>
     </View>
