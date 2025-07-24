@@ -1704,6 +1704,13 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
             backgroundColor,
             borderWidth: isActive ? 1 : 0,
             borderColor,
+            ...(isActive && {
+              shadowColor: '#FF6B8A',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.15,
+              shadowRadius: 4,
+              elevation: 3,
+            }),
           },
         ]}
         activeOpacity={0.8}
@@ -3084,10 +3091,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.5,
     borderTopColor: 'rgba(0, 0, 0, 0.06)',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 8,
+    shadowOffset: { width: 0, height: -1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 6,
     overflow: 'hidden',
   },
   modernTabBarContent: {
@@ -3111,11 +3118,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 16,
     minHeight: 52,
-    shadowColor: 'transparent',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0,
-    shadowRadius: 0,
-    elevation: 0,
   },
   modernTabIconContainer: {
     width: 28,
