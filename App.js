@@ -1714,17 +1714,24 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
             styles.modernTabIconContainer,
             {
               transform: [{ scale: iconScaleAnim }],
-              ...(isActive && {
-                shadowColor: '#FF6B8A',
-                shadowOffset: { width: 0, height: 0 },
-                shadowOpacity: 0.3,
-                shadowRadius: 6,
-                elevation: 4,
-              }),
             },
           ]}
         >
-          {getIconComponent(icon, 26, textColor)}
+          <View
+            style={[
+              {
+                ...(isActive && {
+                  shadowColor: '#FF6B8A',
+                  shadowOffset: { width: 0, height: 0 },
+                  shadowOpacity: 0.15,
+                  shadowRadius: 2,
+                  elevation: 1,
+                }),
+              },
+            ]}
+          >
+            {getIconComponent(icon, 26, textColor)}
+          </View>
           
           {/* Modern Badge */}
           {badgeCount > 0 && (
