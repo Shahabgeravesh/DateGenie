@@ -1834,13 +1834,10 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
           />
           <StatusBar style="dark" />
           
-          {/* Settings Header */}
-          <View style={styles.settingsHeader}>
-            <View style={{ flex: 1 }} />
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <MaterialCommunityIcons name="close" size={24} color="#86868B" />
-            </TouchableOpacity>
-          </View>
+                      {/* Settings Header - Removed close button since we have tab navigation */}
+            <View style={styles.settingsHeader}>
+              <View style={{ flex: 1 }} />
+            </View>
 
           {/* Settings Content */}
           <ScrollView style={styles.settingsContent} showsVerticalScrollIndicator={false}>
