@@ -817,11 +817,10 @@ const SpinningWheel = ({ visible, onClose, onSelectCard, onSpinStart, excludedCa
     const segments = [];
     const segmentAngle = 360 / 12; // 12 segments for better performance
     
-    // Modern color palette for segments
+    // Ultra-modern gradient color palette
     const modernColors = [
-      '#FF6B8A', '#7FB069', '#5B9BD5', '#F4A261', 
-      '#E76F51', '#E9C46A', '#8B9DC3', '#9B59B6',
-      '#34495E', '#F7931E', '#6A994E', '#C9A87D'
+      '#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe',
+      '#43e97b', '#38f9d7', '#fa709a', '#fee140', '#a8edea', '#fed6e3'
     ];
     
     for (let i = 0; i < 12; i++) {
@@ -835,7 +834,7 @@ const SpinningWheel = ({ visible, onClose, onSelectCard, onSpinStart, excludedCa
             styles.wheelSegment,
             {
               transform: [{ rotate: `${startAngle}deg` }],
-              backgroundColor: modernColors[colorIndex],
+              borderBottomColor: modernColors[colorIndex],
             }
           ]}
         >
@@ -872,10 +871,6 @@ const SpinningWheel = ({ visible, onClose, onSelectCard, onSpinStart, excludedCa
           </View>
         
         <View style={styles.wheelContent}>
-          <View style={styles.wheelStats}>
-            <Text style={styles.wheelStatsText}>Spins: {spinCount}</Text>
-          </View>
-          
           <View style={styles.wheelWrapper}>
             <Animated.View
               style={[
@@ -897,16 +892,13 @@ const SpinningWheel = ({ visible, onClose, onSelectCard, onSpinStart, excludedCa
             >
               {renderWheelSegments()}
               
-              {/* Simple center */}
+              {/* Clean modern center */}
               <View style={styles.wheelCenter}>
-                <Text style={styles.wheelCenterText}>•</Text>
+                <View style={styles.wheelCenterInner}>
+                  <Text style={styles.wheelCenterText}>•</Text>
+                </View>
               </View>
             </Animated.View>
-            
-            {/* Casino-style pointer */}
-            <View style={styles.wheelPointer}>
-              <View style={styles.wheelPointerInner} />
-            </View>
           </View>
           
           {selectedNumber && (
@@ -930,7 +922,7 @@ const SpinningWheel = ({ visible, onClose, onSelectCard, onSpinStart, excludedCa
             activeOpacity={0.8}
           >
             <Text style={styles.spinButtonText}>
-              {isSpinning ? 'Finding your date...' : 'Find a Date'}
+              {isSpinning ? 'Finding your date idea...' : 'Find a Date Idea'}
             </Text>
           </TouchableOpacity>
           
@@ -3760,47 +3752,49 @@ const styles = StyleSheet.create({
   },
   wheelWrapper: {
     width: '100%',
-    height: 250,
+    height: 300,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
   },
   wheel: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
+    width: 240,
+    height: 240,
+    borderRadius: 120,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowColor: '#667eea',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
+    elevation: 8,
+    borderWidth: 6,
+    borderColor: '#FFFFFF',
   },
   wheelPointer: {
     position: 'absolute',
-    top: -8,
+    top: -12,
     left: '50%',
-    transform: [{ translateX: -8 }],
-    width: 16,
-    height: 16,
-    backgroundColor: '#FF6B8A',
-    borderRadius: 8,
+    transform: [{ translateX: -10 }],
+    width: 20,
+    height: 20,
+    backgroundColor: '#667eea',
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#FF6B8A',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 4,
-    borderWidth: 2,
+    shadowColor: '#667eea',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+    elevation: 6,
+    borderWidth: 3,
     borderColor: '#FFFFFF',
   },
   wheelPointerInner: {
-    width: 8,
-    height: 8,
+    width: 10,
+    height: 10,
     backgroundColor: '#FFFFFF',
-    borderRadius: 4,
+    borderRadius: 5,
   },
   resultContainer: {
     marginBottom: 20,
@@ -3834,58 +3828,78 @@ const styles = StyleSheet.create({
     width: 0,
     height: 0,
     borderStyle: 'solid',
-    borderLeftWidth: 100,
-    borderRightWidth: 100,
-    borderBottomWidth: 100,
+    borderLeftWidth: 110,
+    borderRightWidth: 110,
+    borderBottomWidth: 110,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
+    borderBottomColor: '#667eea', // Default modern color
     transform: [{ rotate: '0deg' }],
   },
   wheelSegmentInner: {
     position: 'absolute',
-    top: 35,
+    top: 45,
     left: -12,
     width: 24,
     alignItems: 'center',
   },
   wheelSegmentText: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 18,
+    fontWeight: '800',
     color: '#FFFFFF',
-    fontFamily: 'System',
-    textShadowColor: 'rgba(0,0,0,0.5)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 1,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    textShadowColor: 'rgba(0,0,0,0.7)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 3,
   },
   wheelCenter: {
     position: 'absolute',
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E5E5EA',
+    borderWidth: 3,
+    borderColor: '#667eea',
+    shadowColor: '#667eea',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  wheelCenterInner: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#667eea',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 2,
   },
   wheelCenterText: {
     fontSize: 16,
-    color: '#8E8E93',
+    color: '#FFFFFF',
+    fontWeight: '900',
   },
   spinButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 14,
-    paddingHorizontal: 32,
-    borderRadius: 12,
+    backgroundColor: '#667eea',
+    paddingVertical: 16,
+    paddingHorizontal: 40,
+    borderRadius: 16,
     marginBottom: 16,
-    shadowColor: '#007AFF',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowColor: '#667eea',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
   },
   spinButtonDisabled: {
-    backgroundColor: '#C7C7CC',
+    backgroundColor: '#A0A0A0',
     shadowOpacity: 0.1,
   },
   spinButtonText: {
