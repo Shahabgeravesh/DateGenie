@@ -1823,7 +1823,7 @@ const getLocationPreference = (revealedCards) => {
 };
 
 // Settings Screen Component
-const SettingsScreen = ({ onClose, onReset, revealedCardsCount }) => {
+const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount }) => {
   return (
     <View style={styles.settingsPage}>
       <View style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
@@ -1892,7 +1892,7 @@ const SettingsScreen = ({ onClose, onReset, revealedCardsCount }) => {
             <View style={styles.settingsSection}>
               <Text style={styles.sectionTitle}>Support</Text>
               
-              <TouchableOpacity style={styles.settingsItem}>
+              <TouchableOpacity style={styles.settingsItem} onPress={onShowHelp}>
                 <View style={styles.settingsItemLeft}>
                   <MaterialCommunityIcons name="help-circle" size={24} color="#FF6B8A" />
                   <View style={styles.settingsItemText}>
@@ -1921,6 +1921,155 @@ const SettingsScreen = ({ onClose, onReset, revealedCardsCount }) => {
   );
 };
 
+// Help & FAQ Screen Component
+const HelpFAQScreen = ({ onClose }) => {
+  const [expandedFAQ, setExpandedFAQ] = useState(null);
+
+  const faqData = [
+    {
+      id: 1,
+      question: "How do I discover date ideas?",
+      answer: "Tap on any card in the main grid to reveal a date idea. You can also use the Random button to get surprise suggestions, or filter by categories like Romantic, Adventure, or Food & Dining."
+    },
+    {
+      id: 2,
+      question: "What are the different categories?",
+      answer: "DateGenie offers 8 categories: Romantic, Adventure, Food & Dining, Creative, Outdoors, Indoor, Budget-Friendly, and Luxury. Each category contains unique date ideas tailored to different preferences and situations."
+    },
+    {
+      id: 3,
+      question: "How does the Random feature work?",
+      answer: "The Random button spins a wheel with all 100 date ideas. It excludes ideas you've already discovered to ensure you always get something new. Perfect for when you can't decide!"
+    },
+    {
+      id: 4,
+      question: "Can I save my favorite ideas?",
+      answer: "Yes! All revealed ideas are automatically saved to your History tab. You can view all your discovered ideas there, and they're organized by when you found them."
+    },
+    {
+      id: 5,
+      question: "How do I share date ideas?",
+      answer: "When you tap on a revealed idea, you'll see share options. You can share via email, SMS, or use your device's native sharing. Perfect for planning dates with your partner!"
+    },
+    {
+      id: 6,
+      question: "What do the budget indicators mean?",
+      answer: "$ = Low budget (under $25), $$ = Medium budget ($25-$75), $$$ = Higher budget (over $75). This helps you plan according to your budget."
+    },
+    {
+      id: 7,
+      question: "How do I set reminders for dates?",
+      answer: "When viewing a date idea, tap the reminder icon to set a notification. You can choose the date and time, and DateGenie will remind you about your planned date."
+    },
+    {
+      id: 8,
+      question: "Can I reset the app and start over?",
+      answer: "Yes! Go to Settings > Data Management > Reset App Data. This will clear all your revealed ideas and reset the app to its initial state. Use with caution as this action cannot be undone."
+    },
+    {
+      id: 9,
+      question: "How many date ideas are in the app?",
+      answer: "DateGenie contains 100 carefully curated date ideas across 8 different categories. Each idea includes details about the activity, budget, and location."
+    },
+    {
+      id: 10,
+      question: "What if I want to suggest new ideas?",
+      answer: "We'd love to hear your suggestions! Use the Contact Us option in Settings to send us your ideas. We regularly update the app with new date suggestions."
+    }
+  ];
+
+  const toggleFAQ = (id) => {
+    setExpandedFAQ(expandedFAQ === id ? null : id);
+  };
+
+  return (
+    <View style={styles.helpPage}>
+      <View style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
+          <RNStatusBar 
+            barStyle="dark-content" 
+            backgroundColor={'#FFFFFF'} 
+          />
+          <StatusBar style="dark" />
+          
+          {/* Help Header */}
+          <View style={styles.helpHeader}>
+            <Text style={styles.helpTitle}>Help & FAQ</Text>
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+              <MaterialCommunityIcons name="close" size={24} color="#86868B" />
+            </TouchableOpacity>
+          </View>
+
+          {/* Help Content */}
+          <ScrollView style={styles.helpContent} showsVerticalScrollIndicator={false}>
+            
+            {/* Welcome Section */}
+            <View style={styles.helpWelcomeSection}>
+              <View style={styles.helpWelcomeIcon}>
+                <MaterialCommunityIcons name="help-circle" size={48} color="#FF6B8A" />
+              </View>
+              <Text style={styles.helpWelcomeTitle}>How can we help?</Text>
+              <Text style={styles.helpWelcomeText}>
+                Find answers to common questions about using DateGenie and discover all the features available to make your dating experience amazing.
+              </Text>
+            </View>
+
+            {/* FAQ Section */}
+            <View style={styles.faqSection}>
+              <Text style={styles.faqSectionTitle}>Frequently Asked Questions</Text>
+              
+              {faqData.map((faq) => (
+                <TouchableOpacity
+                  key={faq.id}
+                  style={[styles.faqItem, expandedFAQ === faq.id && styles.faqItemExpanded]}
+                  onPress={() => toggleFAQ(faq.id)}
+                >
+                  <View style={styles.faqQuestionRow}>
+                    <Text style={styles.faqQuestion}>{faq.question}</Text>
+                    <MaterialCommunityIcons 
+                      name={expandedFAQ === faq.id ? "chevron-up" : "chevron-down"} 
+                      size={20} 
+                      color="#86868B" 
+                    />
+                  </View>
+                  {expandedFAQ === faq.id && (
+                    <Text style={styles.faqAnswer}>{faq.answer}</Text>
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {/* Quick Tips Section */}
+            <View style={styles.tipsSection}>
+              <Text style={styles.tipsSectionTitle}>Quick Tips</Text>
+              
+              <View style={styles.tipCard}>
+                <MaterialCommunityIcons name="lightbulb" size={24} color="#FF9500" />
+                <Text style={styles.tipText}>Use the Random feature when you're feeling indecisive</Text>
+              </View>
+              
+              <View style={styles.tipCard}>
+                <MaterialCommunityIcons name="heart" size={24} color="#FF6B8A" />
+                <Text style={styles.tipText}>Check your History to revisit your favorite ideas</Text>
+              </View>
+              
+              <View style={styles.tipCard}>
+                <MaterialCommunityIcons name="share" size={24} color="#34C759" />
+                <Text style={styles.tipText}>Share ideas with your partner to plan together</Text>
+              </View>
+              
+              <View style={styles.tipCard}>
+                <MaterialCommunityIcons name="bell" size={24} color="#007AFF" />
+                <Text style={styles.tipText}>Set reminders to never forget your planned dates</Text>
+              </View>
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      </View>
+    </View>
+  );
+};
+
 export default function App() {
   const colorScheme = useColorScheme();
   const theme = createTheme(colorScheme);
@@ -1939,6 +2088,7 @@ export default function App() {
   const [showSpinningWheel, setShowSpinningWheel] = useState(false);
   const [wheelSelectedCards, setWheelSelectedCards] = useState([]);
   const [showSettings, setShowSettings] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
     // Load revealed cards from AsyncStorage on mount
@@ -2595,7 +2745,13 @@ export default function App() {
           <SettingsScreen
             onClose={() => setShowSettings(false)}
             onReset={handleResetWithConfirmation}
+            onShowHelp={() => setShowHelp(true)}
             revealedCardsCount={revealedCards.length}
+          />
+        )}
+        {showHelp && (
+          <HelpFAQScreen
+            onClose={() => setShowHelp(false)}
           />
         )}
 
@@ -4227,5 +4383,148 @@ const styles = StyleSheet.create({
   },
   dangerText: {
     color: '#FF3B30',
+  },
+  // Help & FAQ Styles
+  helpPage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#F8F9FA',
+    zIndex: 1000,
+  },
+  helpHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E5E7',
+  },
+  helpTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  helpContent: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  helpWelcomeSection: {
+    alignItems: 'center',
+    marginBottom: 32,
+    paddingVertical: 20,
+  },
+  helpWelcomeIcon: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(255, 107, 138, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  helpWelcomeTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  helpWelcomeText: {
+    fontSize: 16,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    textAlign: 'center',
+    lineHeight: 22,
+    paddingHorizontal: 20,
+  },
+  faqSection: {
+    marginBottom: 32,
+  },
+  faqSectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 16,
+  },
+  faqItem: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    marginBottom: 8,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  faqItemExpanded: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  faqQuestionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  faqQuestion: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    flex: 1,
+    marginRight: 12,
+  },
+  faqAnswer: {
+    fontSize: 14,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    lineHeight: 20,
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+  },
+  tipsSection: {
+    marginBottom: 32,
+  },
+  tipsSectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 16,
+  },
+  tipCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  tipText: {
+    fontSize: 14,
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginLeft: 12,
+    flex: 1,
+    lineHeight: 20,
   },
 });
