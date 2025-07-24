@@ -2383,6 +2383,60 @@ export default function App() {
                   </View>
                 )}
 
+                {/* Modern Advanced Tab Bar - Always Visible */}
+                <View style={styles.modernTabBar}>
+                  <View style={styles.modernTabBarBackground} />
+                  <View style={styles.modernTabBarContent}>
+                    <ModernTabButton
+                      onPress={() => {
+                        setExpandedCard(null);
+                        setShowInvitationModal(false);
+                        setShowReminderModal(false);
+                        setShowSpinningWheel(false);
+                        setShowHistory(false);
+                        setSelectedCategory(null);
+                      }}
+                      icon="home"
+                      label="Home"
+                      isActive={!showHistory && !showSpinningWheel && !expandedCard}
+                      badgeCount={0}
+                    />
+                    <ModernTabButton
+                      onPress={() => {
+                        setExpandedCard(null);
+                        setShowInvitationModal(false);
+                        setShowReminderModal(false);
+                        setShowHistory(false);
+                        setShowSpinningWheel(true);
+                        setSelectedCategory(null);
+                      }}
+                      icon="shuffle"
+                      label="Random"
+                      isActive={showSpinningWheel}
+                      badgeCount={0}
+                    />
+                    <ModernTabButton
+                      onPress={() => {
+                        setExpandedCard(null);
+                        setShowInvitationModal(false);
+                        setShowReminderModal(false);
+                        setShowSpinningWheel(false);
+                        setShowHistory(true);
+                      }}
+                      icon="heart"
+                      label="History"
+                      isActive={showHistory}
+                      badgeCount={revealedCards.length}
+                    />
+                    <ModernTabButton
+                      onPress={resetAppData}
+                      icon="settings"
+                      label="Settings"
+                      isActive={false}
+                      badgeCount={0}
+                    />
+                  </View>
+                </View>
 
               </SafeAreaView>
             </View>
