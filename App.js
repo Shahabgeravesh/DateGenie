@@ -514,6 +514,7 @@ const Tutorial = ({ visible, onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [fadeAnim] = useState(new Animated.Value(0));
   const [slideAnim] = useState(new Animated.Value(50));
+  const [swipeAnim] = useState(new Animated.Value(0));
 
   const tutorialSteps = [
     {
@@ -539,6 +540,52 @@ const Tutorial = ({ visible, onComplete }) => {
     }
   ];
 
+  // PanResponder for swipe gestures
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: (evt, gestureState) => {
+        return Math.abs(gestureState.dx) > Math.abs(gestureState.dy) && Math.abs(gestureState.dx) > 10;
+      },
+      onPanResponderGrant: () => {
+        swipeAnim.setValue(0);
+      },
+      onPanResponderMove: (evt, gestureState) => {
+        swipeAnim.setValue(gestureState.dx);
+      },
+      onPanResponderRelease: (evt, gestureState) => {
+        const { dx, vx } = gestureState;
+        const swipeThreshold = 50;
+        const velocityThreshold = 0.5;
+
+        if (dx > swipeThreshold || vx > velocityThreshold) {
+          // Swipe right - go to previous step
+          if (currentStep > 0) {
+            setCurrentStep(currentStep - 1);
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          }
+        } else if (dx < -swipeThreshold || vx < -velocityThreshold) {
+          // Swipe left - go to next step
+          if (currentStep < tutorialSteps.length - 1) {
+            setCurrentStep(currentStep + 1);
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          } else {
+            onComplete();
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+          }
+        }
+
+        // Reset swipe animation
+        Animated.spring(swipeAnim, {
+          toValue: 0,
+          useNativeDriver: true,
+          tension: 100,
+          friction: 8,
+        }).start();
+      },
+    })
+  ).current;
+
   useEffect(() => {
     if (visible) {
       Animated.parallel([
@@ -559,13 +606,23 @@ const Tutorial = ({ visible, onComplete }) => {
   const nextStep = () => {
     if (currentStep < tutorialSteps.length - 1) {
       setCurrentStep(currentStep + 1);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     } else {
       onComplete();
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
+  };
+
+  const previousStep = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
   };
 
   const skipTutorial = () => {
     onComplete();
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   };
 
   if (!visible) return null;
@@ -575,11 +632,15 @@ const Tutorial = ({ visible, onComplete }) => {
   return (
     <View style={styles.tutorialFullScreen}>
       <Animated.View 
+        {...panResponder.panHandlers}
         style={[
           styles.tutorialContent,
           {
             opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }]
+            transform: [
+              { translateY: slideAnim },
+              { translateX: swipeAnim }
+            ]
           }
         ]}
       >
@@ -624,11 +685,27 @@ const Tutorial = ({ visible, onComplete }) => {
           <TouchableOpacity onPress={skipTutorial} style={[styles.nextButton, { backgroundColor: '#F2F2F7' }]}> 
             <Text style={[styles.nextButtonText, { color: '#1D1D1F' }]}>Skip</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={nextStep} style={[styles.nextButton, { backgroundColor: currentTutorial.color }]}> 
-            <Text style={styles.nextButtonText}>
-              {currentStep === tutorialSteps.length - 1 ? "Get Started" : "Next"}
-            </Text>
-          </TouchableOpacity>
+          
+          <View style={{ flex: 1, flexDirection: 'row', gap: 12 }}>
+            {currentStep > 0 && (
+              <TouchableOpacity onPress={previousStep} style={[styles.nextButton, { backgroundColor: '#F2F2F7', flex: 1 }]}> 
+                <Text style={[styles.nextButtonText, { color: '#1D1D1F' }]}>Back</Text>
+              </TouchableOpacity>
+            )}
+            
+            <TouchableOpacity onPress={nextStep} style={[styles.nextButton, { backgroundColor: currentTutorial.color, flex: currentStep > 0 ? 1 : 1 }]}> 
+              <Text style={styles.nextButtonText}>
+                {currentStep === tutorialSteps.length - 1 ? "Get Started" : "Next"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        
+        {/* Swipe hint indicator */}
+        <View style={styles.swipeHint}>
+          <Text style={styles.swipeHintText}>
+            {currentStep > 0 ? "← Swipe to navigate →" : "Swipe → to continue"}
+          </Text>
         </View>
       </Animated.View>
     </View>
@@ -4478,6 +4555,18 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     letterSpacing: -0.2,
+  },
+  swipeHint: {
+    marginTop: 16,
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  swipeHintText: {
+    fontSize: 14,
+    color: '#8E8E93',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    textAlign: 'center',
+    opacity: 0.8,
   },
   // Settings Styles
   settingsPage: {
