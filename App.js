@@ -31,6 +31,7 @@ import * as Linking from 'expo-linking';
 import * as Notifications from 'expo-notifications';
 import * as Haptics from 'expo-haptics';
 import { MaterialCommunityIcons, FontAwesome5, Feather } from '@expo/vector-icons';
+import GenieIcon from './GenieIcon';
 
 // Platform-specific icon imports
 import { Ionicons } from '@expo/vector-icons'; // SF Symbols equivalent for iOS
@@ -519,7 +520,7 @@ const Tutorial = ({ visible, onComplete }) => {
       title: "Welcome to DateGenie",
       message: "Discover 100 creative date ideas. Tap a card to reveal, filter by category, and save your favorites.",
       iconSet: 'MaterialCommunityIcons',
-      icon: 'magic-staff',
+      icon: 'share-variant',
       color: "#FF6B8A"
     },
     {
@@ -533,7 +534,7 @@ const Tutorial = ({ visible, onComplete }) => {
       title: "You're Ready!",
       message: "Start exploring your 100 date ideas now.",
       iconSet: 'MaterialCommunityIcons',
-      icon: 'magic-staff',
+      icon: 'share-variant',
       color: "#FF6B8A"
     }
   ];
@@ -584,8 +585,10 @@ const Tutorial = ({ visible, onComplete }) => {
       >
         <View style={styles.tutorialHeader}> 
           <View style={styles.genieContainer}>
-            <View style={[styles.tutorialIconContainer, { backgroundColor: currentTutorial.color }]}> 
-              {currentTutorial.iconSet === 'MaterialCommunityIcons' ? ( 
+            <View style={[styles.tutorialIconContainer, { backgroundColor: 'transparent' }]}> 
+              {currentStep === 0 ? (
+                <GenieIcon size={60} color={currentTutorial.color} />
+              ) : currentTutorial.iconSet === 'MaterialCommunityIcons' ? ( 
                 <MaterialCommunityIcons name={currentTutorial.icon} size={44} color="#FFFFFF" /> 
               ) : currentTutorial.iconSet === 'FontAwesome5' ? ( 
                 <FontAwesome5 name={currentTutorial.icon} size={40} color="#FFFFFF" /> 
