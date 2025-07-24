@@ -9,53 +9,19 @@ const GenieIcon = ({ size = 72, color = "#FF6B8A" }) => {
         <Defs>
           <LinearGradient id="genieGradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <Stop offset="0%" stopColor={color} />
-            <Stop offset="100%" stopColor="#FF8FA3" />
+            <Stop offset="100%" stopColor="#E91E63" />
           </LinearGradient>
-          <LinearGradient id="lampGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#FFD700" />
-            <Stop offset="100%" stopColor="#FFA500" />
+          <LinearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <Stop offset="0%" stopColor="#FF1744" />
+            <Stop offset="100%" stopColor="#D50000" />
           </LinearGradient>
         </Defs>
         
-        {/* Genie Lamp Base */}
+        {/* Genie Body - Rounded, plump figure */}
         <Path
-          d="M20 50 L52 50 L48 60 L24 60 Z"
-          fill="url(#lampGradient)"
-          stroke="#DAA520"
-          strokeWidth="1"
-        />
-        
-        {/* Lamp Body */}
-        <Path
-          d="M24 30 Q36 20 48 30 L48 50 L24 50 Z"
-          fill="url(#lampGradient)"
-          stroke="#DAA520"
-          strokeWidth="1"
-        />
-        
-        {/* Lamp Spout */}
-        <Path
-          d="M48 30 Q52 25 50 20 Q48 15 44 20 Q42 25 44 30"
-          fill="url(#lampGradient)"
-          stroke="#DAA520"
-          strokeWidth="1"
-        />
-        
-        {/* Genie Smoke/Magic */}
-        <Path
-          d="M44 20 Q42 15 40 10 Q38 5 36 10 Q34 15 36 20"
-          fill="none"
-          stroke="#FF6B8A"
-          strokeWidth="2"
-          strokeLinecap="round"
-          opacity="0.8"
-        />
-        
-        {/* Genie Body */}
-        <Path
-          d="M36 20 Q32 15 30 20 Q28 25 30 30 Q32 35 36 30 Q40 25 38 20"
+          d="M36 15 Q28 15 24 20 Q20 25 22 35 Q24 45 36 45 Q48 45 50 35 Q52 25 48 20 Q44 15 36 15"
           fill="url(#genieGradient)"
-          stroke="#FF6B8A"
+          stroke="#C2185B"
           strokeWidth="1"
         />
         
@@ -63,32 +29,113 @@ const GenieIcon = ({ size = 72, color = "#FF6B8A" }) => {
         <Circle
           cx="36"
           cy="18"
-          r="6"
+          r="8"
           fill="url(#genieGradient)"
-          stroke="#FF6B8A"
+          stroke="#C2185B"
           strokeWidth="1"
         />
         
-        {/* Genie Eyes */}
-        <Circle cx="34" cy="17" r="1" fill="#FFFFFF" />
-        <Circle cx="38" cy="17" r="1" fill="#FFFFFF" />
-        <Circle cx="34" cy="17" r="0.5" fill="#000000" />
-        <Circle cx="38" cy="17" r="0.5" fill="#000000" />
+        {/* Genie Hair Bun/Topknot */}
+        <Circle
+          cx="36"
+          cy="12"
+          r="3"
+          fill="#C2185B"
+        />
         
-        {/* Genie Arms */}
+        {/* Genie Eyes - Closed, content expression */}
         <Path
-          d="M30 25 Q28 23 26 25 Q24 27 26 29"
+          d="M33 17 Q34 16 35 17 Q36 18 35 17"
           fill="none"
-          stroke="url(#genieGradient)"
-          strokeWidth="2"
+          stroke="#FFFFFF"
+          strokeWidth="1.5"
           strokeLinecap="round"
         />
         <Path
-          d="M42 25 Q44 23 46 25 Q48 27 46 29"
+          d="M37 17 Q38 16 39 17 Q40 18 39 17"
           fill="none"
-          stroke="url(#genieGradient)"
+          stroke="#FFFFFF"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+        
+        {/* Genie Mustache */}
+        <Path
+          d="M32 20 Q36 22 40 20"
+          fill="none"
+          stroke="#C2185B"
           strokeWidth="2"
           strokeLinecap="round"
+        />
+        
+        {/* Genie Mouth - Simple, content */}
+        <Path
+          d="M35 21 Q36 22 37 21"
+          fill="none"
+          stroke="#C2185B"
+          strokeWidth="1"
+          strokeLinecap="round"
+        />
+        
+        {/* Genie Left Arm - Bent, hand on hip */}
+        <Path
+          d="M28 25 Q26 27 25 30 Q24 33 26 35"
+          fill="none"
+          stroke="url(#genieGradient)"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+        
+        {/* Genie Right Arm - Extended, presenting */}
+        <Path
+          d="M44 25 Q46 23 48 20 Q50 17 52 15"
+          fill="none"
+          stroke="url(#genieGradient)"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+        
+        {/* Genie Hand - Open palm */}
+        <Circle
+          cx="52"
+          cy="15"
+          r="2"
+          fill="url(#genieGradient)"
+          stroke="#C2185B"
+          strokeWidth="1"
+        />
+        
+        {/* Heart - Floating above hand */}
+        <Path
+          d="M52 10 Q54 8 56 10 Q58 12 56 14 Q54 16 52 14 Q50 12 52 10"
+          fill="url(#heartGradient)"
+          stroke="#D50000"
+          strokeWidth="0.5"
+        />
+        
+        {/* Genie Swirling Tail/Smoke Base */}
+        <Path
+          d="M36 45 Q32 50 30 55 Q28 60 32 62 Q36 64 40 62 Q42 60 44 55 Q46 50 42 45"
+          fill="url(#genieGradient)"
+          stroke="#C2185B"
+          strokeWidth="1"
+          opacity="0.8"
+        />
+        
+        {/* Additional Swirl Details */}
+        <Path
+          d="M34 48 Q32 52 34 56"
+          fill="none"
+          stroke="#C2185B"
+          strokeWidth="1"
+          opacity="0.6"
+        />
+        <Path
+          d="M38 48 Q40 52 38 56"
+          fill="none"
+          stroke="#C2185B"
+          strokeWidth="1"
+          opacity="0.6"
         />
         
         {/* Magic Sparkles */}
@@ -98,7 +145,7 @@ const GenieIcon = ({ size = 72, color = "#FF6B8A" }) => {
             fill="#FFD700"
           />
           <Path
-            d="M52 12 L54 14 L52 16 L50 14 Z"
+            d="M52 8 L54 10 L52 12 L50 10 Z"
             fill="#FFD700"
           />
           <Path
@@ -110,17 +157,6 @@ const GenieIcon = ({ size = 72, color = "#FF6B8A" }) => {
             fill="#FFD700"
           />
         </G>
-        
-        {/* Lamp Glow */}
-        <Circle
-          cx="36"
-          cy="40"
-          r="8"
-          fill="none"
-          stroke="#FFD700"
-          strokeWidth="1"
-          opacity="0.3"
-        />
       </Svg>
     </View>
   );
