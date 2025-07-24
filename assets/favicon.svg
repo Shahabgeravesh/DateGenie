@@ -1,0 +1,38 @@
+<svg width="196" height="196" viewBox="0 0 196 196" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B8A;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FF8E53;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF6B8A;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="cardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F8F9FA;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF4757;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF6B8A;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="196" height="196" rx="29.4" fill="url(#bgGradient)"/>
+  
+  <!-- Main card -->
+  <rect x="43.120000000000005" y="50.96000000000001" 
+        width="109.76" height="94.08" 
+        rx="12.544" fill="url(#cardGradient)"/>
+  
+  <!-- Card number -->
+  <text x="98" y="90.16" 
+        font-family="Arial, sans-serif" font-size="39.2" 
+        font-weight="bold" text-anchor="middle" fill="#FF6B8A">42</text>
+  
+  <!-- Heart icon -->
+  <path d="M 58.800000000000004 137.20000000000002 
+           Q 50.96000000000001 121.52000000000001 
+             58.800000000000004 105.84
+           Q 66.64 121.52000000000001 
+             58.800000000000004 137.20000000000002 Z" 
+        fill="url(#heartGradient)"/>
+</svg>

@@ -1,0 +1,54 @@
+<svg width="1242" height="1242" viewBox="0 0 1242 1242" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B8A;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FF8E53;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF6B8A;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="cardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F8F9FA;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF4757;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF6B8A;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1242" height="1242" fill="url(#bgGradient)"/>
+  
+  <!-- Main card -->
+  <rect x="316.71" y="360.18" 
+        width="608.58" height="521.64" 
+        rx="69.552" fill="url(#cardGradient)" filter="url(#shadow)"/>
+  
+  <!-- Card number -->
+  <text x="621" y="577.5300000000001" 
+        font-family="Arial, sans-serif" font-size="217.35000000000002" 
+        font-weight="bold" text-anchor="middle" fill="#FF6B8A">42</text>
+  
+  <!-- Heart icon -->
+  <path d="M 403.65 838.35 
+           Q 360.18 751.4100000000001 
+             403.65 664.47
+           Q 447.12 751.4100000000001 
+             403.65 838.35 Z" 
+        fill="url(#heartGradient)"/>
+  
+  <!-- App name -->
+  <text x="621" y="1012.23" 
+        font-family="Arial, sans-serif" font-size="69.552" 
+        font-weight="bold" text-anchor="middle" fill="#FFFFFF">DateUnveil</text>
+  
+  <!-- Sparkle elements -->
+  <circle cx="881.82" cy="447.12" 
+          r="34.776" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="925.29" cy="403.65" 
+          r="21.735000000000003" fill="#FFFFFF" opacity="0.7"/>
+  <circle cx="838.35" cy="490.59000000000003" 
+          r="17.388" fill="#FFFFFF" opacity="0.8"/>
+</svg>
