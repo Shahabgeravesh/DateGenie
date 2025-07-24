@@ -599,6 +599,15 @@ const Tutorial = ({ visible, onComplete }) => {
                   source={require('./assets/Genie.png')} 
                   style={styles.genieImage}
                 />
+                {/* Yellow Glitters */}
+                <View style={styles.glitterContainer}>
+                  <MaterialCommunityIcons name="star" size={12} color="#FFD700" style={styles.glitter1} />
+                  <MaterialCommunityIcons name="star" size={8} color="#FFD700" style={styles.glitter2} />
+                  <MaterialCommunityIcons name="star" size={10} color="#FFD700" style={styles.glitter3} />
+                  <MaterialCommunityIcons name="star" size={14} color="#FFD700" style={styles.glitter4} />
+                  <MaterialCommunityIcons name="star" size={9} color="#FFD700" style={styles.glitter5} />
+                  <MaterialCommunityIcons name="star" size={11} color="#FFD700" style={styles.glitter6} />
+                </View>
               </View>
             ) : (
               <View style={[styles.iconContainer, { backgroundColor: currentTutorial.color }]}>
@@ -4408,6 +4417,43 @@ const styles = StyleSheet.create({
     width: 140,
     height: 140,
     resizeMode: 'contain',
+  },
+  glitterContainer: {
+    position: 'absolute',
+    width: 200,
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  glitter1: {
+    position: 'absolute',
+    top: -20,
+    right: -30,
+  },
+  glitter2: {
+    position: 'absolute',
+    bottom: -15,
+    left: -25,
+  },
+  glitter3: {
+    position: 'absolute',
+    top: 30,
+    left: -20,
+  },
+  glitter4: {
+    position: 'absolute',
+    bottom: 20,
+    right: -15,
+  },
+  glitter5: {
+    position: 'absolute',
+    top: -10,
+    left: -10,
+  },
+  glitter6: {
+    position: 'absolute',
+    bottom: -25,
+    right: -5,
   },
   iconContainer: {
     width: 120,
