@@ -587,7 +587,7 @@ const Tutorial = ({ visible, onComplete }) => {
           <View style={styles.genieContainer}>
             <View style={[styles.tutorialIconContainer, { backgroundColor: 'transparent' }]}> 
               {currentStep === 0 ? (
-                <GenieIcon size={60} color={currentTutorial.color} />
+                <GenieIcon size={80} color={currentTutorial.color} />
               ) : currentTutorial.iconSet === 'MaterialCommunityIcons' ? ( 
                 <MaterialCommunityIcons name={currentTutorial.icon} size={44} color="#FFFFFF" /> 
               ) : currentTutorial.iconSet === 'FontAwesome5' ? ( 
