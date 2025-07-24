@@ -527,13 +527,13 @@ const Tutorial = ({ visible, onComplete }) => {
       title: "Filter & Explore",
       message: "Use categories to find exactly what you're looking for - romantic, adventurous, cozy, and more.",
       icon: 'filter-variant',
-      color: "#7FB069"
+      color: "#FF6B8A"
     },
     {
       title: "Share & Save",
       message: "Found the perfect date? Share it with your partner via email or message instantly.",
       icon: 'share-variant',
-      color: "#5B9BD5"
+      color: "#FF6B8A"
     }
   ];
 
