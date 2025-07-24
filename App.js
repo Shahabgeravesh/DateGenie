@@ -2086,14 +2086,6 @@ const HelpFAQScreen = ({ onClose }) => {
           />
           <StatusBar style="dark" />
           
-          {/* Help Header */}
-          <View style={styles.helpHeader}>
-            <Text style={styles.helpTitle}>Help & FAQ</Text>
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <MaterialCommunityIcons name="close" size={24} color="#86868B" />
-            </TouchableOpacity>
-          </View>
-
           {/* Help Content */}
           <ScrollView style={styles.helpContent} showsVerticalScrollIndicator={false}>
             
@@ -4635,27 +4627,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F9FA',
     zIndex: 1000,
   },
-  helpHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0, 0, 0, 0.06)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  helpTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#1D1D1F',
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-  },
+
   helpContent: {
     flex: 1,
     paddingHorizontal: 20,
