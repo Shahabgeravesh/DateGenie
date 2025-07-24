@@ -1828,6 +1828,25 @@ const getLocationPreference = (revealedCards) => {
 
 // Settings Screen Component
 const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNavigateHome, onNavigateRandom, onNavigateHistory, showHistory, showSpinningWheel, expandedCard, showSettings }) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 100,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
   return (
     <View style={styles.settingsPage}>
       <View style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
@@ -1842,71 +1861,100 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
           <ScrollView style={styles.settingsContent} showsVerticalScrollIndicator={false}>
             
             {/* App Info Section */}
-            <View style={styles.settingsSection}>
-              <View style={styles.settingsItem}>
-                <View style={styles.settingsItemLeft}>
-                  <MaterialCommunityIcons name="information" size={24} color="#FF6B8A" />
-                  <View style={styles.settingsItemText}>
-                    <Text style={styles.settingsItemTitle}>DateGenie</Text>
-                    <Text style={styles.settingsItemSubtitle}>Version 1.0.0</Text>
+            <Animated.View 
+              style={[
+                styles.settingsSection,
+                {
+                  opacity: fadeAnim,
+                  transform: [{ translateY: slideAnim }],
+                }
+              ]}
+            >
+              <View style={styles.appInfoCard}>
+                <View style={styles.appInfoHeader}>
+                  <View style={styles.appIconContainer}>
+                    <MaterialCommunityIcons name="heart" size={32} color="#FF6B8A" />
+                  </View>
+                  <View style={styles.appInfoText}>
+                    <Text style={styles.appName}>DateGenie</Text>
+                    <Text style={styles.appVersion}>Version 1.0.0</Text>
+                  </View>
+                </View>
+                
+                <View style={styles.statsContainer}>
+                  <View style={styles.statItem}>
+                    <Text style={styles.statNumber}>{revealedCardsCount}</Text>
+                    <Text style={styles.statLabel}>Ideas Discovered</Text>
+                  </View>
+                  <View style={styles.statDivider} />
+                  <View style={styles.statItem}>
+                    <Text style={styles.statNumber}>100</Text>
+                    <Text style={styles.statLabel}>Total Ideas</Text>
                   </View>
                 </View>
               </View>
-              
-              <View style={styles.settingsItem}>
-                <View style={styles.settingsItemLeft}>
-                  <MaterialCommunityIcons name="heart" size={24} color="#FF6B8A" />
-                  <View style={styles.settingsItemText}>
-                    <Text style={styles.settingsItemTitle}>Revealed Ideas</Text>
-                    <Text style={styles.settingsItemSubtitle}>{revealedCardsCount} date ideas discovered</Text>
-                  </View>
-                </View>
-              </View>
-            </View>
+            </Animated.View>
 
             {/* Data Management Section */}
-            <View style={styles.settingsSection}>
+            <Animated.View 
+              style={[
+                styles.settingsSection,
+                {
+                  opacity: fadeAnim,
+                  transform: [{ translateY: slideAnim }],
+                }
+              ]}
+            >
               <TouchableOpacity 
-                style={[styles.settingsItem, styles.dangerItem]}
+                style={styles.resetCard}
                 onPress={onReset}
+                activeOpacity={0.8}
               >
-                <View style={styles.settingsItemLeft}>
-                  <MaterialCommunityIcons name="delete" size={24} color="#FF3B30" />
-                  <View style={styles.settingsItemText}>
-                    <Text style={[styles.settingsItemTitle, styles.dangerText]}>Reset App Data</Text>
-                    <Text style={styles.settingsItemSubtitle}>Clear all revealed ideas and start fresh</Text>
-                  </View>
+                <View style={styles.resetIconContainer}>
+                  <MaterialCommunityIcons name="refresh" size={24} color="#FF3B30" />
                 </View>
-                <MaterialCommunityIcons name="chevron-right" size={24} color="#C7C7CC" />
+                <View style={styles.resetContent}>
+                  <Text style={styles.resetTitle}>Reset App Data</Text>
+                  <Text style={styles.resetSubtitle}>Clear all revealed ideas and start fresh</Text>
+                </View>
+                <MaterialCommunityIcons name="chevron-right" size={20} color="#C7C7CC" />
               </TouchableOpacity>
-            </View>
+            </Animated.View>
 
             {/* Support Section */}
-            <View style={styles.settingsSection}>
+            <Animated.View 
+              style={[
+                styles.settingsSection,
+                {
+                  opacity: fadeAnim,
+                  transform: [{ translateY: slideAnim }],
+                }
+              ]}
+            >
               <Text style={styles.sectionTitle}>Support</Text>
               
-              <TouchableOpacity style={styles.settingsItem} onPress={onShowHelp}>
-                <View style={styles.settingsItemLeft}>
+              <TouchableOpacity style={styles.supportCard} onPress={onShowHelp} activeOpacity={0.8}>
+                <View style={styles.supportIconContainer}>
                   <MaterialCommunityIcons name="help-circle" size={24} color="#FF6B8A" />
-                  <View style={styles.settingsItemText}>
-                    <Text style={styles.settingsItemTitle}>Help & FAQ</Text>
-                    <Text style={styles.settingsItemSubtitle}>Get help and answers</Text>
-                  </View>
                 </View>
-                <MaterialCommunityIcons name="chevron-right" size={24} color="#C7C7CC" />
+                <View style={styles.supportContent}>
+                  <Text style={styles.supportTitle}>Help & FAQ</Text>
+                  <Text style={styles.supportSubtitle}>Get help and answers</Text>
+                </View>
+                <MaterialCommunityIcons name="chevron-right" size={20} color="#C7C7CC" />
               </TouchableOpacity>
               
-              <TouchableOpacity style={styles.settingsItem}>
-                <View style={styles.settingsItemLeft}>
+              <TouchableOpacity style={styles.supportCard} activeOpacity={0.8}>
+                <View style={styles.supportIconContainer}>
                   <MaterialCommunityIcons name="email" size={24} color="#FF6B8A" />
-                  <View style={styles.settingsItemText}>
-                    <Text style={styles.settingsItemTitle}>Contact Us</Text>
-                    <Text style={styles.settingsItemSubtitle}>Send feedback or report issues</Text>
-                  </View>
                 </View>
-                <MaterialCommunityIcons name="chevron-right" size={24} color="#C7C7CC" />
+                <View style={styles.supportContent}>
+                  <Text style={styles.supportTitle}>Contact Us</Text>
+                  <Text style={styles.supportSubtitle}>Send feedback or report issues</Text>
+                </View>
+                <MaterialCommunityIcons name="chevron-right" size={20} color="#C7C7CC" />
               </TouchableOpacity>
-            </View>
+            </Animated.View>
           </ScrollView>
 
           {/* Modern Advanced Tab Bar - Always Visible */}
@@ -4416,59 +4464,166 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 24,
+    paddingBottom: 40,
   },
   settingsSection: {
-    marginBottom: 32,
+    marginBottom: 24,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     marginBottom: 16,
+    marginLeft: 4,
   },
-  settingsItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 16,
+  // App Info Card Styles
+  appInfoCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    marginBottom: 8,
+    borderRadius: 16,
+    padding: 20,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  settingsItemLeft: {
+  appInfoHeader: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 20,
+  },
+  appIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: 'rgba(255, 107, 138, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  appInfoText: {
     flex: 1,
   },
-  settingsItemText: {
-    marginLeft: 12,
-    flex: 1,
-  },
-  settingsItemTitle: {
-    fontSize: 16,
-    fontWeight: '500',
+  appName: {
+    fontSize: 20,
+    fontWeight: '700',
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     marginBottom: 2,
   },
-  settingsItemSubtitle: {
+  appVersion: {
     fontSize: 14,
     color: '#86868B',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
-  dangerItem: {
-    borderWidth: 1,
-    borderColor: 'rgba(255, 59, 48, 0.2)',
+  statsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 107, 138, 0.05)',
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
   },
-  dangerText: {
+  statItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  statNumber: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#FF6B8A',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  statLabel: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginTop: 4,
+  },
+  statDivider: {
+    width: 1,
+    height: 40,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    marginHorizontal: 20,
+  },
+  // Reset Card Styles
+  resetCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 59, 48, 0.1)',
+  },
+  resetIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255, 59, 48, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  resetContent: {
+    flex: 1,
+  },
+  resetTitle: {
+    fontSize: 16,
+    fontWeight: '600',
     color: '#FF3B30',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 2,
+  },
+  resetSubtitle: {
+    fontSize: 14,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  // Support Card Styles
+  supportCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  supportIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255, 107, 138, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  supportContent: {
+    flex: 1,
+  },
+  supportTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 2,
+  },
+  supportSubtitle: {
+    fontSize: 14,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
   // Help & FAQ Styles
   helpPage: {
