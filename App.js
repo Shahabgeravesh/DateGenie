@@ -1823,7 +1823,7 @@ const getLocationPreference = (revealedCards) => {
 };
 
 // Settings Screen Component
-const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNavigateHome, onNavigateRandom, onNavigateHistory, showHistory, showSpinningWheel, expandedCard }) => {
+const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNavigateHome, onNavigateRandom, onNavigateHistory, showHistory, showSpinningWheel, expandedCard, showSettings }) => {
   return (
     <View style={styles.settingsPage}>
       <View style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
@@ -1924,7 +1924,7 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
                 onPress={onNavigateHome}
                 icon="home"
                 label="Home"
-                isActive={!showHistory && !showSpinningWheel && !expandedCard}
+                isActive={!showHistory && !showSpinningWheel && !expandedCard && !showSettings}
                 badgeCount={0}
               />
               <ModernTabButton
@@ -2810,6 +2810,7 @@ export default function App() {
             showHistory={showHistory}
             showSpinningWheel={showSpinningWheel}
             expandedCard={expandedCard}
+            showSettings={showSettings}
           />
         )}
         {showHelp && (
