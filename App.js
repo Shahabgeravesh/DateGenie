@@ -1611,16 +1611,16 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
   useEffect(() => {
     Animated.parallel([
       Animated.spring(opacityAnim, {
-        toValue: isActive ? 1 : 0.6,
+        toValue: isActive ? 1 : 0.7,
         useNativeDriver: true,
-        tension: 100,
-        friction: 8,
+        tension: 120,
+        friction: 10,
       }),
       Animated.spring(badgeScaleAnim, {
         toValue: badgeCount > 0 ? 1 : 0,
         useNativeDriver: true,
-        tension: 150,
-        friction: 10,
+        tension: 180,
+        friction: 12,
       }),
     ]).start();
   }, [isActive, badgeCount]);
@@ -1634,32 +1634,32 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
     // Button press animation
     Animated.sequence([
       Animated.spring(scaleAnim, {
-        toValue: 0.95,
+        toValue: 0.92,
         useNativeDriver: true,
-        tension: 200,
-        friction: 8,
+        tension: 250,
+        friction: 10,
       }),
       Animated.spring(scaleAnim, {
         toValue: 1,
         useNativeDriver: true,
-        tension: 200,
-        friction: 8,
+        tension: 250,
+        friction: 10,
       }),
     ]).start();
 
     // Icon bounce animation
     Animated.sequence([
       Animated.spring(iconScaleAnim, {
-        toValue: 1.2,
+        toValue: 1.3,
         useNativeDriver: true,
-        tension: 300,
-        friction: 6,
+        tension: 350,
+        friction: 8,
       }),
       Animated.spring(iconScaleAnim, {
         toValue: 1,
         useNativeDriver: true,
-        tension: 300,
-        friction: 6,
+        tension: 350,
+        friction: 8,
       }),
     ]).start();
 
@@ -1683,7 +1683,8 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
   const activeColor = '#FF6B8A';
   const inactiveColor = '#8E8E93';
   const textColor = isActive ? activeColor : inactiveColor;
-  const backgroundColor = isActive ? 'rgba(255, 107, 138, 0.08)' : 'transparent';
+  const backgroundColor = isActive ? 'rgba(255, 107, 138, 0.12)' : 'transparent';
+  const borderColor = isActive ? 'rgba(255, 107, 138, 0.2)' : 'transparent';
 
   return (
     <Animated.View
@@ -1701,6 +1702,8 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
           styles.modernTabButtonContent,
           {
             backgroundColor,
+            borderWidth: isActive ? 1 : 0,
+            borderColor,
           },
         ]}
         activeOpacity={0.8}
@@ -1713,7 +1716,7 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
             },
           ]}
         >
-          {getIconComponent(icon, 22, textColor)}
+          {getIconComponent(icon, 26, textColor)}
           
           {/* Modern Badge */}
           {badgeCount > 0 && (
@@ -3060,13 +3063,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 14,
   },
-  // Modern Tab Bar Styles
+  // Advanced Professional Tab Bar Styles
   modernTabBar: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: Platform.OS === 'ios' ? 88 : 64,
+    height: Platform.OS === 'ios' ? 92 : 68,
     paddingBottom: Platform.OS === 'ios' ? 34 : 0,
     zIndex: 1000,
   },
@@ -3077,76 +3080,76 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: '#FFFFFF',
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(0, 0, 0, 0.08)',
+    borderTopWidth: 0.5,
+    borderTopColor: 'rgba(0, 0, 0, 0.06)',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: -1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 4,
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 8,
   },
   modernTabBarContent: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     height: '100%',
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
   },
   modernTabButton: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
+    paddingVertical: 6,
   },
   modernTabButtonContent: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    minHeight: 44,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 16,
+    minHeight: 52,
   },
   modernTabIconContainer: {
-    width: 24,
-    height: 24,
+    width: 28,
+    height: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: 6,
     position: 'relative',
   },
   modernTabLabel: {
-    fontSize: 11,
-    fontWeight: '500',
+    fontSize: 12,
+    fontWeight: '600',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     textAlign: 'center',
-    letterSpacing: 0.2,
+    letterSpacing: 0.3,
   },
   modernBadge: {
     position: 'absolute',
-    top: -4,
-    right: -8,
-    minWidth: 20,
-    height: 20,
-    borderRadius: 10,
+    top: -6,
+    right: -10,
+    minWidth: 22,
+    height: 22,
+    borderRadius: 11,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 6,
     backgroundColor: '#FF3B30',
     shadowColor: '#FF3B30',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 4,
-    borderWidth: 2,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.4,
+    shadowRadius: 6,
+    elevation: 6,
+    borderWidth: 2.5,
     borderColor: '#FFFFFF',
   },
   modernBadgeText: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: '700',
     color: '#FFFFFF',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     textAlign: 'center',
-    lineHeight: 12,
+    lineHeight: 14,
   },
   dateTimeSection: {
     marginBottom: 24,
