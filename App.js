@@ -27,7 +27,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { StatusBar } from 'expo-status-bar';
 import * as MailComposer from 'expo-mail-composer';
 import * as Linking from 'expo-linking';
-import * as Calendar from 'expo-calendar';
+
 import * as Notifications from 'expo-notifications';
 import { MaterialCommunityIcons, FontAwesome5, Feather } from '@expo/vector-icons';
 
@@ -264,10 +264,7 @@ const getActionIcon = (action, size = 20, color = '#FF6B8A') => {
       ios: 'share-outline',
       android: 'share'
     },
-    calendar: {
-      ios: 'calendar-outline',
-      android: 'event'
-    },
+
     reminder: {
       ios: 'notifications-outline',
       android: 'notifications'
@@ -526,7 +523,7 @@ const Tutorial = ({ visible, onComplete }) => {
     },
     {
       title: "Share & Save",
-      message: "Found a great idea? Share it via email, message, or add to your calendar.",
+      message: "Found a great idea? Share it via email or message.",
       iconSet: 'MaterialCommunityIcons',
       icon: 'share-variant',
       color: "#34C759"
@@ -1002,7 +999,7 @@ const shareDateIdea = async (item) => {
 };
 
 // Enhanced Expanded Card Component with detailed descriptions
-const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar, onSetReminder }) => {
+const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onSetReminder }) => {
   const categories = {
     romantic: { name: 'Romantic', icon: '', color: '#FF6B8A', description: '' },
     adventurous: { name: 'Adventurous', icon: '', color: '#7FB069', description: '' },
@@ -1105,223 +1102,14 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
             <MaterialCommunityIcons name="share-variant" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
             <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', fontFamily: 'System' }}>Share</Text>
           </TouchableOpacity>
-          <TouchableOpacity 
-            style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 48, borderRadius: 12, backgroundColor: '#FF6B8A' }} 
-            onPress={onAddToCalendar}
-            activeOpacity={0.85}
-          >
-            <MaterialCommunityIcons name="calendar" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
-            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', fontFamily: 'System' }}>Calendar</Text>
-          </TouchableOpacity>
+
         </View>
       </TouchableOpacity>
     </TouchableOpacity>
   );
 };
 
-// Advanced Calendar Modal Component
-const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
-  const categories = {
-    romantic: { name: 'Romantic', icon: '', color: '#FF6B8A' },
-    adventurous: { name: 'Adventurous', icon: '', color: '#7FB069' },
-    active: { name: 'Active', icon: '', color: '#5B9BD5' },
-    cozy: { name: 'Cozy', icon: '', color: '#F4A261' },
-    fun: { name: 'Fun', icon: '', color: '#E76F51' },
-    foodie: { name: 'Foodie', icon: '', color: '#E9C46A' },
-    chill: { name: 'Chill', icon: '', color: '#8B9DC3' },
-    spontaneous: { name: 'Spontaneous', icon: '', color: '#F7931E' },
-    budget: { name: 'Budget-Friendly', icon: '', color: '#6A994E' },
-    luxury: { name: 'Luxury', icon: '', color: '#C9A87D' },
-    random: { name: 'Random', icon: '', color: '#D4A5A5' },
-  };
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState(new Date());
-  const [customTitle, setCustomTitle] = useState('');
-  const [customLocation, setCustomLocation] = useState('');
-  const [customNotes, setCustomNotes] = useState('');
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
-  useEffect(() => {
-    if (visible && dateIdea) {
-      const categoryInfo = categories[dateIdea.category] || categories.romantic;
-      setCustomTitle(`DateUnveil: ${dateIdea.idea}`);
-      setCustomLocation('Your chosen location');
-      setCustomNotes(`Category: ${categoryInfo.name}\nBudget: ${dateIdea.budget === 'low' ? '$' : dateIdea.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${dateIdea.location}`);
-    }
-  }, [visible, dateIdea]);
-
-  const formatDate = (date) => {
-    return date.toLocaleDateString('en-US', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
-  };
-
-  const formatTime = (date) => {
-    return date.toLocaleTimeString('en-US', { 
-      hour: 'numeric', 
-      minute: '2-digit',
-      hour12: true 
-    });
-  };
-
-  const handleSchedule = () => {
-    const scheduledDateTime = new Date(selectedDate);
-    scheduledDateTime.setHours(selectedTime.getHours());
-    scheduledDateTime.setMinutes(selectedTime.getMinutes());
-    
-    onSchedule({
-      title: customTitle,
-      location: customLocation,
-      notes: customNotes,
-      startDate: scheduledDateTime,
-      endDate: new Date(scheduledDateTime.getTime() + 2 * 60 * 60 * 1000), // 2 hours later
-    });
-  };
-
-  const handleDateChange = (event, date) => {
-    setShowDatePicker(false);
-    if (date) {
-      setSelectedDate(date);
-    }
-  };
-
-  const handleTimeChange = (event, time) => {
-    setShowTimePicker(false);
-    if (time) {
-      setSelectedTime(time);
-    }
-  };
-
-  if (!visible) return null;
-
-  return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={onClose}
-    >
-      <View style={styles.calendarModalOverlay}>
-        <View style={styles.calendarModalContent}>
-          <View style={styles.calendarModalHeader}>
-            <Text style={styles.calendarModalTitle}>Schedule Your Date</Text>
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Feather name="x" size={16} color="#FF8E8E" />
-            </TouchableOpacity>
-          </View>
-
-          <ScrollView style={styles.calendarModalBody}>
-            <View style={styles.dateTimeSection}>
-              <Text style={styles.sectionTitle}>Date & Time</Text>
-              
-              <TouchableOpacity 
-                style={styles.dateTimeButton}
-                onPress={() => setShowDatePicker(true)}
-              >
-                <View style={styles.dateTimeButtonContent}>
-                  <MaterialCommunityIcons name="calendar" size={20} color="#007AFF" />
-                  <View style={styles.dateTimeTextContainer}>
-                    <Text style={styles.dateTimeLabel}>Date</Text>
-                    <Text style={styles.dateTimeValue}>{formatDate(selectedDate)}</Text>
-                  </View>
-                  <MaterialCommunityIcons name="chevron-right" size={20} color="#007AFF" />
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity 
-                style={styles.dateTimeButton}
-                onPress={() => setShowTimePicker(true)}
-              >
-                <View style={styles.dateTimeButtonContent}>
-                  <MaterialCommunityIcons name="clock-outline" size={20} color="#007AFF" />
-                  <View style={styles.dateTimeTextContainer}>
-                    <Text style={styles.dateTimeLabel}>Time</Text>
-                    <Text style={styles.dateTimeValue}>{formatTime(selectedTime)}</Text>
-                  </View>
-                  <MaterialCommunityIcons name="chevron-right" size={20} color="#007AFF" />
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View style={{ height: 1, backgroundColor: '#F2F2F7', marginVertical: 16 }} />
-                          <View style={styles.detailsSection}>
-                <Text style={styles.sectionTitle}>Event Details</Text>
-              
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Title:</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={customTitle}
-                  onChangeText={setCustomTitle}
-                  placeholder="Enter event title"
-                  multiline
-                />
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Location:</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={customLocation}
-                  onChangeText={setCustomLocation}
-                  placeholder="Enter location"
-                  multiline
-                />
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Notes:</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={customNotes}
-                  onChangeText={setCustomNotes}
-                  placeholder="Add any additional notes"
-                  multiline
-                  numberOfLines={4}
-                />
-              </View>
-            </View>
-          </ScrollView>
-
-          <View style={styles.calendarModalActions}>
-            <TouchableOpacity onPress={handleSchedule} style={styles.scheduleButton}>
-              <Text style={styles.scheduleButtonText}>Schedule Date</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onClose} style={styles.cancelButton}>
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Date Picker */}
-        {showDatePicker && (
-          <DateTimePicker
-            value={selectedDate}
-            mode="date"
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            onChange={handleDateChange}
-            minimumDate={new Date()}
-            maximumDate={new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)} // 1 year from now
-          />
-        )}
-
-        {/* Time Picker */}
-        {showTimePicker && (
-          <DateTimePicker
-            value={selectedTime}
-            mode="time"
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            onChange={handleTimeChange}
-            is24Hour={false}
-          />
-        )}
-      </View>
-    </Modal>
-  );
-};
 
 // Invitation Modal Component
 const InvitationModal = ({ visible, onClose, invitationData }) => {
@@ -1941,7 +1729,7 @@ export default function App() {
   const [showHistory, setShowHistory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showTutorial, setShowTutorial] = useState(false);
-  const [showCalendarModal, setShowCalendarModal] = useState(false);
+
   const [showInvitationModal, setShowInvitationModal] = useState(false);
   const [showReminderModal, setShowReminderModal] = useState(false);
   const [invitationData, setInvitationData] = useState(null);
@@ -2064,87 +1852,7 @@ export default function App() {
     });
   };
 
-  const addToCalendar = async (eventDetails) => {
-    try {
-      // Check if calendar permissions are already granted
-      const { status: existingStatus } = await Calendar.getCalendarPermissionsAsync();
-      let finalStatus = existingStatus;
-      
-      // If permissions not granted, request them
-      if (existingStatus !== 'granted') {
-        const { status } = await Calendar.requestCalendarPermissionsAsync();
-        finalStatus = status;
-      }
-      
-      if (finalStatus !== 'granted') {
-        showPlatformAlert(
-          'Calendar Permission Required', 
-          'Please enable calendar access in your device settings to add date ideas to your calendar.',
-          [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Open Settings', onPress: () => Linking.openSettings() }
-          ]
-        );
-        return;
-      }
-      
-      // Get available calendars
-      const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
-      const writableCalendars = calendars.filter(cal => cal.allowsModifications);
-      
-      if (writableCalendars.length === 0) {
-        Alert.alert('No Writable Calendar', 'No calendar found that allows adding events. Please check your calendar settings.');
-        return;
-      }
-      
-      // Use the first writable calendar (usually the default)
-      const selectedCalendar = writableCalendars[0];
-      
-      const eventDetailsForCalendar = {
-        title: eventDetails.title,
-        startDate: eventDetails.startDate,
-        endDate: eventDetails.endDate,
-        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        location: eventDetails.location,
-        notes: eventDetails.notes,
-        alarms: [{ relativeOffset: -60 }], // Reminder 1 hour before
-      };
-      
-      const eventId = await Calendar.createEventAsync(selectedCalendar.id, eventDetailsForCalendar);
-      
-      if (eventId) {
-        Alert.alert(
-          'Date Scheduled Successfully!', 
-          `"${eventDetails.title}" has been added to your calendar.`,
-          [
-            { text: 'Great!', style: 'default' },
-            { text: 'Send Invitation', onPress: () => {
-              setInvitationData(eventDetails);
-              setShowInvitationModal(true);
-            }}
-          ]
-        );
-      } else {
-        throw new Error('Failed to create event');
-      }
-      
-    } catch (error) {
-      console.error('Calendar error:', error);
-      showPlatformAlert(
-        'Calendar Error', 
-        'Unable to add to calendar. Please check your calendar app and try again.',
-        [
-          { text: 'OK', style: 'default' },
-          { text: 'Open Calendar', onPress: () => Linking.openURL('calshow://') }
-        ]
-      );
-    }
-  };
 
-  const handleScheduleDate = (eventDetails) => {
-    setShowCalendarModal(false);
-    addToCalendar(eventDetails);
-  };
 
   const setReminder = async () => {
     if (!expandedCard) return;
@@ -2326,7 +2034,6 @@ export default function App() {
       setRevealedCards([]);
       setExpandedCard(null);
       setShowHistory(false);
-      setShowCalendarModal(false);
       setShowInvitationModal(false);
       setShowReminderModal(false);
       setShowSpinningWheel(false);
@@ -2478,7 +2185,6 @@ export default function App() {
             <PlatformButton
               onPress={() => {
                 setExpandedCard(null);
-                setShowCalendarModal(false);
                 setShowInvitationModal(false);
                 setShowReminderModal(false);
                 setShowSpinningWheel(false);
@@ -2497,7 +2203,6 @@ export default function App() {
             <PlatformButton
               onPress={() => {
                 setExpandedCard(null);
-                setShowCalendarModal(false);
                 setShowInvitationModal(false);
                 setShowReminderModal(false);
                 setShowHistory(false);
@@ -2516,7 +2221,6 @@ export default function App() {
             <PlatformButton
               onPress={() => {
                 setExpandedCard(null);
-                setShowCalendarModal(false);
                 setShowInvitationModal(false);
                 setShowReminderModal(false);
                 setShowSpinningWheel(false);
@@ -2550,7 +2254,7 @@ export default function App() {
             onClose={closeExpandedCard}
             onShareEmail={shareByEmail}
             onShareSMS={shareBySMS}
-            onAddToCalendar={() => setShowCalendarModal(true)}
+
             onSetReminder={setReminder}
           />
         )}
@@ -2613,15 +2317,14 @@ export default function App() {
                 <View style={styles.tabBar}>
                   <View style={styles.tabBarContent}>
                     <PlatformButton
-                      onPress={() => {
-                        setExpandedCard(null);
-                        setShowCalendarModal(false);
-                        setShowInvitationModal(false);
-                        setShowReminderModal(false);
-                        setShowSpinningWheel(false);
-                        setShowHistory(false);
-                        setSelectedCategory(null);
-                      }}
+                                    onPress={() => {
+                setExpandedCard(null);
+                setShowInvitationModal(false);
+                setShowReminderModal(false);
+                setShowSpinningWheel(false);
+                setShowHistory(false);
+                setSelectedCategory(null);
+              }}
                       style={{}}
                       theme={theme}
                       platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
@@ -2685,12 +2388,7 @@ export default function App() {
             </View>
           </View>
         )}
-        <CalendarModal
-          visible={showCalendarModal}
-          onClose={() => setShowCalendarModal(false)}
-          onSchedule={handleScheduleDate}
-          dateIdea={expandedCard}
-        />
+
         <InvitationModal
           visible={showInvitationModal}
           onClose={() => setShowInvitationModal(false)}
@@ -3363,67 +3061,7 @@ const styles = StyleSheet.create({
     borderColor: '#E0E0E0',
     borderRadius: 10,
   },
-  calendarModalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  calendarModalContent: {
-    width: '90%',
-    maxWidth: 400,
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 16,
-    elevation: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
-    marginVertical: 40,
-  },
-  calendarModalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  calendarModalTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#1D1D1F',
-    fontFamily: 'System',
-  },
-  calendarModalBody: {
-    marginBottom: 24,
-  },
-  calendarModalActions: {
-    marginTop: 20,
-  },
-  cancelButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-  },
-  cancelButtonText: {
-    color: '#86868B',
-    fontSize: 16,
-    fontFamily: 'System',
-  },
-  scheduleButton: {
-    backgroundColor: '#007AFF',
-    borderRadius: 12,
-    height: 48,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 8,
-  },
-  scheduleButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-    fontFamily: 'System',
-  },
+
   invitationModalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
