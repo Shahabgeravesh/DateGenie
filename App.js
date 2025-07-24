@@ -1960,6 +1960,24 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
 // Help & FAQ Screen Component
 const HelpFAQScreen = ({ onClose }) => {
   const [expandedFAQ, setExpandedFAQ] = useState(null);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(50)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 100,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
 
   const faqData = [
     {
@@ -2040,65 +2058,159 @@ const HelpFAQScreen = ({ onClose }) => {
           <ScrollView style={styles.helpContent} showsVerticalScrollIndicator={false}>
             
             {/* Welcome Section */}
-            <View style={styles.helpWelcomeSection}>
-              <View style={styles.helpWelcomeIcon}>
-                <MaterialCommunityIcons name="help-circle" size={48} color="#FF6B8A" />
+            <Animated.View 
+              style={[
+                styles.helpWelcomeSection,
+                {
+                  opacity: fadeAnim,
+                  transform: [{ translateY: slideAnim }],
+                }
+              ]}
+            >
+              <View style={styles.helpWelcomeIconContainer}>
+                <View style={styles.helpWelcomeIcon}>
+                  <MaterialCommunityIcons name="help-circle" size={48} color="#FF6B8A" />
+                </View>
+                <View style={styles.helpWelcomeIconGlow} />
               </View>
               <Text style={styles.helpWelcomeTitle}>How can we help?</Text>
               <Text style={styles.helpWelcomeText}>
                 Find answers to common questions about using DateGenie and discover all the features available to make your dating experience amazing.
               </Text>
-            </View>
+              <View style={styles.helpWelcomeStats}>
+                <View style={styles.statItem}>
+                  <Text style={styles.statNumber}>10</Text>
+                  <Text style={styles.statLabel}>FAQs</Text>
+                </View>
+                <View style={styles.statDivider} />
+                <View style={styles.statItem}>
+                  <Text style={styles.statNumber}>4</Text>
+                  <Text style={styles.statLabel}>Tips</Text>
+                </View>
+                <View style={styles.statDivider} />
+                <View style={styles.statItem}>
+                  <Text style={styles.statNumber}>100%</Text>
+                  <Text style={styles.statLabel}>Helpful</Text>
+                </View>
+              </View>
+            </Animated.View>
 
             {/* FAQ Section */}
-            <View style={styles.faqSection}>
-              <Text style={styles.faqSectionTitle}>Frequently Asked Questions</Text>
+            <Animated.View 
+              style={[
+                styles.faqSection,
+                {
+                  opacity: fadeAnim,
+                  transform: [{ translateY: slideAnim }],
+                }
+              ]}
+            >
+              <View style={styles.faqSectionHeader}>
+                <MaterialCommunityIcons name="frequently-asked-questions" size={24} color="#FF6B8A" />
+                <Text style={styles.faqSectionTitle}>Frequently Asked Questions</Text>
+              </View>
               
-              {faqData.map((faq) => (
-                <TouchableOpacity
+              {faqData.map((faq, index) => (
+                <Animated.View
                   key={faq.id}
-                  style={[styles.faqItem, expandedFAQ === faq.id && styles.faqItemExpanded]}
-                  onPress={() => toggleFAQ(faq.id)}
+                  style={[
+                    styles.faqItem,
+                    expandedFAQ === faq.id && styles.faqItemExpanded,
+                    {
+                      opacity: fadeAnim,
+                      transform: [{ translateY: slideAnim }],
+                    }
+                  ]}
                 >
-                  <View style={styles.faqQuestionRow}>
-                    <Text style={styles.faqQuestion}>{faq.question}</Text>
-                    <MaterialCommunityIcons 
-                      name={expandedFAQ === faq.id ? "chevron-up" : "chevron-down"} 
-                      size={20} 
-                      color="#86868B" 
-                    />
-                  </View>
-                  {expandedFAQ === faq.id && (
-                    <Text style={styles.faqAnswer}>{faq.answer}</Text>
-                  )}
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.faqTouchable}
+                    onPress={() => toggleFAQ(faq.id)}
+                    activeOpacity={0.7}
+                  >
+                    <View style={styles.faqQuestionRow}>
+                      <View style={styles.faqQuestionContent}>
+                        <Text style={styles.faqQuestion}>{faq.question}</Text>
+                        <Text style={styles.faqPreview}>
+                          {expandedFAQ === faq.id ? '' : faq.answer.substring(0, 50) + '...'}
+                        </Text>
+                      </View>
+                      <View style={[
+                        styles.faqChevronContainer,
+                        expandedFAQ === faq.id && styles.faqChevronActive
+                      ]}>
+                        <MaterialCommunityIcons 
+                          name={expandedFAQ === faq.id ? "chevron-up" : "chevron-down"} 
+                          size={20} 
+                          color={expandedFAQ === faq.id ? "#FF6B8A" : "#86868B"} 
+                        />
+                      </View>
+                    </View>
+                    {expandedFAQ === faq.id && (
+                      <Animated.View
+                        style={[
+                          styles.faqAnswerContainer,
+                          {
+                            opacity: fadeAnim,
+                          }
+                        ]}
+                      >
+                        <Text style={styles.faqAnswer}>{faq.answer}</Text>
+                      </Animated.View>
+                    )}
+                  </TouchableOpacity>
+                </Animated.View>
               ))}
-            </View>
+            </Animated.View>
 
             {/* Quick Tips Section */}
-            <View style={styles.tipsSection}>
-              <Text style={styles.tipsSectionTitle}>Quick Tips</Text>
-              
-              <View style={styles.tipCard}>
-                <MaterialCommunityIcons name="lightbulb" size={24} color="#FF9500" />
-                <Text style={styles.tipText}>Use the Random feature when you're feeling indecisive</Text>
+            <Animated.View 
+              style={[
+                styles.tipsSection,
+                {
+                  opacity: fadeAnim,
+                  transform: [{ translateY: slideAnim }],
+                }
+              ]}
+            >
+              <View style={styles.tipsSectionHeader}>
+                <MaterialCommunityIcons name="lightbulb-on" size={24} color="#FF9500" />
+                <Text style={styles.tipsSectionTitle}>Quick Tips</Text>
               </View>
               
-              <View style={styles.tipCard}>
-                <MaterialCommunityIcons name="heart" size={24} color="#FF6B8A" />
-                <Text style={styles.tipText}>Check your History to revisit your favorite ideas</Text>
+              <View style={styles.tipsGrid}>
+                <View style={[styles.tipCard, styles.tipCardFeatured]}>
+                  <View style={styles.tipIconContainer}>
+                    <MaterialCommunityIcons name="shuffle" size={28} color="#FF9500" />
+                  </View>
+                  <Text style={styles.tipTitle}>Random Feature</Text>
+                  <Text style={styles.tipText}>Use when you're feeling indecisive</Text>
+                </View>
+                
+                <View style={styles.tipCard}>
+                  <View style={styles.tipIconContainer}>
+                    <MaterialCommunityIcons name="heart" size={28} color="#FF6B8A" />
+                  </View>
+                  <Text style={styles.tipTitle}>History</Text>
+                  <Text style={styles.tipText}>Revisit your favorite ideas</Text>
+                </View>
+                
+                <View style={styles.tipCard}>
+                  <View style={styles.tipIconContainer}>
+                    <MaterialCommunityIcons name="share" size={28} color="#34C759" />
+                  </View>
+                  <Text style={styles.tipTitle}>Share</Text>
+                  <Text style={styles.tipText}>Plan together with your partner</Text>
+                </View>
+                
+                <View style={styles.tipCard}>
+                  <View style={styles.tipIconContainer}>
+                    <MaterialCommunityIcons name="filter" size={28} color="#FF6B8A" />
+                  </View>
+                  <Text style={styles.tipTitle}>Categories</Text>
+                  <Text style={styles.tipText}>Find specific types of dates</Text>
+                </View>
               </View>
-              
-              <View style={styles.tipCard}>
-                <MaterialCommunityIcons name="share" size={24} color="#34C759" />
-                <Text style={styles.tipText}>Share ideas with your partner to plan together</Text>
-              </View>
-              
-              <View style={styles.tipCard}>
-                <MaterialCommunityIcons name="filter" size={24} color="#FF6B8A" />
-                <Text style={styles.tipText}>Use category filters to find specific types of dates</Text>
-              </View>
-            </View>
+            </Animated.View>
           </ScrollView>
         </SafeAreaView>
       </View>
@@ -4465,132 +4577,258 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 20,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E5E7',
+    borderBottomColor: 'rgba(0, 0, 0, 0.06)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
   },
   helpTitle: {
-    fontSize: 20,
-    fontWeight: '600',
+    fontSize: 22,
+    fontWeight: '700',
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
   helpContent: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 24,
+    paddingBottom: 40,
   },
   helpWelcomeSection: {
     alignItems: 'center',
-    marginBottom: 32,
-    paddingVertical: 20,
+    marginBottom: 40,
+    paddingVertical: 32,
+    paddingHorizontal: 20,
+  },
+  helpWelcomeIconContainer: {
+    position: 'relative',
+    marginBottom: 24,
   },
   helpWelcomeIcon: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
     backgroundColor: 'rgba(255, 107, 138, 0.1)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 107, 138, 0.2)',
+  },
+  helpWelcomeIconGlow: {
+    position: 'absolute',
+    top: -10,
+    left: -10,
+    right: -10,
+    bottom: -10,
+    borderRadius: 60,
+    backgroundColor: 'rgba(255, 107, 138, 0.05)',
+    zIndex: -1,
   },
   helpWelcomeTitle: {
-    fontSize: 24,
-    fontWeight: '700',
+    fontSize: 28,
+    fontWeight: '800',
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    marginBottom: 8,
+    marginBottom: 12,
     textAlign: 'center',
+    letterSpacing: -0.5,
   },
   helpWelcomeText: {
-    fontSize: 16,
+    fontSize: 17,
     color: '#86868B',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     textAlign: 'center',
-    lineHeight: 22,
-    paddingHorizontal: 20,
+    lineHeight: 24,
+    paddingHorizontal: 10,
+    marginBottom: 24,
+  },
+  helpWelcomeStats: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  statItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  statNumber: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#FF6B8A',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  statLabel: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginTop: 2,
+  },
+  statDivider: {
+    width: 1,
+    height: 30,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    marginHorizontal: 16,
   },
   faqSection: {
-    marginBottom: 32,
+    marginBottom: 40,
+  },
+  faqSectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingHorizontal: 4,
   },
   faqSectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: '700',
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    marginBottom: 16,
+    marginLeft: 12,
+    letterSpacing: -0.3,
   },
   faqItem: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    marginBottom: 8,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  faqItemExpanded: {
+    borderRadius: 16,
+    marginBottom: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
+    overflow: 'hidden',
+  },
+  faqItemExpanded: {
+    shadowColor: '#FF6B8A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+  faqTouchable: {
+    padding: 20,
   },
   faqQuestionRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+  },
+  faqQuestionContent: {
+    flex: 1,
+    marginRight: 16,
   },
   faqQuestion: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#1D1D1F',
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    flex: 1,
-    marginRight: 12,
-  },
-  faqAnswer: {
-    fontSize: 14,
-    color: '#86868B',
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    lineHeight: 20,
-    marginTop: 12,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#F0F0F0',
-  },
-  tipsSection: {
-    marginBottom: 32,
-  },
-  tipsSectionTitle: {
-    fontSize: 18,
     fontWeight: '600',
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    marginBottom: 16,
+    lineHeight: 22,
+    marginBottom: 4,
   },
-  tipCard: {
+  faqPreview: {
+    fontSize: 14,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    lineHeight: 18,
+  },
+  faqChevronContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  faqChevronActive: {
+    backgroundColor: 'rgba(255, 107, 138, 0.1)',
+  },
+  faqAnswerContainer: {
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0, 0, 0, 0.06)',
+  },
+  faqAnswer: {
+    fontSize: 15,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    lineHeight: 22,
+  },
+  tipsSection: {
+    marginBottom: 40,
+  },
+  tipsSectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    marginBottom: 20,
+    paddingHorizontal: 4,
   },
-  tipText: {
-    fontSize: 14,
+  tipsSectionTitle: {
+    fontSize: 20,
+    fontWeight: '700',
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     marginLeft: 12,
-    flex: 1,
-    lineHeight: 20,
+    letterSpacing: -0.3,
+  },
+  tipsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  tipCard: {
+    width: '48%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 12,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  tipCardFeatured: {
+    backgroundColor: 'rgba(255, 149, 0, 0.05)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 149, 0, 0.2)',
+  },
+  tipIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: 'rgba(255, 107, 138, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  tipTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 4,
+    textAlign: 'center',
+  },
+  tipText: {
+    fontSize: 12,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    textAlign: 'center',
+    lineHeight: 16,
   },
 });
