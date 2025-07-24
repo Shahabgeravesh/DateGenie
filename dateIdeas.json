@@ -1,807 +1,702 @@
 [
   {
     "id": 1,
-    "idea": "Sunset picnic with champagne and strawberries",
-    "category": "romantic",
-    "budget": "medium",
-    "location": "outdoor"
-  },
-  {
-    "id": 2,
-    "idea": "Cooking class for two - learn to make pasta together",
+    "idea": "Get your fortune told - Go to a fortune teller and have your tarot cards read. Whether or not your fortune actually comes true, it's a fun way to think about your future together.",
     "category": "creative",
     "budget": "medium",
     "location": "indoor"
   },
   {
-    "id": 3,
-    "idea": "Stargazing with hot chocolate and blankets",
-    "category": "romantic",
+    "id": 2,
+    "idea": "Use a coloring book - Coloring isn't just for kids! Put on some relaxing music and split a box of crayons, markers, or pencils to go to town.",
+    "category": "creative",
     "budget": "low",
-    "location": "outdoor"
+    "location": "indoor"
+  },
+  {
+    "id": 3,
+    "idea": "Scrapbook - Move your favorite photos off your phone and into your hands. You can save ticket stubs and love notes alongside pictures of your favorite times together.",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
   },
   {
     "id": 4,
-    "idea": "Board game night with wine and cheese",
+    "idea": "Learn to bartend - Pick a gourmet drink and practice your mixology skills to end the night with a delicious beverage you can serve at your next gathering.",
+    "category": "creative",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 5,
+    "idea": "Build a pillow fort - Grab your coziest blankets and pillows and fill your fort with twinkle lights, snacks, and a romantic playlist to have your own secret place to snuggle.",
     "category": "cozy",
     "budget": "low",
     "location": "indoor"
   },
   {
-    "id": 5,
-    "idea": "Hiking adventure to a beautiful viewpoint",
-    "category": "adventurous",
-    "budget": "low",
-    "location": "outdoor"
-  },
-  {
     "id": 6,
-    "idea": "Wine tasting at a local vineyard",
-    "category": "romantic",
-    "budget": "medium",
-    "location": "outdoor"
+    "idea": "Play a video game - Download something slow and low stakes like Animal Crossing or The Sims to play collaboratively, or competitive games like Mario Kart to battle it out.",
+    "category": "fun",
+    "budget": "low",
+    "location": "indoor"
   },
   {
     "id": 7,
-    "idea": "Dance lesson - salsa or tango for beginners",
-    "category": "active",
-    "budget": "medium",
+    "idea": "Play with clay - Embrace nostalgia and buy some colorful clay. It's a hands-on way to embrace your creativity, with lots of potential to get silly.",
+    "category": "creative",
+    "budget": "low",
     "location": "indoor"
   },
   {
     "id": 8,
-    "idea": "Art gallery exploration with coffee afterwards",
+    "idea": "Build a craft kit - You can try Lego, model replicas, or any other kind of kit that includes all the materials and instructions. It's great practice for that Ikea furniture.",
+    "category": "creative",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 9,
+    "idea": "Learn a new language - Learning is sexy—and so is flirting in another language. Whether you take proper lessons or fire up a free program online.",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 10,
+    "idea": "Redecorate - Do you have new artwork to hang on the wall or a beautiful vintage rug you scored at the flea market? Put on some upbeat tunes and redecorate together.",
+    "category": "creative",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 11,
+    "idea": "Restaurant hop - If you've got your favorite spot's menu just about memorized, check out a few new places instead. Visit a food hall or head to an area with different restaurants.",
+    "category": "foodie",
+    "budget": "medium",
+    "location": "outdoor"
+  },
+  {
+    "id": 12,
+    "idea": "Tour an art gallery - Get acquainted with up-and-coming artists' work, or pick an opening night of one of your favorites.",
     "category": "cultural",
     "budget": "low",
     "location": "indoor"
   },
   {
-    "id": 9,
-    "idea": "Karaoke night at a private room",
-    "category": "fun",
-    "budget": "medium",
-    "location": "indoor"
-  },
-  {
-    "id": 10,
-    "idea": "Try a 3-part 'Yes Day': Each of you picks one surprise mini activity (like boba stop, quick hike, art store visit). Don't tell the other until it's time. Say yes to each activity and take a photo at each stop.",
-    "category": "adventurous",
-    "budget": "medium",
-    "location": "outdoor"
-  },
-  {
-    "id": 11,
-    "idea": "Do a DIY trivia night: Each person prepares 10 custom trivia questions about your relationship, shared memories, or favorite topics. Light candles, grab drinks, and compete for a prize like a foot rub or breakfast in bed.",
-    "category": "fun",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 12,
-    "idea": "Go to a bookstore or library together: Pick out a book for each other to read and explain why you chose it. Find a cozy spot nearby to read the first chapter together with coffee or tea.",
-    "category": "chill",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
     "id": 13,
-    "idea": "Plan a spontaneous food crawl: Choose 3 local spots (one for drinks, one for appetizers, one for dessert). Rate each place together and create a shared food memory map afterward.",
-    "category": "foodie",
+    "idea": "See a play - Theatre kids will appreciate an evening or midday show whether it's on or off Broadway.",
+    "category": "cultural",
     "budget": "medium",
-    "location": "outdoor"
+    "location": "indoor"
   },
   {
     "id": 14,
-    "idea": "Create a vision board night: Gather old magazines, scissors, glue, or use Canva. Each of you makes a collage about future dreams and then shares the stories behind the images.",
-    "category": "creative",
-    "budget": "low",
+    "idea": "Try an escape room - Put your logic to the test and try to solve the puzzle before time runs out.",
+    "category": "fun",
+    "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 15,
-    "idea": "Do a 'Spotify Swap': Build a 5-song playlist for each other that reflects how you feel about them. Then go for a walk or drive while listening to each other's playlists and share your thoughts.",
-    "category": "romantic",
+    "idea": "Make a fun new recipe - Even if you're not much of a cook, trying out a new dish can result in lots of laughs. And when you're done, you get to eat the results.",
+    "category": "foodie",
     "budget": "low",
-    "location": "outdoor"
+    "location": "indoor"
   },
   {
     "id": 16,
-    "idea": "Take a scenic bike ride to a local park or quiet neighborhood. Pack snacks, a Bluetooth speaker, and take breaks to talk about your favorite childhood memories or future travel dreams. End by watching the sunset together from a bench or blanket.",
-    "category": "active",
+    "idea": "Play a board game - Drag out the classics or try a brand new one for a healthy dose of competition. Toss in a friendly wager to spice things up a little.",
+    "category": "fun",
     "budget": "low",
-    "location": "outdoor"
+    "location": "indoor"
   },
   {
     "id": 17,
-    "idea": "Plan a local photo scavenger hunt: Create a list of 10 fun or romantic photo challenges (like 'kiss under a mural' or 'find a heart-shaped object'). Explore your city together and take selfies at each spot. End with ice cream or a surprise treat.",
-    "category": "adventurous",
+    "idea": "Throw a casino night - If they call you Lady Luck, see if your partner can roll snake eyes and win your heart. That, or play cards with that week's chore list on the line.",
+    "category": "fun",
     "budget": "low",
-    "location": "outdoor"
+    "location": "indoor"
   },
   {
     "id": 18,
-    "idea": "Create a 'home spa night': Light candles, put on calming music, and take turns giving each other foot soaks, face masks, or neck massages. End with tea and a cozy cuddle in robes or pajamas.",
-    "category": "cozy",
+    "idea": "Play hide 'n seek - It's not just for kids anymore.",
+    "category": "fun",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 19,
-    "idea": "Host a themed movie marathon: Pick a theme like '80s Night' or 'Movies That Made Us Cry.' Dress up, make themed snacks, and rate each movie on fun, romance, and rewatch value.",
-    "category": "fun",
+    "idea": "Look through old photos - Pull out the albums and get ready for an awwww-fest. Share stories of your childhoods and your awkward teen years.",
+    "category": "romantic",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 20,
-    "idea": "Go on a sunset mini road trip: Pick a direction and drive for 30 minutes, stopping at the quirkiest roadside attraction, café, or scenic spot. Bring a playlist and snacks to share on the way.",
+    "idea": "Go antique hunting - You'll be amazed what kinds of gems you can find at an antique store, not to mention the creepy AF tchotchkes you'll run into.",
     "category": "adventurous",
-    "budget": "medium",
-    "location": "outdoor"
+    "budget": "low",
+    "location": "indoor"
   },
   {
     "id": 21,
-    "idea": "Have a 'dream life' planning date: Each of you grabs a journal and writes about your ideal life in 5 years—home, pets, travel, work, love. Share over drinks or coffee and circle anything you both wrote in common.",
-    "category": "romantic",
+    "idea": "Make a craft together - Creativity feels even more satisfying when you do a project with your sweetheart. Don't worry if you're not a pro artist; there's beauty in imperfection.",
+    "category": "creative",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 22,
-    "idea": "Have a blackout night: Turn off all the lights and electronics. Use candles and flashlights to play card games, tell stories, or do a DIY tasting of snacks you can eat in the dark.",
-    "category": "cozy",
-    "budget": "low",
+    "idea": "See a comedy show - Laughing gets endorphins flowing, and comedy often comes cheaper than other forms of live entertainment. Even really bad standup can be fun, in its own way.",
+    "category": "fun",
+    "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 23,
-    "idea": "Build a blanket fort in the living room: Add pillows, fairy lights, and snacks. Watch a movie or tell stories about what you were like as kids.",
-    "category": "cozy",
+    "idea": "Go to an open house or estate sale - Even if you have zero plans to buy a home, looking inside someone else's is the best (and least creepy) kind of voyeurism.",
+    "category": "adventurous",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 24,
-    "idea": "Create a couple's time capsule: Collect small items that represent your relationship right now. Write letters to each other and bury or hide them to open in a year.",
-    "category": "romantic",
+    "idea": "Tackle a home improvement project - If you've been meaning to hang some shelves or finally cleaning out your closet, enlist the help of your main squeeze. Doing it together will make the task go by faster.",
+    "category": "active",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 25,
-    "idea": "Do a 'blind taste test' date: Blindfold each other and feed each other different foods. Try to guess what you're eating and rate the experience.",
+    "idea": "Do karaoke - Everyone's a star at karaoke, especially if you can find the kind with private rooms. The sappier ballads you belt out, the better.",
     "category": "fun",
-    "budget": "low",
+    "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 26,
-    "idea": "Have a 'midnight snack' date: Stay up late, make comfort food, and watch something silly on TV. It'll feel like a sleepover from when you were kids.",
+    "idea": "Go ax-throwing - As soon as you let the first one fly, you'll understand why ax-throwing is so popular. It's also a great way to unload some stress.",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 27,
+    "idea": "Put together a puzzle - There's something so satisfying about finally clicking that last piece into place, plus it's good for the ol' noodle.",
     "category": "cozy",
     "budget": "low",
     "location": "indoor"
   },
   {
-    "id": 27,
-    "idea": "Do a 'restaurant roulette': Open a delivery app, close your eyes, and scroll. The first place you land on is where you order from. Try something you've never had, then rate it together like you're food critics.",
-    "category": "foodie",
+    "id": 28,
+    "idea": "Go bowling - This is one instance in which you actually want to strike out.",
+    "category": "fun",
     "budget": "medium",
     "location": "indoor"
   },
   {
-    "id": 28,
-    "idea": "Create a couple's bucket list: Use paper, sticky notes, or a whiteboard and brainstorm everything you'd love to try—small or big. Categorize them (adventure, romantic, weird) and choose one to plan that night.",
+    "id": 29,
+    "idea": "Stay at a bed and breakfast - Whether you go old-school or rent an Airbnb for the night, bed and breakfasts feel like sneaking into someone else's house, except you're totally allowed to be there.",
     "category": "romantic",
-    "budget": "low",
+    "budget": "medium",
     "location": "indoor"
   },
   {
-    "id": 29,
-    "idea": "Take a sunset walk with a twist: Each of you brings 3 'surprise questions' written on index cards to ask along the way. They can be deep, funny, or romantic. It turns a simple walk into a heartfelt memory.",
-    "category": "chill",
-    "budget": "low",
-    "location": "outdoor"
-  },
-  {
     "id": 30,
-    "idea": "Do a DIY tasting night: Choose a theme like chocolates, cheeses, or sparkling waters. Get 5–6 varieties, make a scorecard, and take turns guessing origins or brands. Winner gets a small gift or coupon from the other.",
+    "idea": "Challenge them at an arcade - Go a few rounds at Ms. Pacman and Big Deer Hunter for a unique night out that will bring out your competitive side.",
     "category": "fun",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 31,
-    "idea": "Attend a free local event: Search community boards or Eventbrite for free pop-up events—art shows, markets, outdoor concerts. Dress up a bit and treat it like a spontaneous city date.",
-    "category": "adventurous",
+    "idea": "Try a new fancy coffee or tea - If you usually take it black or with just sugar or cream, branch out! Hit up a local coffee shop and try the most offbeat offering they've got.",
+    "category": "foodie",
     "budget": "low",
-    "location": "outdoor"
+    "location": "indoor"
   },
   {
     "id": 32,
-    "idea": "Have a 'technology detox' night: Put phones away and focus on each other. Play board games, cook together, or just talk without distractions.",
-    "category": "chill",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 33,
-    "idea": "Create a DIY photo booth: Set up a backdrop, use props, and take silly photos together. Print them out and create a mini album.",
-    "category": "creative",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 34,
-    "idea": "Go on a 'color hunt': Pick a color and find as many things in that color as possible while walking around your neighborhood. Take photos of your discoveries.",
-    "category": "adventurous",
-    "budget": "low",
-    "location": "outdoor"
-  },
-  {
-    "id": 35,
-    "idea": "Have a 'breakfast for dinner' night: Make pancakes, eggs, bacon, and all the breakfast foods you love. Eat in pajamas and watch a feel-good movie.",
-    "category": "foodie",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 36,
-    "idea": "Create a couple's playlist: Each of you adds 10 songs that remind you of your relationship. Listen to it while cooking dinner or going for a drive.",
-    "category": "romantic",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 37,
-    "idea": "Do a 'swap day': Wear each other's clothes (if they fit) and try to act like each other for an hour. It's hilarious and surprisingly bonding.",
-    "category": "fun",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 38,
-    "idea": "Visit a farmers market and buy ingredients for a meal you've never cooked before. Go home and figure out how to make it together.",
-    "category": "foodie",
-    "budget": "medium",
-    "location": "outdoor"
-  },
-  {
-    "id": 39,
-    "idea": "Have a 'paint night' at home: Get some canvases, paint, and follow a YouTube tutorial together. Don't worry about being perfect—just have fun!",
-    "category": "creative",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 40,
-    "idea": "Go on a 'scent adventure': Visit a candle store, perfume shop, or even a grocery store and smell different things together. Pick out a scent that reminds you of each other.",
-    "category": "romantic",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 41,
-    "idea": "Create a 'memory lane' walk: Walk around your neighborhood and point out places that have special meaning to your relationship.",
-    "category": "romantic",
-    "budget": "low",
-    "location": "outdoor"
-  },
-  {
-    "id": 42,
-    "idea": "Have a 'dessert crawl': Visit 3 different dessert places and share a small treat at each. Rate them and decide on your new favorite spot.",
-    "category": "foodie",
-    "budget": "medium",
-    "location": "outdoor"
-  },
-  {
-    "id": 43,
-    "idea": "Do a 'DIY escape room': Create puzzles and clues around your house. Hide a small prize and work together to solve the mystery.",
-    "category": "fun",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 44,
-    "idea": "Write a silly song together: Pick a random topic (like your pets or laundry) and write lyrics. Use a karaoke track and perform it. Bonus: record and save it.",
-    "category": "creative",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 45,
-    "idea": "Try geo-caching in your area: Use a free app to search for hidden objects and messages nearby. Take something small to trade.",
-    "category": "adventurous",
-    "budget": "low",
-    "location": "outdoor"
-  },
-  {
-    "id": 46,
-    "idea": "Play the 'Newlywed Game': Write down answers to fun couple questions (like favorite movie, dream vacation) and then see if your partner can guess.",
-    "category": "fun",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 47,
-    "idea": "Go to a local art gallery and pick a painting for each other: Explain why you think it matches them. Then go home and try drawing each other!",
+    "idea": "Explore a museum - If you haven't been to your nearest museum since your class field trip, it's time to make a trip. Learning is sexy, don't you think?",
     "category": "cultural",
     "budget": "low",
     "location": "indoor"
   },
   {
+    "id": 33,
+    "idea": "Go out for dessert - I don't know about you, but I'm always too full to get dessert after a nice dinner. Make dessert the main event instead.",
+    "category": "foodie",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 34,
+    "idea": "Take a cooking class - Whether you're a kitchen newbie or a seasoned chef, there's always something new to learn. Plus, you get to eat your homework.",
+    "category": "foodie",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 35,
+    "idea": "Go to a farmers market - Even if you don't cook, farmers markets are fun to explore. Pick up some fresh flowers, sample local honey, and people-watch.",
+    "category": "foodie",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 36,
+    "idea": "Try a new restaurant - Whether it's a cuisine you've never tried or a place that just opened, trying something new together is always an adventure.",
+    "category": "foodie",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 37,
+    "idea": "Have a picnic - Pack a basket with your favorite foods, grab a blanket, and head to a park or beach. Bonus points if you bring a bottle of wine.",
+    "category": "romantic",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 38,
+    "idea": "Go wine tasting - Many wineries offer tastings for a reasonable price, and you can learn about different varietals while enjoying each other's company.",
+    "category": "romantic",
+    "budget": "medium",
+    "location": "outdoor"
+  },
+  {
+    "id": 39,
+    "idea": "Take a dance class - Whether it's salsa, ballroom, or hip-hop, dancing together is a great way to get close and have fun.",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 40,
+    "idea": "Go hiking - Find a trail near you and spend the day exploring nature together. Don't forget to pack water and snacks!",
+    "category": "active",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 41,
+    "idea": "Rent bikes - Many cities have bike-sharing programs, or you can rent bikes for the day. Explore your city on two wheels.",
+    "category": "active",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 42,
+    "idea": "Go rock climbing - Many gyms offer beginner classes, and it's a great way to build trust and communication.",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 43,
+    "idea": "Take a yoga class - Many studios offer couples classes, or you can follow along with a video at home.",
+    "category": "active",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 44,
+    "idea": "Go swimming - Whether it's at a pool, lake, or beach, swimming together is refreshing and fun.",
+    "category": "active",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 45,
+    "idea": "Play mini golf - It's fun, competitive, and usually pretty affordable. Plus, you get to be outside.",
+    "category": "fun",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 46,
+    "idea": "Go to a drive-in movie - Many drive-ins still play double features, so you get twice the films for your buck. Besides, it's delightfully retro.",
+    "category": "romantic",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 47,
+    "idea": "Stargaze together - There's just something inherently romantic about staring up at the night sky. Bring a blanket to the backyard or a local park.",
+    "category": "romantic",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
     "id": 48,
-    "idea": "Volunteer together: Choose a community event or shelter and sign up for a few hours. It's bonding, humbling, and gives you something beautiful to reflect on.",
-    "category": "chill",
+    "idea": "Watch the sunset - There's a reason so many romantic movies end this way.",
+    "category": "romantic",
     "budget": "low",
     "location": "outdoor"
   },
   {
     "id": 49,
-    "idea": "Do a 'Surprise Me' drive: Get in the car and take turns saying 'left' or 'right' at intersections. See where you end up and explore that area together.",
-    "category": "adventurous",
-    "budget": "medium",
-    "location": "outdoor"
-  },
-  {
-    "id": 50,
-    "idea": "Have a 'recreate our first date' night: Wear similar outfits, order the same food, and retell the funniest or most awkward moment from that day.",
-    "category": "romantic",
+    "idea": "Order each other's meal - See how well you know your loved one's tastes by ordering for the other at dinner. No swapping back when the food arrives!",
+    "category": "foodie",
     "budget": "medium",
     "location": "indoor"
   },
   {
+    "id": 50,
+    "idea": "Make your own pizza - Yes, including the dough. Top it with all of the classics, or go with personal pies and challenge each other to come up with the tastiest new combo.",
+    "category": "foodie",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
     "id": 51,
-    "idea": "Plan a 'pajama brunch' at home: Stay in pajamas, cook pancakes and eggs, and play chill music while you eat on the floor picnic-style.",
+    "idea": "Start a book club - Select a new book to read and make a habit of discussing it every week. Follow up with new books for a standing date night routine.",
     "category": "cozy",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 52,
-    "idea": "Try a workout challenge: Do a partner yoga video, TikTok dance, or YouTube bootcamp. Laugh at your fails, and reward yourselves with smoothies.",
-    "category": "active",
+    "idea": "Go camping - Snuggling under the stars is a cliché for a reason. Pitch a tent in the backyard if you don't have a campground nearby.",
+    "category": "adventurous",
     "budget": "low",
-    "location": "indoor"
+    "location": "outdoor"
   },
   {
     "id": 53,
-    "idea": "Have a 'recreate our first date' night: Wear similar outfits, order the same food, and retell the funniest or most awkward moment from that day.",
-    "category": "romantic",
+    "idea": "Throw a dinner party together - Invite a few other couples over and go all out making an apps-to-dessert meal. Placing cards and centerpieces are optional.",
+    "category": "foodie",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 54,
-    "idea": "Do a 'taste test': Buy 3 brands of the same food (chips, chocolate, soda), blindfold each other, and guess which is which. Add bonus points for guessing the flavor.",
-    "category": "fun",
+    "idea": "Have a themed movie night - But make it a theme. Choose a flick and add snacks to match. Think The Godfather and cannoli or Ratatouille and, well, you know.",
+    "category": "cozy",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 55,
-    "idea": "Write short love notes on sticky notes and hide them all around your place. Then go on a hunt to find them and read them out loud.",
+    "idea": "Make a romantic playlist - Remember when you used to exchange mix tapes with your crush back in the day? Thanks to streaming services, it's easier than ever to create a musical journey through your relationship.",
     "category": "romantic",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 56,
-    "idea": "Take a class together: Pottery, salsa dancing, cake decorating—anything you can do hands-on. Learning together = bonding.",
+    "idea": "Paint and sip - If you've got a paint nite program nearby, it's a fun and easy date. If not, get some canvasses, pour some bevies, and throw your own.",
     "category": "creative",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 57,
-    "idea": "Create your own board game: Use cardboard, markers, and dice to build a game based on your relationship or silly dares.",
-    "category": "fun",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 58,
-    "idea": "Plan a 'Netflix Roulette' night: Scroll randomly and pick the first movie neither of you has seen. Watch it and rate it like a critic.",
-    "category": "cozy",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 59,
-    "idea": "Recreate a viral TikTok trend together: Whether it's a recipe, dance, or funny skit, film it and enjoy the behind-the-scenes chaos.",
+    "idea": "Try tie-dye - You may have noticed that all kinds of things are tie-dyed lately. Get in on the trend by making your own. Even if it doesn't come out perfectly, you'll have a fun memory.",
     "category": "creative",
     "budget": "low",
     "location": "indoor"
   },
   {
-    "id": 60,
-    "idea": "Build a gingerbread house, even if it's not the holidays. Make it competitive, decorate ridiculously, and smash it at the end.",
+    "id": 58,
+    "idea": "Watch a sports game - Even high school sports can get your adrenaline going if you get really, really into it. And, in most cases, you can watch from your couch.",
     "category": "fun",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 59,
+    "idea": "Have a breakfast date - Turn date night on its head and start your day with some couple time. Mimosas highly encouraged, if you partake.",
+    "category": "foodie",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 60,
+    "idea": "Swap houses with a friend - Enjoy a staycation for free by exchanging houses with a nearby pal. Living in someone else's shoes for the night or weekend feels like stepping into someone else's life.",
+    "category": "adventurous",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 61,
-    "idea": "Take turns planning a 5-minute 'dream vacation pitch.' Describe the perfect getaway, make a fake brochure, and vote on whose wins.",
-    "category": "romantic",
+    "idea": "Build a snowman (or a sand sculpture) - Make the most of the weather by creating a new friend.",
+    "category": "creative",
     "budget": "low",
-    "location": "indoor"
+    "location": "outdoor"
   },
   {
     "id": 62,
-    "idea": "Go sunrise or sunset skating: Find a park or boardwalk, bring headphones, and skate while the sky changes colors.",
-    "category": "active",
+    "idea": "Shop for charity - Food pantries, homeless shelters and community organizations need supplies all year round. Spread the love while spending quality time with your partner.",
+    "category": "chill",
     "budget": "low",
     "location": "outdoor"
   },
   {
     "id": 63,
-    "idea": "Do a 'vintage date': Dress in retro outfits and go bowling, get milkshakes, or walk around a historical neighborhood pretending it's the 1950s.",
-    "category": "fun",
-    "budget": "medium",
-    "location": "outdoor"
-  },
-  {
-    "id": 64,
-    "idea": "Write and mail a love letter to each other, even if you live together. Open them at the same time with snacks and candles.",
-    "category": "romantic",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 65,
-    "idea": "Have a bookshop date: Set a timer and each pick a book you think the other will love. Then read the first page to each other in a café.",
-    "category": "chill",
-    "budget": "medium",
-    "location": "indoor"
-  },
-  {
-    "id": 66,
-    "idea": "Try a puzzle night: Choose a 500+ piece puzzle, turn on a podcast, and see how long it takes you to finish together.",
+    "idea": "Listen to podcasts - For a twist on the usual movie night, cuddle up and turn on a podcast instead.",
     "category": "cozy",
     "budget": "low",
     "location": "indoor"
   },
   {
-    "id": 67,
-    "idea": "Explore your own town like tourists: Visit a landmark you've never been to, take photos, and write fake Yelp reviews of the places you see.",
-    "category": "adventurous",
+    "id": 64,
+    "idea": "Do couples' yoga - Getting bendy together can really heat things up, plus you're doing something good for your body and mind.",
+    "category": "active",
     "budget": "low",
-    "location": "outdoor"
+    "location": "indoor"
   },
   {
-    "id": 68,
-    "idea": "Do a 'No Complaints' challenge: Spend an entire evening without complaining once. Whoever breaks first owes the other a sweet treat.",
+    "id": 65,
+    "idea": "Play 'never have I ever' - Asking each other to get deep can reveal some new things about your loved one.",
     "category": "fun",
     "budget": "low",
     "location": "indoor"
   },
   {
+    "id": 66,
+    "idea": "Make a video together - The only thing more fun than watching reality TV is making your own. Use your phone to shoot a cooking video, do a tutorial or even give each other makeovers.",
+    "category": "creative",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 67,
+    "idea": "Write each other love letters - Getting your feelings down on paper can ignite some real sparks, plus create a keepsake for years to come.",
+    "category": "romantic",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
+    "id": 68,
+    "idea": "Climb your family tree - Sit down with Ancestry.com and learn about your backgrounds. Or even better, interview an elderly family member to get personal stories about where you came from.",
+    "category": "romantic",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
     "id": 69,
-    "idea": "Try painting each other's portraits—but with your non-dominant hands. Display them somewhere, even if they're hilariously bad.",
+    "idea": "Cultivate a garden - Even if you live in an apartment, try your hand at growing a window garden. Plants make any dwelling feel like a home.",
     "category": "creative",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 70,
-    "idea": "Find a YouTube karaoke channel and sing duets dramatically. Award each other points for passion, performance, and lyrics.",
-    "category": "fun",
+    "idea": "Build a bucket list - Sit down together and think big: No item is too out-there or mundane to plan ahead for the rest of your life as a couple.",
+    "category": "romantic",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 71,
-    "idea": "Go on a 'silent dinner' date. Try to eat an entire meal without speaking and only using eye contact and gestures.",
-    "category": "creative",
+    "idea": "Go to a flea market - You never know what treasures you'll find, and it's a great way to spend a few hours browsing and people-watching.",
+    "category": "adventurous",
     "budget": "low",
-    "location": "indoor"
+    "location": "outdoor"
   },
   {
     "id": 72,
-    "idea": "Take personality quizzes online and compare results. Laugh at the ones that feel wrong and see what your love languages match.",
-    "category": "chill",
+    "idea": "Take a scenic drive - Pick a direction and just drive. Stop at interesting places along the way and see where the road takes you.",
+    "category": "adventurous",
     "budget": "low",
-    "location": "indoor"
+    "location": "outdoor"
   },
   {
     "id": 73,
-    "idea": "Visit a free museum, walk slowly, and take turns making up stories behind the paintings or exhibits.",
-    "category": "cultural",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 74,
-    "idea": "Have a 'technology swap' day: Use each other's phones, laptops, or gaming consoles. See how the other person organizes their digital life.",
-    "category": "fun",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 75,
-    "idea": "Create a couple's vision board: Cut out pictures from magazines or print images that represent your shared goals and dreams.",
-    "category": "romantic",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 76,
-    "idea": "Go on a 'scent memory' walk: Visit places that have strong smells (bakery, coffee shop, garden) and talk about what memories they trigger.",
+    "idea": "Visit a botanical garden - Many cities have beautiful botanical gardens that are perfect for a romantic stroll.",
     "category": "romantic",
     "budget": "low",
     "location": "outdoor"
   },
   {
-    "id": 77,
-    "idea": "Have a 'breakfast in bed' morning: Cook together in your pajamas and eat while watching the sunrise or a morning show.",
-    "category": "cozy",
+    "id": 74,
+    "idea": "Go to a local festival - Check your city's events calendar for festivals, fairs, and other community events.",
+    "category": "adventurous",
     "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 75,
+    "idea": "Take a photography walk - Bring your phones or cameras and take turns being the photographer. You'll end up with some great memories.",
+    "category": "creative",
+    "budget": "low",
+    "location": "outdoor"
+  },
+  {
+    "id": 76,
+    "idea": "Go to a local brewery or distillery - Many offer tours and tastings, and it's a fun way to learn about the brewing process.",
+    "category": "foodie",
+    "budget": "medium",
+    "location": "indoor"
+  },
+  {
+    "id": 77,
+    "idea": "Take a cooking class together - Learn to make pasta, sushi, or whatever cuisine interests you both.",
+    "category": "foodie",
+    "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 78,
-    "idea": "Create a couple's playlist challenge: Each pick 5 songs that remind you of your relationship and explain why you chose each one.",
-    "category": "romantic",
-    "budget": "low",
-    "location": "indoor"
+    "idea": "Go to a food truck festival - Sample different cuisines without committing to a full meal at each place.",
+    "category": "foodie",
+    "budget": "medium",
+    "location": "outdoor"
   },
   {
     "id": 79,
-    "idea": "Do a 'DIY spa day': Make face masks, give each other massages, and relax with calming music and candles.",
-    "category": "cozy",
-    "budget": "low",
-    "location": "indoor"
+    "idea": "Have a progressive dinner - Start with appetizers at one place, main course at another, and dessert at a third.",
+    "category": "foodie",
+    "budget": "medium",
+    "location": "outdoor"
   },
   {
     "id": 80,
-    "idea": "Have a 'movie critic' night: Watch a movie and then write reviews as if you're professional critics. Compare your thoughts and ratings.",
-    "category": "fun",
-    "budget": "low",
-    "location": "indoor"
+    "idea": "Go to a farmers market and cook together - Pick up fresh ingredients and then go home to create a meal together.",
+    "category": "foodie",
+    "budget": "medium",
+    "location": "outdoor"
   },
   {
     "id": 81,
-    "idea": "Create a couple's bucket list: Write down 50 things you want to do together, from small daily activities to big adventures.",
-    "category": "romantic",
-    "budget": "low",
+    "idea": "Take a dance class - Whether it's salsa, ballroom, or swing, dancing together is romantic and fun.",
+    "category": "active",
+    "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 82,
-    "idea": "Go on a 'photo story' walk: Take turns taking photos and then create a story using all the images you captured.",
-    "category": "creative",
-    "budget": "low",
-    "location": "outdoor"
+    "idea": "Go rock climbing - Many gyms offer beginner classes, and it's a great way to build trust.",
+    "category": "active",
+    "budget": "medium",
+    "location": "indoor"
   },
   {
     "id": 83,
-    "idea": "Have a 'comfort food' night: Each of you makes your favorite comfort food and shares the story behind why you love it.",
-    "category": "foodie",
+    "idea": "Take a yoga class together - Many studios offer couples classes or partner yoga.",
+    "category": "active",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 84,
-    "idea": "Each pick a charity and spend 20 minutes pitching it to each other. Then donate $5 to the one that wins.",
-    "category": "chill",
+    "idea": "Go for a bike ride - Rent bikes or use your own and explore your city on two wheels.",
+    "category": "active",
     "budget": "low",
-    "location": "indoor"
+    "location": "outdoor"
   },
   {
     "id": 85,
-    "idea": "Print a coloring sheet and color it together while sipping tea. Bonus: Use crayons for nostalgia.",
-    "category": "creative",
+    "idea": "Go hiking - Find a trail near you and spend the day exploring nature together.",
+    "category": "active",
     "budget": "low",
-    "location": "indoor"
+    "location": "outdoor"
   },
   {
     "id": 86,
-    "idea": "Try a 'partner interview': One person pretends to be famous, the other plays a journalist. Record the whole silly thing.",
-    "category": "fun",
+    "idea": "Go ice skating - Whether it's winter or an indoor rink, ice skating is fun and romantic.",
+    "category": "active",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 87,
-    "idea": "Create a relationship map: Draw your journey together with markers or paint, from how you met to where you are now.",
-    "category": "romantic",
+    "idea": "Go roller skating - Many cities have roller rinks that are perfect for a retro date night.",
+    "category": "active",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 88,
-    "idea": "Go to an open mic night: Watch strangers perform poetry, comedy, or music. Optional: Sign up for the ultimate brave date.",
-    "category": "cultural",
-    "budget": "low",
+    "idea": "Take a martial arts class - Many studios offer couples classes in karate, tai chi, or other martial arts.",
+    "category": "active",
+    "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 89,
-    "idea": "Have a 'midnight snack' adventure: Stay up late and make comfort food together while watching something silly on TV.",
-    "category": "cozy",
+    "idea": "Go swimming - Whether it's at a pool, lake, or beach, swimming together is refreshing and fun.",
+    "category": "active",
     "budget": "low",
-    "location": "indoor"
+    "location": "outdoor"
   },
   {
     "id": 90,
-    "idea": "Make your own mocktail or cocktail recipes: Give them fun names and write the recipes down in a shared notebook.",
-    "category": "foodie",
+    "idea": "Take a fitness class together - Many gyms offer classes that you can do together.",
+    "category": "active",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 91,
-    "idea": "Each pick a one-hour playlist and listen to both during an outdoor walk or indoor chill night.",
-    "category": "chill",
-    "budget": "low",
+    "idea": "Go to a concert - Whether it's a big arena show or a small local venue, live music is always a great date.",
+    "category": "cultural",
+    "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 92,
-    "idea": "Start a couple's journal: Answer one prompt together each week. First one: 'What made you smile about us this month?'",
-    "category": "romantic",
+    "idea": "Go to a poetry reading - Many bookstores and cafes host poetry readings that are free or low-cost.",
+    "category": "cultural",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 93,
-    "idea": "Visit a dog park even if you don't have a dog. Watch the chaos, pick your favorite pups, and enjoy coffee on a bench.",
-    "category": "fun",
+    "idea": "Go to a lecture - Many universities and libraries offer free lectures on interesting topics.",
+    "category": "cultural",
     "budget": "low",
-    "location": "outdoor"
+    "location": "indoor"
   },
   {
     "id": 94,
-    "idea": "Go to a free workshop at a local store (home depot, art center, library). Try something random together.",
-    "category": "creative",
+    "idea": "Go to a book signing - Meet your favorite author and get your book signed together.",
+    "category": "cultural",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 95,
-    "idea": "Create a 'memory jar': Write down happy moments on slips of paper and put them in a jar. Read them together on special occasions.",
-    "category": "romantic",
-    "budget": "low",
+    "idea": "Go to a film festival - Many cities have film festivals that showcase independent and foreign films.",
+    "category": "cultural",
+    "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 96,
-    "idea": "Have a 'technology detox' day: Put away all devices and focus on each other. Play games, cook, or just talk without distractions.",
-    "category": "chill",
+    "idea": "Go to a cultural festival - Many cities have festivals celebrating different cultures with food, music, and dance.",
+    "category": "cultural",
     "budget": "low",
-    "location": "indoor"
+    "location": "outdoor"
   },
   {
     "id": 97,
-    "idea": "Go on a 'scent adventure': Visit places with strong smells (bakery, coffee shop, garden) and talk about what memories they trigger.",
-    "category": "romantic",
+    "idea": "Go to a historical site - Learn about your city's history while spending time together.",
+    "category": "cultural",
     "budget": "low",
     "location": "outdoor"
   },
   {
     "id": 98,
-    "idea": "Have a photo sorting night: Go through your phone galleries or old albums together. Make a shared digital album.",
-    "category": "cozy",
+    "idea": "Go to a science museum - Many science museums have interactive exhibits that are fun for adults too.",
+    "category": "cultural",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 99,
-    "idea": "Each write a short letter to open in 6 months. Seal them together and hide them in a drawer.",
-    "category": "romantic",
+    "idea": "Go to a planetarium - Many planetariums offer shows that are both educational and romantic.",
+    "category": "cultural",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 100,
-    "idea": "Try a 'restaurant at home' night: Set the table like a fancy place, dress up, and serve each other in courses.",
-    "category": "romantic",
+    "idea": "Go to a zoo or aquarium - Many zoos and aquariums offer evening events that are perfect for dates.",
+    "category": "cultural",
     "budget": "medium",
-    "location": "indoor"
-  },
-  {
-    "id": 101,
-    "idea": "Dollar store challenge: Each person gets $5 to buy items for a creative date. Combine your purchases for a unique experience.",
-    "category": "budget",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 102,
-    "idea": "Free museum day: Many museums offer free admission on certain days. Explore art, history, or science together.",
-    "category": "budget",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 103,
-    "idea": "Library date: Browse books together, find a cozy corner, and read to each other from your favorite passages.",
-    "category": "budget",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 104,
-    "idea": "Park picnic with homemade sandwiches and games. Bring a frisbee or cards for extra fun.",
-    "category": "budget",
-    "budget": "low",
-    "location": "outdoor"
-  },
-  {
-    "id": 105,
-    "idea": "Window shopping adventure: Walk through a mall or shopping district, create wish lists for each other.",
-    "category": "budget",
-    "budget": "low",
-    "location": "indoor"
-  },
-  {
-    "id": 106,
-    "idea": "Helicopter tour over the city with champagne service and luxury transportation.",
-    "category": "luxury",
-    "budget": "high",
-    "location": "outdoor"
-  },
-  {
-    "id": 107,
-    "idea": "Private chef experience at home with a professional chef preparing a multi-course meal.",
-    "category": "luxury",
-    "budget": "high",
-    "location": "indoor"
-  },
-  {
-    "id": 108,
-    "idea": "Luxury spa day with couples massage, facials, and relaxation treatments.",
-    "category": "luxury",
-    "budget": "high",
-    "location": "indoor"
-  },
-  {
-    "id": 109,
-    "idea": "Private yacht charter for a sunset cruise with gourmet dining and live music.",
-    "category": "luxury",
-    "budget": "high",
-    "location": "outdoor"
-  },
-  {
-    "id": 110,
-    "idea": "Michelin-starred restaurant experience with wine pairing and private dining room.",
-    "category": "luxury",
-    "budget": "high",
-    "location": "indoor"
-  },
-  {
-    "id": 111,
-    "idea": "Book a last-minute flight to a nearby city and explore together for the weekend.",
-    "category": "spontaneous",
-    "budget": "medium",
-    "location": "outdoor"
-  },
-  {
-    "id": 112,
-    "idea": "Drive to a random location using a dice roll for directions - left, right, or straight.",
-    "category": "spontaneous",
-    "budget": "low",
-    "location": "outdoor"
-  },
-  {
-    "id": 113,
-    "idea": "Try a new restaurant you've never heard of - pick by closing your eyes and pointing at a menu.",
-    "category": "spontaneous",
-    "budget": "medium",
-    "location": "indoor"
-  },
-  {
-    "id": 114,
-    "idea": "Attend a random event or festival happening in your city this weekend.",
-    "category": "spontaneous",
-    "budget": "low",
-    "location": "outdoor"
-  },
-  {
-    "id": 115,
-    "idea": "Take a different route home and stop at the first interesting place you see.",
-    "category": "spontaneous",
-    "budget": "low",
     "location": "outdoor"
   }
 ]
