@@ -2112,59 +2112,61 @@ const HelpFAQScreen = ({ onClose }) => {
               </Text>
             </Animated.View>
 
-            {/* FAQ Section */}
-            <Animated.View 
-              style={[
-                styles.faqSection,
-                {
-                  opacity: fadeAnim,
-                  transform: [{ translateY: slideAnim }],
-                }
-              ]}
-            >
-              <Text style={styles.faqSectionTitle}>Frequently Asked Questions</Text>
-              
-              {faqData.map((faq, index) => (
-                <Animated.View
-                  key={faq.id}
-                  style={[
-                    styles.faqItem,
-                    expandedFAQ === faq.id && styles.faqItemExpanded,
-                    {
-                      opacity: fadeAnim,
-                      transform: [{ translateY: slideAnim }],
-                    }
-                  ]}
-                >
-                  <TouchableOpacity
-                    style={styles.faqTouchable}
-                    onPress={() => toggleFAQ(faq.id)}
-                    activeOpacity={0.7}
-                  >
-                                      <View style={styles.faqQuestionRow}>
-                    <Text style={styles.faqQuestion}>{faq.question}</Text>
-                    <MaterialCommunityIcons 
-                      name={expandedFAQ === faq.id ? "chevron-up" : "chevron-down"} 
-                      size={20} 
-                      color={expandedFAQ === faq.id ? "#FF6B8A" : "#86868B"} 
-                    />
-                  </View>
-                    {expandedFAQ === faq.id && (
-                      <Animated.View
-                        style={[
-                          styles.faqAnswerContainer,
-                          {
-                            opacity: fadeAnim,
-                          }
-                        ]}
-                      >
-                        <Text style={styles.faqAnswer}>{faq.answer}</Text>
-                      </Animated.View>
-                    )}
-                  </TouchableOpacity>
-                </Animated.View>
-              ))}
-            </Animated.View>
+                                   {/* FAQ Section */}
+                       <Animated.View 
+                         style={[
+                           styles.faqSection,
+                           {
+                             opacity: fadeAnim,
+                             transform: [{ translateY: slideAnim }],
+                           }
+                         ]}
+                       >
+                         <Text style={styles.faqSectionTitle}>Frequently Asked Questions</Text>
+                         
+                         {faqData.map((faq, index) => (
+                           <Animated.View
+                             key={faq.id}
+                             style={[
+                               styles.faqItem,
+                               expandedFAQ === faq.id && styles.faqItemExpanded,
+                               {
+                                 opacity: fadeAnim,
+                                 transform: [{ translateY: slideAnim }],
+                               }
+                             ]}
+                           >
+                             <TouchableOpacity
+                               style={styles.faqTouchable}
+                               onPress={() => toggleFAQ(faq.id)}
+                               activeOpacity={0.8}
+                             >
+                               <View style={styles.faqQuestionRow}>
+                                 <Text style={styles.faqQuestion}>{faq.question}</Text>
+                                 <View style={styles.faqChevronContainer}>
+                                   <MaterialCommunityIcons 
+                                     name={expandedFAQ === faq.id ? "chevron-up" : "chevron-down"} 
+                                     size={18} 
+                                     color={expandedFAQ === faq.id ? "#FF6B8A" : "#C7C7CC"} 
+                                   />
+                                 </View>
+                               </View>
+                               {expandedFAQ === faq.id && (
+                                 <Animated.View
+                                   style={[
+                                     styles.faqAnswerContainer,
+                                     {
+                                       opacity: fadeAnim,
+                                     }
+                                   ]}
+                                 >
+                                   <Text style={styles.faqAnswer}>{faq.answer}</Text>
+                                 </Animated.View>
+                               )}
+                             </TouchableOpacity>
+                           </Animated.View>
+                         ))}
+                       </Animated.View>
 
 
           </ScrollView>
@@ -4667,8 +4669,8 @@ const styles = StyleSheet.create({
   },
   helpWelcomeSection: {
     alignItems: 'center',
-    marginBottom: 32,
-    paddingVertical: 24,
+    marginBottom: 36,
+    paddingVertical: 20,
     paddingHorizontal: 20,
   },
   helpWelcomeTitle: {
@@ -4680,67 +4682,83 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   helpWelcomeText: {
-    fontSize: 16,
-    color: '#86868B',
+    fontSize: 17,
+    color: '#6B7280',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     textAlign: 'center',
-    lineHeight: 22,
+    lineHeight: 24,
     paddingHorizontal: 20,
+    letterSpacing: -0.1,
   },
   faqSection: {
     marginBottom: 32,
   },
   faqSectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: '700',
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    marginBottom: 16,
+    marginBottom: 20,
+    letterSpacing: -0.5,
   },
   faqItem: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    marginBottom: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  faqItemExpanded: {
+    borderRadius: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.04)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
     elevation: 2,
   },
+  faqItemExpanded: {
+    borderColor: 'rgba(255, 107, 138, 0.2)',
+    shadowColor: '#FF6B8A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 4,
+  },
   faqTouchable: {
-    padding: 16,
+    padding: 20,
   },
   faqQuestionRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   faqQuestion: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     flex: 1,
-    marginRight: 12,
+    marginRight: 16,
+    lineHeight: 22,
+    letterSpacing: -0.2,
+  },
+  faqChevronContainer: {
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.02)',
   },
   faqAnswerContainer: {
-    marginTop: 12,
-    paddingTop: 12,
+    marginTop: 16,
+    paddingTop: 16,
     borderTopWidth: 1,
-    borderTopColor: '#F0F0F0',
+    borderTopColor: 'rgba(0, 0, 0, 0.06)',
   },
   faqAnswer: {
-    fontSize: 14,
-    color: '#86868B',
+    fontSize: 15,
+    color: '#6B7280',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    lineHeight: 20,
+    lineHeight: 22,
+    letterSpacing: -0.1,
   },
 
 });
