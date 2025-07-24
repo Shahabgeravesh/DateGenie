@@ -1683,7 +1683,7 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
   const activeColor = '#FF6B8A';
   const inactiveColor = '#8E8E93';
   const textColor = isActive ? activeColor : inactiveColor;
-  const backgroundColor = isActive ? 'rgba(255, 107, 138, 0.18)' : 'transparent';
+  const backgroundColor = isActive ? 'rgba(255, 107, 138, 0.08)' : 'transparent';
   const borderColor = isActive ? 'rgba(255, 107, 138, 0.2)' : 'transparent';
 
   return (
@@ -1704,13 +1704,7 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
             backgroundColor,
             borderWidth: isActive ? 1 : 0,
             borderColor,
-            ...(isActive && {
-              shadowColor: '#FF6B8A',
-              shadowOffset: { width: 0, height: 1 },
-              shadowOpacity: 0.25,
-              shadowRadius: 3,
-              elevation: 4,
-            }),
+
           },
         ]}
         activeOpacity={0.8}
@@ -1720,6 +1714,13 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
             styles.modernTabIconContainer,
             {
               transform: [{ scale: iconScaleAnim }],
+              ...(isActive && {
+                shadowColor: '#FF6B8A',
+                shadowOffset: { width: 0, height: 0 },
+                shadowOpacity: 0.3,
+                shadowRadius: 6,
+                elevation: 4,
+              }),
             },
           ]}
         >
