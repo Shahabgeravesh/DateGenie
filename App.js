@@ -2059,7 +2059,6 @@ const HelpFAQScreen = ({ onClose }) => {
                 }
               ]}
             >
-              <Text style={styles.helpWelcomeTitle}>Help & FAQ</Text>
               <Text style={styles.helpWelcomeText}>
                 Find answers to common questions about using DateGenie.
               </Text>
