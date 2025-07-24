@@ -644,12 +644,14 @@ const Tutorial = ({ visible, onComplete }) => {
 
         {/* Navigation Buttons */}
         <View style={styles.tutorialNavigation}>
-          {currentStep > 0 && (
-            <TouchableOpacity onPress={previousStep} style={styles.navButton}>
-              <MaterialCommunityIcons name="chevron-left" size={24} color="#8E8E93" />
-              <Text style={styles.navButtonText}>Previous</Text>
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity 
+            onPress={previousStep} 
+            style={[styles.navButton, { opacity: currentStep > 0 ? 1 : 0 }]}
+            disabled={currentStep === 0}
+          >
+            <MaterialCommunityIcons name="chevron-left" size={24} color="#8E8E93" />
+            <Text style={styles.navButtonText}>Previous</Text>
+          </TouchableOpacity>
           
           <View style={{ flex: 1 }} />
           
