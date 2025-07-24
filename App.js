@@ -2383,75 +2383,7 @@ export default function App() {
                   </View>
                 )}
 
-                {/* Enhanced Tab Bar - Always Visible */}
-                <View style={styles.tabBar}>
-                  <View style={styles.tabBarContent}>
-                    <PlatformButton
-                                    onPress={() => {
-                setExpandedCard(null);
-                setShowInvitationModal(false);
-                setShowReminderModal(false);
-                setShowSpinningWheel(false);
-                setShowHistory(false);
-                setSelectedCategory(null);
-              }}
-                      style={{}}
-                      theme={theme}
-                      platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
-                      buttonColor={getTabColors('home', false).buttonColor}
-                      isActive={false}
-                    >
-                      {getActionIcon('home', 24, getTabColors('home', false).iconColor)}
-                      Home
-                    </PlatformButton>
-                    <PlatformButton
-                      onPress={() => {
-                        setExpandedCard(null);
-                        setShowInvitationModal(false);
-                        setShowReminderModal(false);
-                        setShowHistory(false);
-                        setShowSpinningWheel(true);
-                        setSelectedCategory(null);
-                      }}
-                      style={{}}
-                      theme={theme}
-                      platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
-                      buttonColor={getTabColors('random', false).buttonColor}
-                      isActive={false}
-                    >
-                      {getActionIcon('random', 24, getTabColors('random', false).iconColor)}
-                      Random
-                    </PlatformButton>
-                    <PlatformButton
-                      onPress={() => {
-                        setExpandedCard(null);
-                        setShowInvitationModal(false);
-                        setShowReminderModal(false);
-                        setShowSpinningWheel(false);
-                        setShowHistory(true);
-                      }}
-                      style={{}}
-                      theme={theme}
-                      platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
-                      buttonColor={getTabColors('history', true).buttonColor}
-                      badgeCount={revealedCards.length}
-                      isActive={true}
-                    >
-                      {getActionIcon('history', 24, getTabColors('history', true).iconColor)}
-                      History
-                    </PlatformButton>
-                    <PlatformButton
-                      onPress={resetAppData}
-                      style={{}}
-                      theme={theme}
-                      platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
-                      buttonColor={getTabColors('reset', false).buttonColor}
-                    >
-                      {getActionIcon('reset', 24, getTabColors('reset', false).iconColor)}
-                      Reset
-                    </PlatformButton>
-                  </View>
-                </View>
+
               </SafeAreaView>
             </View>
           </View>
