@@ -610,12 +610,14 @@ const Tutorial = ({ visible, onComplete }) => {
                 </View>
               </View>
             ) : (
-              <View style={[styles.iconContainer, { backgroundColor: currentTutorial.color }]}>
-                <MaterialCommunityIcons 
-                  name={currentTutorial.icon} 
-                  size={48} 
-                  color="#FFFFFF" 
-                />
+              <View style={styles.genieGlowContainer}>
+                <View style={[styles.iconContainer, { backgroundColor: currentTutorial.color }]}>
+                  <MaterialCommunityIcons 
+                    name={currentTutorial.icon} 
+                    size={48} 
+                    color="#FFFFFF" 
+                  />
+                </View>
               </View>
             )}
           </View>
@@ -4451,9 +4453,9 @@ const styles = StyleSheet.create({
     right: -5,
   },
   iconContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    width: 140,
+    height: 140,
+    borderRadius: 70,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
