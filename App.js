@@ -510,12 +510,11 @@ const showConfirmation = (title, message, onConfirm, onCancel) => {
   }
 };
 
-// Professional Tutorial Component
+// Simple Tutorial Component
 const Tutorial = ({ visible, onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [fadeAnim] = useState(new Animated.Value(0));
   const [slideAnim] = useState(new Animated.Value(50));
-  const [swipeAnim] = useState(new Animated.Value(0));
 
   const tutorialSteps = [
     {
@@ -538,65 +537,17 @@ const Tutorial = ({ visible, onComplete }) => {
     }
   ];
 
-  // Improved PanResponder for reliable swipe gestures
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
-        const { dx, dy } = gestureState;
-        return Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 20;
-      },
-      onPanResponderGrant: () => {
-        swipeAnim.setValue(0);
-      },
-      onPanResponderMove: (evt, gestureState) => {
-        const { dx } = gestureState;
-        swipeAnim.setValue(dx * 0.3); // Reduced movement for subtle effect
-      },
-      onPanResponderRelease: (evt, gestureState) => {
-        const { dx, vx } = gestureState;
-        const swipeThreshold = 80;
-        const velocityThreshold = 0.3;
-
-        if (dx > swipeThreshold || vx > velocityThreshold) {
-          // Swipe right - go to previous step
-          if (currentStep > 0) {
-            setCurrentStep(currentStep - 1);
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          }
-        } else if (dx < -swipeThreshold || vx < -velocityThreshold) {
-          // Swipe left - go to next step
-          if (currentStep < tutorialSteps.length - 1) {
-            setCurrentStep(currentStep + 1);
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          } else {
-            onComplete();
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-          }
-        }
-
-        // Smooth reset animation
-        Animated.spring(swipeAnim, {
-          toValue: 0,
-          useNativeDriver: true,
-          tension: 200,
-          friction: 10,
-        }).start();
-      },
-    })
-  ).current;
-
   useEffect(() => {
     if (visible) {
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 1,
-          duration: 600,
+          duration: 500,
           useNativeDriver: true,
         }),
         Animated.timing(slideAnim, {
           toValue: 0,
-          duration: 600,
+          duration: 500,
           useNativeDriver: true,
         })
       ]).start();
@@ -606,23 +557,19 @@ const Tutorial = ({ visible, onComplete }) => {
   const nextStep = () => {
     if (currentStep < tutorialSteps.length - 1) {
       setCurrentStep(currentStep + 1);
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     } else {
       onComplete();
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
   };
 
   const previousStep = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
   };
 
   const skipTutorial = () => {
     onComplete();
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   };
 
   if (!visible) return null;
@@ -632,15 +579,11 @@ const Tutorial = ({ visible, onComplete }) => {
   return (
     <View style={styles.tutorialFullScreen}>
       <Animated.View 
-        {...panResponder.panHandlers}
         style={[
           styles.tutorialContent,
           {
             opacity: fadeAnim,
-            transform: [
-              { translateY: slideAnim },
-              { translateX: swipeAnim }
-            ]
+            transform: [{ translateY: slideAnim }]
           }
         ]}
       >
