@@ -1680,10 +1680,10 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
     return <IconComponent name={iconConfig.name} size={size} color={color} />;
   };
 
-  const activeColor = '#007AFF';
+  const activeColor = '#FF6B8A';
   const inactiveColor = '#8E8E93';
   const textColor = isActive ? activeColor : inactiveColor;
-  const backgroundColor = isActive ? 'rgba(0, 122, 255, 0.1)' : 'transparent';
+  const backgroundColor = isActive ? 'rgba(255, 107, 138, 0.08)' : 'transparent';
 
   return (
     <Animated.View
@@ -1713,7 +1713,7 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
             },
           ]}
         >
-          {getIconComponent(icon, 24, textColor)}
+          {getIconComponent(icon, 22, textColor)}
           
           {/* Modern Badge */}
           {badgeCount > 0 && (
@@ -3068,6 +3068,7 @@ const styles = StyleSheet.create({
     right: 0,
     height: Platform.OS === 'ios' ? 88 : 64,
     paddingBottom: Platform.OS === 'ios' ? 34 : 0,
+    zIndex: 1000,
   },
   modernTabBarBackground: {
     position: 'absolute',
@@ -3075,15 +3076,14 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    backdropFilter: 'blur(20px)',
-    borderTopWidth: 0.5,
-    borderTopColor: 'rgba(0, 0, 0, 0.1)',
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0, 0, 0, 0.08)',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 8,
+    shadowOffset: { width: 0, height: -1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 4,
   },
   modernTabBarContent: {
     flexDirection: 'row',
@@ -3101,25 +3101,25 @@ const styles = StyleSheet.create({
   modernTabButtonContent: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 16,
-    minHeight: 48,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    minHeight: 44,
   },
   modernTabIconContainer: {
-    width: 28,
-    height: 28,
+    width: 24,
+    height: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 4,
     position: 'relative',
   },
   modernTabLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '500',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     textAlign: 'center',
-    letterSpacing: 0.3,
+    letterSpacing: 0.2,
   },
   modernBadge: {
     position: 'absolute',
