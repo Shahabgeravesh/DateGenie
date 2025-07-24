@@ -241,16 +241,16 @@ const getLocationIcon = (location, size = 20) => {
   }
 };
 
-// Platform-specific action icons
+// Platform-specific action icons - Updated with stunning, guideline-compliant icons
 const getActionIcon = (action, size = 20, color = '#FF6B8A') => {
   const actionIcons = {
     home: {
       ios: 'grid-outline',
-      android: 'grid-on'
+      android: 'dashboard'
     },
     random: {
-      ios: 'dice-outline',
-      android: 'casino'
+      ios: 'shuffle-outline',
+      android: 'shuffle'
     },
     history: {
       ios: 'heart-outline',
@@ -1814,8 +1814,17 @@ const AppHeader = ({ revealedCards, theme, platformStyles }) => {
   );
 };
 
-// Refactored Button - Fix TouchableHighlight child issue and theme access
-const PlatformButton = ({ onPress, children, style, icon, iconColor, theme, platformStyles, buttonColor }) => {
+// Enhanced Platform Button with notification badge support
+const PlatformButton = ({ onPress, children, style, icon, iconColor, theme, platformStyles, buttonColor, badgeCount, isActive }) => {
+  // Get the appropriate colors based on active state
+  const activeColor = buttonColor || '#FF6B8A';
+  const inactiveColor = '#86868B';
+  const textColor = isActive ? activeColor : inactiveColor;
+  const badgeColor = activeColor; // Badge always uses the button's primary color
+  
+  // Badge animation scale
+  const badgeScale = badgeCount > 0 ? 1 : 0.8;
+
   const buttonContent = (
     <View style={[
       styles.tabBarButton, 
@@ -1824,16 +1833,30 @@ const PlatformButton = ({ onPress, children, style, icon, iconColor, theme, plat
       {icon && (
         <View style={styles.tabBarIconContainer}>
           {icon}
+          {/* Modern Notification Badge - positioned at top-right */}
+          {badgeCount > 0 && (
+            <View style={[
+              styles.tabBarBadge,
+              { 
+                backgroundColor: badgeColor,
+                transform: [{ scale: badgeScale }]
+              }
+            ]}>
+              <Text style={styles.tabBarBadgeText}>
+                {badgeCount > 99 ? '99+' : badgeCount.toString()}
+              </Text>
+            </View>
+          )}
         </View>
       )}
       <Text style={[
         styles.tabBarButtonText, 
         { 
-          fontFamily: 'System',
-          color: '#800000000',
-          fontWeight: '400',
-          fontSize: 10,
-          marginTop:2
+          fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+          color: textColor,
+          fontWeight: isActive ? '600' : '400',
+          fontSize: 11,
+          marginTop: 4
         }
       ]}> 
         {children}
@@ -1850,6 +1873,21 @@ const PlatformButton = ({ onPress, children, style, icon, iconColor, theme, plat
       {buttonContent}
     </TouchableOpacity>
   );
+};
+
+// Helper function to get consistent tab colors
+const getTabColors = (tabName, isActive) => {
+  const colors = {
+    home: '#007AFF',
+    random: '#FF9500', 
+    history: '#FF3B30',
+    reset: '#34C759'
+  };
+  
+  return {
+    buttonColor: colors[tabName] || '#FF6B8A',
+    iconColor: isActive ? colors[tabName] || '#FF6B8A' : '#86868B'
+  };
 };
 
 // Helper functions for history stats
@@ -2436,7 +2474,7 @@ export default function App() {
           contentContainerStyle={[styles.gridContainer, { backgroundColor: '#fff', borderRadius: 18, marginHorizontal: 8 }]}
           showsVerticalScrollIndicator={false}
         />
-        {/* Professional Bottom Action Bar */}
+        {/* Enhanced Bottom Tab Bar with Stunning Icons */}
         <View style={styles.tabBar}>
           <View style={styles.tabBarContent}>
             <PlatformButton
@@ -2451,11 +2489,12 @@ export default function App() {
               }}
               style={{}}
               theme={theme}
-              platformStyles={{ fontFamily: 'System' }}
-              buttonColor="#5B9BD5"
+              platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
+              buttonColor={getTabColors('home', !showHistory && !showSpinningWheel && !expandedCard).buttonColor}
+              isActive={!showHistory && !showSpinningWheel && !expandedCard}
             >
-              {getActionIcon('home', 26, '#5B9BD5')}
-              Main
+              {getActionIcon('home', 24, getTabColors('home', !showHistory && !showSpinningWheel && !expandedCard).iconColor)}
+              Home
             </PlatformButton>
             <PlatformButton
               onPress={() => {
@@ -2469,10 +2508,11 @@ export default function App() {
               }}
               style={{}}
               theme={theme}
-              platformStyles={{ fontFamily: 'System' }}
-              buttonColor="#F7931E"
+              platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
+              buttonColor={getTabColors('random', showSpinningWheel).buttonColor}
+              isActive={showSpinningWheel}
             >
-              {getActionIcon('random', 26, '#F7931E')}
+              {getActionIcon('random', 24, getTabColors('random', showSpinningWheel).iconColor)}
               Random
             </PlatformButton>
             <PlatformButton
@@ -2486,20 +2526,22 @@ export default function App() {
               }}
               style={{}}
               theme={theme}
-              platformStyles={{ fontFamily: 'System' }}
-              buttonColor="#FF6B8A"
+              platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
+              buttonColor={getTabColors('history', showHistory).buttonColor}
+              badgeCount={revealedCards.length}
+              isActive={showHistory}
             >
-              {getActionIcon('history', 26, '#FF6B8A')}
+              {getActionIcon('history', 24, getTabColors('history', showHistory).iconColor)}
               History
             </PlatformButton>
             <PlatformButton
               onPress={resetAppData}
               style={{}}
               theme={theme}
-              platformStyles={{ fontFamily: 'System' }}
-              buttonColor="#7FB069"
+              platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
+              buttonColor={getTabColors('reset', false).buttonColor}
             >
-              {getActionIcon('reset', 26, '#7FB069')}
+              {getActionIcon('reset', 24, getTabColors('reset', false).iconColor)}
               Reset
             </PlatformButton>
           </View>
@@ -2578,7 +2620,7 @@ export default function App() {
                   </View>
                 )}
 
-                {/* Tab Bar - Always Visible */}
+                {/* Enhanced Tab Bar - Always Visible */}
                 <View style={styles.tabBar}>
                   <View style={styles.tabBarContent}>
                     <PlatformButton
@@ -2593,11 +2635,12 @@ export default function App() {
                       }}
                       style={{}}
                       theme={theme}
-                      platformStyles={{ fontFamily: 'System' }}
-                      buttonColor="#5B9BD5"
+                      platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
+                      buttonColor={getTabColors('home', false).buttonColor}
+                      isActive={false}
                     >
-                      {getActionIcon('home', 26, '#5B9BD5')}
-                      Main
+                      {getActionIcon('home', 24, getTabColors('home', false).iconColor)}
+                      Home
                     </PlatformButton>
                     <PlatformButton
                       onPress={() => {
@@ -2611,10 +2654,11 @@ export default function App() {
                       }}
                       style={{}}
                       theme={theme}
-                      platformStyles={{ fontFamily: 'System' }}
-                      buttonColor="#F7931E"
+                      platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
+                      buttonColor={getTabColors('random', false).buttonColor}
+                      isActive={false}
                     >
-                      {getActionIcon('random', 26, '#F7931E')}
+                      {getActionIcon('random', 24, getTabColors('random', false).iconColor)}
                       Random
                     </PlatformButton>
                     <PlatformButton
@@ -2628,20 +2672,22 @@ export default function App() {
                       }}
                       style={{}}
                       theme={theme}
-                      platformStyles={{ fontFamily: 'System' }}
-                      buttonColor="#FF6B8A"
+                      platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
+                      buttonColor={getTabColors('history', true).buttonColor}
+                      badgeCount={revealedCards.length}
+                      isActive={true}
                     >
-                      {getActionIcon('history', 26, '#FF6B8A')}
+                      {getActionIcon('history', 24, getTabColors('history', true).iconColor)}
                       History
                     </PlatformButton>
                     <PlatformButton
                       onPress={resetAppData}
                       style={{}}
                       theme={theme}
-                      platformStyles={{ fontFamily: 'System' }}
-                      buttonColor="#7FB069"
+                      platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
+                      buttonColor={getTabColors('reset', false).buttonColor}
                     >
-                      {getActionIcon('reset', 26, '#7FB069')}
+                      {getActionIcon('reset', 24, getTabColors('reset', false).iconColor)}
                       Reset
                     </PlatformButton>
                   </View>
@@ -3199,45 +3245,74 @@ const styles = StyleSheet.create({
     bottom: Platform.OS === 'ios' ? 20 : 10,
     left: 16,
     right: 16,
-    height: 60,
+    height: 64,
     backgroundColor: '#FFFFFF',
-    borderTopWidth: 0.5,
-    borderTopColor: '#E5E5E7',
+    borderTopWidth: 0,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 8,
-    borderRadius: 16,
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 12,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
   },
   tabBarContent: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: 60,
-    paddingHorizontal: 20,
+    height: 64,
+    paddingHorizontal: 24,
   },
   tabBarButton: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 6,
-    minHeight: 44,
+    paddingVertical: 8,
+    minHeight: 48,
   },
   tabBarButtonText: {
-    fontSize: 10,
-    fontWeight: 400,
+    fontSize: 11,
+    fontWeight: '500',
     color: '#86868B',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    marginTop: 2,
+    marginTop: 4,
     textAlign: 'center',
+    letterSpacing: 0.2,
   },
   tabBarIconContainer: {
-    width: 24,
-    height: 24,
+    width: 32,
+    height: 32,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 2,
+    position: 'relative',
+  },
+  tabBarBadge: {
+    position: 'absolute',
+    top: -2,
+    right: -6,
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 4,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  tabBarBadgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    textAlign: 'center',
+    lineHeight: 14,
   },
   dateTimeSection: {
     marginBottom: 24,
