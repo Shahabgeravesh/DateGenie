@@ -721,9 +721,10 @@ const HistoryCard = ({ item, sequenceNumber, onPress }) => {
         <ScrollView 
           style={{ flex: 1, width: '100%' }}
           showsVerticalScrollIndicator={true}
-          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+          contentContainerStyle={{ paddingVertical: 8 }}
+          nestedScrollEnabled={true}
         >
-          <Text style={styles.historyCardText}>
+          <Text style={[styles.historyCardText, { textAlign: 'center' }]}>
             {dateIdeaText}
           </Text>
         </ScrollView>
@@ -1045,9 +1046,6 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
                 textShadowRadius: 2,
               }
             ]}>#{item.sequenceNumber}</Text>
-            <View style={[styles.categoryBadge, { backgroundColor: categoryInfo.color }]}> 
-              <Text style={styles.categoryBadgeText}>{categoryInfo.icon}</Text>
-            </View>
           </View>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <MaterialCommunityIcons name="close" size={24} color="#86868B" />
@@ -1060,6 +1058,8 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
           showsVerticalScrollIndicator={true}
           contentContainerStyle={{ paddingBottom: 24 }}
           scrollEnabled={true}
+          nestedScrollEnabled={true}
+          alwaysBounceVertical={false}
         >
           {/* Date Idea Title */}
           <Text style={styles.dateIdeaText}>
@@ -2564,16 +2564,7 @@ export default function App() {
                 />
                 <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
                 
-                {/* Clean History Header */}
-                <View style={styles.historyTitleSection}>
-                  <View style={styles.historyTitleContainer}>
-                    <Text style={styles.historyPageTitle}>History</Text>
-                    <Text style={styles.historyPageSubtitle}>
-                      {revealedCards.length} {revealedCards.length === 1 ? 'date idea' : 'date ideas'} discovered
-                    </Text>
-                  </View>
 
-                </View>
 
                 {/* History Content */}
                 {revealedCards.length === 0 ? (
@@ -2876,7 +2867,6 @@ const styles = StyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     textAlign: 'center',
     lineHeight: 18,
-    flex: 1,
     paddingHorizontal: 12,
     flexWrap: 'wrap',
   },
@@ -3078,11 +3068,16 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   historyPageTitle: {
-    fontSize: 20,
-    fontWeight: 700,
-    color: '#1D1D1F',
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#FF6B8A',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    letterSpacing: -0.5,
+    letterSpacing: -0.8,
+    textAlign: 'center',
+    textShadowColor: 'rgba(255, 107, 138, 0.3)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
+    marginBottom: 4,
   },
   historyPageSubtitle: {
     fontSize: 13,
@@ -3090,6 +3085,7 @@ const styles = StyleSheet.create({
     color: '#86868B',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     marginTop: 2,
+    textAlign: 'center',
   },
   historyStatsRow: {
     flexDirection: 'row',
@@ -3982,6 +3978,7 @@ const styles = StyleSheet.create({
   expandedCardBody: {
     padding: 19,
     flex: 1,
+    minHeight: 0,
   },
   dateIdeaText: {
     fontSize: 21,
@@ -3992,6 +3989,7 @@ const styles = StyleSheet.create({
     marginBottom: 19,
     textAlign: 'left',
     flexWrap: 'wrap',
+    flexShrink: 1,
   },
   categoryDescriptionContainer: {
     backgroundColor: '#F8F9FA',
