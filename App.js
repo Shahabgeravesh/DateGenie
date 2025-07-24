@@ -718,9 +718,15 @@ const HistoryCard = ({ item, sequenceNumber, onPress }) => {
         ]}>
           #{sequenceNumber}
         </Text>
-        <Text style={styles.historyCardText}>
-          {dateIdeaText}
-        </Text>
+        <ScrollView 
+          style={{ flex: 1, width: '100%' }}
+          showsVerticalScrollIndicator={true}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+        >
+          <Text style={styles.historyCardText}>
+            {dateIdeaText}
+          </Text>
+        </ScrollView>
       </View>
     </CardTouchable>
   );
@@ -997,19 +1003,19 @@ const shareDateIdea = async (item) => {
 // Enhanced Expanded Card Component with detailed descriptions
 const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar, onSetReminder }) => {
   const categories = {
-    romantic: { name: 'Romantic', icon: '❤️', color: '#FF6B8A', description: 'Sweet & Intimate moments' },
-    adventurous: { name: 'Adventurous', icon: '🏔️', color: '#7FB069', description: 'Thrilling & Bold experiences' },
-    active: { name: 'Active', icon: '⚡', color: '#5B9BD5', description: 'Energetic & Sporty activities' },
-    cozy: { name: 'Cozy', icon: '🏠', color: '#F4A261', description: 'Comfortable & Warm settings' },
-    fun: { name: 'Fun', icon: '🎉', color: '#E76F51', description: 'Playful & Entertaining activities' },
-    foodie: { name: 'Foodie', icon: '🍽️', color: '#E9C46A', description: 'Culinary & Delicious experiences' },
-    chill: { name: 'Chill', icon: '😌', color: '#8B9DC3', description: 'Relaxed & Peaceful moments' },
-    creative: { name: 'Creative', icon: '🎨', color: '#9B59B6', description: 'Artistic & Imaginative activities' },
-    cultural: { name: 'Cultural', icon: '🏛️', color: '#34495E', description: 'Educational & Enriching experiences' },
-    spontaneous: { name: 'Spontaneous', icon: '🎲', color: '#F7931E', description: 'Impulsive & Exciting adventures' },
-    budget: { name: 'Budget-Friendly', icon: '💰', color: '#6A994E', description: 'Affordable & Smart choices' },
-    luxury: { name: 'Luxury', icon: '💎', color: '#C9A87D', description: 'Premium & Exclusive experiences' },
-    random: { name: 'Random', icon: '🎰', color: '#D4A5A5', description: 'Spin & Discover surprises' },
+    romantic: { name: 'Romantic', icon: '', color: '#FF6B8A', description: '' },
+    adventurous: { name: 'Adventurous', icon: '', color: '#7FB069', description: '' },
+    active: { name: 'Active', icon: '', color: '#5B9BD5', description: '' },
+    cozy: { name: 'Cozy', icon: '', color: '#F4A261', description: '' },
+    fun: { name: 'Fun', icon: '', color: '#E76F51', description: '' },
+    foodie: { name: 'Foodie', icon: '', color: '#E9C46A', description: '' },
+    chill: { name: 'Chill', icon: '', color: '#8B9DC3', description: '' },
+    creative: { name: 'Creative', icon: '', color: '#9B59B6', description: '' },
+    cultural: { name: 'Cultural', icon: '', color: '#34495E', description: '' },
+    spontaneous: { name: 'Spontaneous', icon: '', color: '#F7931E', description: '' },
+    budget: { name: 'Budget-Friendly', icon: '', color: '#6A994E', description: '' },
+    luxury: { name: 'Luxury', icon: '', color: '#C9A87D', description: '' },
+    random: { name: 'Random', icon: '', color: '#D4A5A5', description: '' },
   };
   const categoryInfo = categories[item.category] || categories.random;
 
@@ -1049,18 +1055,18 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
         </View>
         
         {/* Main Content */}
-        <ScrollView style={styles.expandedCardBody} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }}>
+        <ScrollView 
+          style={styles.expandedCardBody} 
+          showsVerticalScrollIndicator={true}
+          contentContainerStyle={{ paddingBottom: 24 }}
+          scrollEnabled={true}
+        >
           {/* Date Idea Title */}
           <Text style={styles.dateIdeaText}>
             {item.placeholder ? 'Date idea coming soon!' : (item.idea || 'No idea found')}
           </Text>
 
-          {/* Category Description */}
-          <View style={styles.categoryDescriptionContainer}>
-            <Text style={styles.categoryDescriptionText}>
-              {categoryInfo.description}
-            </Text>
-          </View>
+
 
 
           
@@ -1116,17 +1122,17 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onAddToCalendar
 // Advanced Calendar Modal Component
 const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
   const categories = {
-    romantic: { name: 'Romantic', icon: '💕', color: '#FF6B8A' },
-    adventurous: { name: 'Adventurous', icon: '🏔️', color: '#7FB069' },
-    active: { name: 'Active', icon: '⚡', color: '#5B9BD5' },
-    cozy: { name: 'Cozy', icon: '🏠', color: '#F4A261' },
-    fun: { name: 'Fun', icon: '🎉', color: '#E76F51' },
-    foodie: { name: 'Foodie', icon: '🍕', color: '#E9C46A' },
-    chill: { name: 'Chill', icon: '😌', color: '#8B9DC3' },
-    spontaneous: { name: 'Spontaneous', icon: '🎲', color: '#F7931E' },
-    budget: { name: 'Budget-Friendly', icon: '💰', color: '#6A994E' },
-    luxury: { name: 'Luxury', icon: '💎', color: '#C9A87D' },
-    random: { name: 'Random', icon: '🎰', color: '#D4A5A5' },
+    romantic: { name: 'Romantic', icon: '', color: '#FF6B8A' },
+    adventurous: { name: 'Adventurous', icon: '', color: '#7FB069' },
+    active: { name: 'Active', icon: '', color: '#5B9BD5' },
+    cozy: { name: 'Cozy', icon: '', color: '#F4A261' },
+    fun: { name: 'Fun', icon: '', color: '#E76F51' },
+    foodie: { name: 'Foodie', icon: '', color: '#E9C46A' },
+    chill: { name: 'Chill', icon: '', color: '#8B9DC3' },
+    spontaneous: { name: 'Spontaneous', icon: '', color: '#F7931E' },
+    budget: { name: 'Budget-Friendly', icon: '', color: '#6A994E' },
+    luxury: { name: 'Luxury', icon: '', color: '#C9A87D' },
+    random: { name: 'Random', icon: '', color: '#D4A5A5' },
   };
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
@@ -1210,7 +1216,7 @@ const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
 
           <ScrollView style={styles.calendarModalBody}>
             <View style={styles.dateTimeSection}>
-              <Text style={styles.sectionTitle}>📅 Date & Time</Text>
+              <Text style={styles.sectionTitle}>Date & Time</Text>
               
               <TouchableOpacity 
                 style={styles.dateTimeButton}
@@ -1241,8 +1247,8 @@ const CalendarModal = ({ visible, onClose, onSchedule, dateIdea }) => {
               </TouchableOpacity>
             </View>
             <View style={{ height: 1, backgroundColor: '#F2F2F7', marginVertical: 16 }} />
-            <View style={styles.detailsSection}>
-              <Text style={styles.sectionTitle}>📝 Event Details</Text>
+                          <View style={styles.detailsSection}>
+                <Text style={styles.sectionTitle}>Event Details</Text>
               
               <View style={styles.inputGroup}>
                 <Text style={styles.inputLabel}>Title:</Text>
@@ -2464,7 +2470,7 @@ export default function App() {
           numColumns={4}
           key="4-column-grid"
           contentContainerStyle={[styles.gridContainer, { backgroundColor: '#fff', borderRadius: 18, marginHorizontal: 8 }]}
-          showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={true}
         />
         {/* Enhanced Bottom Tab Bar with Stunning Icons */}
         <View style={styles.tabBar}>
@@ -2607,7 +2613,7 @@ export default function App() {
                       numColumns={2}
                       key="history-grid"
                       contentContainerStyle={styles.historyGridContainer}
-                      showsVerticalScrollIndicator={false}
+                      showsVerticalScrollIndicator={true}
                     />
                   </View>
                 )}
@@ -3940,21 +3946,16 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   expandedCardContent: {
-    width: width - 8,
-    maxHeight: height * 0.98,
+    width: width - 16,
+    height: height * 0.5,
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 20 },
-    shadowOpacity: 0.15,
-    shadowRadius: 20,
-    elevation: 10,
   },
   expandedCardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 24,
+    padding: 12,
     borderBottomWidth: 0.5,
     borderBottomColor: '#E5E5E7',
   },
@@ -3979,31 +3980,31 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   expandedCardBody: {
-    padding: 28,
+    padding: 19,
     flex: 1,
   },
   dateIdeaText: {
-    fontSize: 28,
+    fontSize: 21,
     fontWeight: 600,
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    lineHeight: 36,
-    marginBottom: 24,
-    textAlign: 'center',
+    lineHeight: 27,
+    marginBottom: 19,
+    textAlign: 'left',
     flexWrap: 'wrap',
   },
   categoryDescriptionContainer: {
     backgroundColor: '#F8F9FA',
-    padding: 12,
+    padding: 15,
     borderRadius: 12,
-    marginBottom: 16,
-    alignItems: 'center',
+    marginBottom: 18,
+    alignItems: 'flex-start',
   },
   categoryDescriptionText: {
-    fontSize: 18,
+    fontSize: 17,
     color: '#6C757D',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    textAlign: 'center',
+    textAlign: 'left',
     fontStyle: 'italic',
   },
   descriptionContainer: {
@@ -4060,8 +4061,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginBottom: 20,
-    paddingVertical: 16,
+    marginBottom: 18,
+    paddingVertical: 15,
     backgroundColor: '#F8F9FA',
     borderRadius: 12,
   },
@@ -4084,7 +4085,7 @@ const styles = StyleSheet.create({
   expandedActionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 24,
+    padding: 16,
     gap: 12,
   },
   expandedActionButton: {
