@@ -1750,13 +1750,17 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
           )}
         </Animated.View>
         
-        <Text style={[
-          styles.modernTabLabel,
-          {
-            color: textColor,
-            fontWeight: isActive ? '600' : '400',
-          },
-        ]}>
+        <Text 
+          style={[
+            styles.modernTabLabel,
+            {
+              color: textColor,
+              fontWeight: isActive ? '600' : '400',
+            },
+          ]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
           {label}
         </Text>
       </TouchableOpacity>
@@ -3463,7 +3467,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     height: '100%',
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
     paddingTop: 16,
   },
   modernTabButton: {
@@ -3476,7 +3480,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 16,
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
     borderRadius: 16,
     minHeight: 52,
   },
