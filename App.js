@@ -29,6 +29,7 @@ import * as MailComposer from 'expo-mail-composer';
 import * as Linking from 'expo-linking';
 
 import * as Notifications from 'expo-notifications';
+import * as Haptics from 'expo-haptics';
 import { MaterialCommunityIcons, FontAwesome5, Feather } from '@expo/vector-icons';
 
 // Platform-specific icon imports
@@ -1600,64 +1601,148 @@ const AppHeader = ({ revealedCards, theme, platformStyles }) => {
   );
 };
 
-// Enhanced Platform Button with notification badge support
-const PlatformButton = ({ onPress, children, style, icon, iconColor, theme, platformStyles, buttonColor, badgeCount, isActive }) => {
-  // Get the appropriate colors based on active state
-  const activeColor = buttonColor || '#FF6B8A';
-  const inactiveColor = '#86868B';
-  const textColor = isActive ? activeColor : inactiveColor;
-  const badgeColor = activeColor; // Badge always uses the button's primary color
-  
-  // Badge animation scale
-  const badgeScale = badgeCount > 0 ? 1 : 0.8;
+// Modern Advanced Tab Button with animations and haptic feedback
+const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const iconScaleAnim = useRef(new Animated.Value(1)).current;
+  const badgeScaleAnim = useRef(new Animated.Value(badgeCount > 0 ? 1 : 0)).current;
+  const opacityAnim = useRef(new Animated.Value(isActive ? 1 : 0.6)).current;
 
-  const buttonContent = (
-    <View style={[
-      styles.tabBarButton, 
-      style
-    ]}> 
-      {icon && (
-        <View style={styles.tabBarIconContainer}>
-          {icon}
-          {/* Modern Notification Badge - positioned at top-right */}
-          {badgeCount > 0 && (
-            <View style={[
-              styles.tabBarBadge,
-              { 
-                backgroundColor: badgeColor,
-                transform: [{ scale: badgeScale }]
-              }
-            ]}>
-              <Text style={styles.tabBarBadgeText}>
-                {badgeCount > 99 ? '99+' : badgeCount.toString()}
-              </Text>
-            </View>
-          )}
-        </View>
-      )}
-      <Text style={[
-        styles.tabBarButtonText, 
-        { 
-          fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-          color: textColor,
-          fontWeight: isActive ? '600' : '400',
-          fontSize: 11,
-          marginTop: 4
-        }
-      ]}> 
-        {children}
-      </Text>
-    </View>
-  );
+  useEffect(() => {
+    Animated.parallel([
+      Animated.spring(opacityAnim, {
+        toValue: isActive ? 1 : 0.6,
+        useNativeDriver: true,
+        tension: 100,
+        friction: 8,
+      }),
+      Animated.spring(badgeScaleAnim, {
+        toValue: badgeCount > 0 ? 1 : 0,
+        useNativeDriver: true,
+        tension: 150,
+        friction: 10,
+      }),
+    ]).start();
+  }, [isActive, badgeCount]);
+
+  const handlePress = () => {
+    // Haptic feedback
+    if (Platform.OS === 'ios') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+
+    // Button press animation
+    Animated.sequence([
+      Animated.spring(scaleAnim, {
+        toValue: 0.95,
+        useNativeDriver: true,
+        tension: 200,
+        friction: 8,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        tension: 200,
+        friction: 8,
+      }),
+    ]).start();
+
+    // Icon bounce animation
+    Animated.sequence([
+      Animated.spring(iconScaleAnim, {
+        toValue: 1.2,
+        useNativeDriver: true,
+        tension: 300,
+        friction: 6,
+      }),
+      Animated.spring(iconScaleAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        tension: 300,
+        friction: 6,
+      }),
+    ]).start();
+
+    onPress();
+  };
+
+  const getIconComponent = (iconName, size, color) => {
+    const iconMap = {
+      home: { component: Ionicons, name: isActive ? 'home' : 'home-outline' },
+      shuffle: { component: Ionicons, name: isActive ? 'shuffle' : 'shuffle-outline' },
+      heart: { component: Ionicons, name: isActive ? 'heart' : 'heart-outline' },
+      settings: { component: Ionicons, name: isActive ? 'settings' : 'settings-outline' },
+    };
+
+    const iconConfig = iconMap[iconName] || iconMap.home;
+    const IconComponent = iconConfig.component;
+    
+    return <IconComponent name={iconConfig.name} size={size} color={color} />;
+  };
+
+  const activeColor = '#007AFF';
+  const inactiveColor = '#8E8E93';
+  const textColor = isActive ? activeColor : inactiveColor;
+  const backgroundColor = isActive ? 'rgba(0, 122, 255, 0.1)' : 'transparent';
 
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={{ flex: 1, alignItems: 'center' }}
-      activeOpacity={0.7}
+    <Animated.View
+      style={[
+        styles.modernTabButton,
+        {
+          transform: [{ scale: scaleAnim }],
+          opacity: opacityAnim,
+        },
+      ]}
     >
-      {buttonContent}
-    </TouchableOpacity>
+      <TouchableOpacity
+        onPress={handlePress}
+        style={[
+          styles.modernTabButtonContent,
+          {
+            backgroundColor,
+          },
+        ]}
+        activeOpacity={0.8}
+      >
+        <Animated.View
+          style={[
+            styles.modernTabIconContainer,
+            {
+              transform: [{ scale: iconScaleAnim }],
+            },
+          ]}
+        >
+          {getIconComponent(icon, 24, textColor)}
+          
+          {/* Modern Badge */}
+          {badgeCount > 0 && (
+            <Animated.View
+              style={[
+                styles.modernBadge,
+                {
+                  transform: [{ scale: badgeScaleAnim }],
+                },
+              ]}
+            >
+              <Text style={styles.modernBadgeText}>
+                {badgeCount > 99 ? '99+' : badgeCount.toString()}
+              </Text>
+            </Animated.View>
+          )}
+        </Animated.View>
+        
+        <Text style={[
+          styles.modernTabLabel,
+          {
+            color: textColor,
+            fontWeight: isActive ? '600' : '400',
+          },
+        ]}>
+          {label}
+        </Text>
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 
@@ -2179,10 +2264,11 @@ export default function App() {
           contentContainerStyle={[styles.gridContainer, { backgroundColor: '#fff', borderRadius: 18, marginHorizontal: 8 }]}
           showsVerticalScrollIndicator={true}
         />
-        {/* Enhanced Bottom Tab Bar with Stunning Icons */}
-        <View style={styles.tabBar}>
-          <View style={styles.tabBarContent}>
-            <PlatformButton
+        {/* Modern Advanced Tab Bar */}
+        <View style={styles.modernTabBar}>
+          <View style={styles.modernTabBarBackground} />
+          <View style={styles.modernTabBarContent}>
+            <ModernTabButton
               onPress={() => {
                 setExpandedCard(null);
                 setShowInvitationModal(false);
@@ -2191,16 +2277,12 @@ export default function App() {
                 setShowHistory(false);
                 setSelectedCategory(null);
               }}
-              style={{}}
-              theme={theme}
-              platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
-              buttonColor={getTabColors('home', !showHistory && !showSpinningWheel && !expandedCard).buttonColor}
+              icon="home"
+              label="Home"
               isActive={!showHistory && !showSpinningWheel && !expandedCard}
-            >
-              {getActionIcon('home', 24, getTabColors('home', !showHistory && !showSpinningWheel && !expandedCard).iconColor)}
-              Home
-            </PlatformButton>
-            <PlatformButton
+              badgeCount={0}
+            />
+            <ModernTabButton
               onPress={() => {
                 setExpandedCard(null);
                 setShowInvitationModal(false);
@@ -2209,16 +2291,12 @@ export default function App() {
                 setShowSpinningWheel(true);
                 setSelectedCategory(null);
               }}
-              style={{}}
-              theme={theme}
-              platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
-              buttonColor={getTabColors('random', showSpinningWheel).buttonColor}
+              icon="shuffle"
+              label="Random"
               isActive={showSpinningWheel}
-            >
-              {getActionIcon('random', 24, getTabColors('random', showSpinningWheel).iconColor)}
-              Random
-            </PlatformButton>
-            <PlatformButton
+              badgeCount={0}
+            />
+            <ModernTabButton
               onPress={() => {
                 setExpandedCard(null);
                 setShowInvitationModal(false);
@@ -2226,26 +2304,18 @@ export default function App() {
                 setShowSpinningWheel(false);
                 setShowHistory(true);
               }}
-              style={{}}
-              theme={theme}
-              platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
-              buttonColor={getTabColors('history', showHistory).buttonColor}
-              badgeCount={revealedCards.length}
+              icon="heart"
+              label="History"
               isActive={showHistory}
-            >
-              {getActionIcon('history', 24, getTabColors('history', showHistory).iconColor)}
-              History
-            </PlatformButton>
-            <PlatformButton
+              badgeCount={revealedCards.length}
+            />
+            <ModernTabButton
               onPress={resetAppData}
-              style={{}}
-              theme={theme}
-              platformStyles={{ fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto' }}
-              buttonColor={getTabColors('reset', false).buttonColor}
-            >
-              {getActionIcon('reset', 24, getTabColors('reset', false).iconColor)}
-              Reset
-            </PlatformButton>
+              icon="settings"
+              label="Settings"
+              isActive={false}
+              badgeCount={0}
+            />
           </View>
         </View>
         {expandedCard && (
@@ -3003,6 +3073,94 @@ const styles = StyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     textAlign: 'center',
     lineHeight: 14,
+  },
+  // Modern Tab Bar Styles
+  modernTabBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: Platform.OS === 'ios' ? 88 : 64,
+    paddingBottom: Platform.OS === 'ios' ? 34 : 0,
+  },
+  modernTabBarBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    backdropFilter: 'blur(20px)',
+    borderTopWidth: 0.5,
+    borderTopColor: 'rgba(0, 0, 0, 0.1)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  modernTabBarContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: '100%',
+    paddingHorizontal: 20,
+  },
+  modernTabButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+  },
+  modernTabButtonContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 16,
+    minHeight: 48,
+  },
+  modernTabIconContainer: {
+    width: 28,
+    height: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 6,
+    position: 'relative',
+  },
+  modernTabLabel: {
+    fontSize: 12,
+    fontWeight: '500',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    textAlign: 'center',
+    letterSpacing: 0.3,
+  },
+  modernBadge: {
+    position: 'absolute',
+    top: -4,
+    right: -8,
+    minWidth: 20,
+    height: 20,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 6,
+    backgroundColor: '#FF3B30',
+    shadowColor: '#FF3B30',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  modernBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    textAlign: 'center',
+    lineHeight: 12,
   },
   dateTimeSection: {
     marginBottom: 24,
