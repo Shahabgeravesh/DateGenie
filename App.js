@@ -2258,6 +2258,21 @@ export default function App() {
     }
   };
 
+  const handleResetWithConfirmation = () => {
+    showConfirmation(
+      'Reset App Data',
+      'This will permanently delete all your revealed date ideas and reset the app to its initial state. This action cannot be undone.',
+      () => {
+        // User confirmed - proceed with reset
+        resetAppData();
+      },
+      () => {
+        // User cancelled - do nothing
+        console.log('Reset cancelled by user');
+      }
+    );
+  };
+
   const handleWheelCardSelect = (cardNumber) => {
     try {
       console.log('Wheel selected card:', cardNumber);
@@ -2579,7 +2594,7 @@ export default function App() {
         {showSettings && (
           <SettingsScreen
             onClose={() => setShowSettings(false)}
-            onReset={resetAppData}
+            onReset={handleResetWithConfirmation}
             revealedCardsCount={revealedCards.length}
           />
         )}
