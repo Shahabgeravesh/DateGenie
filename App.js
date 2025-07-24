@@ -594,12 +594,10 @@ const Tutorial = ({ visible, onComplete }) => {
           {/* Icon Section */}
           <View style={styles.tutorialIconSection}>
             {currentStep === 0 ? (
-              <View style={styles.genieImageContainer}>
-                <Image 
-                  source={require('./assets/Genie.png')} 
-                  style={styles.genieImage}
-                />
-              </View>
+              <Image 
+                source={require('./assets/Genie.png')} 
+                style={styles.genieImage}
+              />
             ) : (
               <View style={[styles.iconContainer, { backgroundColor: currentTutorial.color }]}>
                 <MaterialCommunityIcons 
@@ -4400,12 +4398,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     alignItems: 'center',
   },
-  genieImageContainer: {
-    width: 160,
-    height: 160,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+
   genieImage: {
     width: 140,
     height: 140,
