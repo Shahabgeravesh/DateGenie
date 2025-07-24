@@ -4380,7 +4380,7 @@ const styles = StyleSheet.create({
   // Professional Tutorial Styles
   tutorialFullScreen: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -4388,7 +4388,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     paddingHorizontal: 24,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: '#FFFFFF',
   },
 
   tutorialMainContent: {
