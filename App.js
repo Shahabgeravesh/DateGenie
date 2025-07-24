@@ -3072,6 +3072,7 @@ const styles = StyleSheet.create({
     height: Platform.OS === 'ios' ? 92 : 68,
     paddingBottom: Platform.OS === 'ios' ? 34 : 0,
     zIndex: 1000,
+    overflow: 'hidden',
   },
   modernTabBarBackground: {
     position: 'absolute',
@@ -3087,6 +3088,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.12,
     shadowRadius: 12,
     elevation: 8,
+    overflow: 'hidden',
   },
   modernTabBarContent: {
     flexDirection: 'row',
@@ -3109,6 +3111,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 16,
     minHeight: 52,
+    shadowColor: 'transparent',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    elevation: 0,
   },
   modernTabIconContainer: {
     width: 28,
