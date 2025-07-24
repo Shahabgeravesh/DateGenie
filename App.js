@@ -397,8 +397,8 @@ const createTheme = (colorScheme) => {
       default: isDark ? '#FF9500' : '#FF9500'
     }),
     
-    // DateUnveil specific colors (adapted for dark mode)
-    dateUnveil: {
+    // DateGenie specific colors (adapted for dark mode)
+  dateGenie: {
       romantic: isDark ? '#FF6B8A' : '#FF6B8A',
       adventurous: isDark ? '#7FB069' : '#7FB069',
       active: isDark ? '#5B9BD5' : '#5B9BD5',
@@ -516,7 +516,7 @@ const Tutorial = ({ visible, onComplete }) => {
 
   const tutorialSteps = [
     {
-      title: "Welcome to DateUnveil",
+      title: "Welcome to DateGenie",
       message: "Discover 100 creative date ideas. Tap a card to reveal, filter by category, and save your favorites.",
       iconSet: 'MaterialCommunityIcons',
       icon: 'cards-heart',
@@ -988,7 +988,7 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect }) => {
 const shareDateIdea = async (item) => {
   try {
     const categoryInfo = categories[item.category] || categories.romantic;
-    const shareMessage = `I just discovered this amazing date idea: ${item.idea}\n\nCategory: ${categoryInfo.name}\nBudget: ${item.budget === 'low' ? '$' : item.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${item.location}\n\nShared via DateUnveil\n\nLet's make it happen!`;
+    const shareMessage = `I just discovered this amazing date idea: ${item.idea}\n\nCategory: ${categoryInfo.name}\nBudget: ${item.budget === 'low' ? '$' : item.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${item.location}\n\nShared via DateGenie\n\nLet's make it happen!`;
     
     await Share.share({
       message: shareMessage,
@@ -1910,8 +1910,8 @@ export default function App() {
     if (!expandedCard) return;
     const categoryInfo = categories[expandedCard.category] || categories.romantic;
     MailComposer.composeAsync({
-      subject: 'DateUnveil: Amazing Date Idea',
-      body: `I just discovered this amazing date idea: ${expandedCard.idea}\n\nCategory: ${categoryInfo.name}\nBudget: ${expandedCard.budget === 'low' ? '$' : expandedCard.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${expandedCard.location}\n\nShared via DateUnveil\n\nLet's make it happen!`,
+      subject: 'DateGenie: Amazing Date Idea',
+      body: `I just discovered this amazing date idea: ${expandedCard.idea}\n\nCategory: ${categoryInfo.name}\nBudget: ${expandedCard.budget === 'low' ? '$' : expandedCard.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${expandedCard.location}\n\nShared via DateGenie\n\nLet's make it happen!`,
     }).catch(() => {
       if (Platform.OS === 'ios') {
         ActionSheetIOS.showActionSheetWithOptions(
@@ -1932,7 +1932,7 @@ export default function App() {
     if (!expandedCard) return;
     let smsUrl = '';
     const categoryInfo = categories[expandedCard.category] || categories.romantic;
-    const message = `I just discovered this amazing date idea: ${expandedCard.idea}\n\nCategory: ${categoryInfo.name}\nBudget: ${expandedCard.budget === 'low' ? '$' : expandedCard.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${expandedCard.location}\n\nShared via DateUnveil\n\nLet's make it happen!`;
+    const message = `I just discovered this amazing date idea: ${expandedCard.idea}\n\nCategory: ${categoryInfo.name}\nBudget: ${expandedCard.budget === 'low' ? '$' : expandedCard.budget === 'medium' ? '$$' : '$$$'}\nLocation: ${expandedCard.location}\n\nShared via DateGenie\n\nLet's make it happen!`;
     
     if (Platform.OS === 'ios') {
       smsUrl = `sms:&body=${encodeURIComponent(message)}`;
@@ -2027,7 +2027,7 @@ export default function App() {
       
       const notificationId = await Notifications.scheduleNotificationAsync({
         content: {
-          title: 'DateUnveil Reminder',
+          title: 'DateGenie Reminder',
           body: message || `Don't forget your romantic date: ${expandedCard.idea}`,
           data: { 
             dateIdea: expandedCard.idea,
