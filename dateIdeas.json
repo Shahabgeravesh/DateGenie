@@ -434,6 +434,13 @@
     "location": "outdoor"
   },
   {
+    "id": 101,
+    "idea": "Take a meditation class together - Many studios offer couples meditation sessions. It's a peaceful way to connect and relax together.",
+    "category": "chill",
+    "budget": "low",
+    "location": "indoor"
+  },
+  {
     "id": 63,
     "idea": "Listen to podcasts - For a twist on the usual movie night, cuddle up and turn on a podcast instead.",
     "category": "cozy",
