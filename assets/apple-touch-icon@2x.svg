@@ -1,4 +1,4 @@
-<svg width="196" height="196" viewBox="0 0 196 196" xmlns="http://www.w3.org/2000/svg">
+<svg width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#FF6B8A;stop-opacity:1" />
@@ -17,34 +17,34 @@
   </defs>
   
   <!-- Background -->
-  <rect width="196" height="196" rx="39.2" fill="url(#bgGradient)"/>
+  <rect width="180" height="180" rx="36" fill="url(#bgGradient)"/>
   
   <!-- Main card -->
-  <rect x="38.416" y="43.120000000000005" 
-        width="119.168" height="109.76" 
-        rx="18.816" fill="url(#cardGradient)"/>
+  <rect x="35.28" y="39.599999999999994" 
+        width="109.44" height="100.8" 
+        rx="17.28" fill="url(#cardGradient)"/>
   
   <!-- Heart icon -->
-  <path d="M 98 69.77600000000001 
-           Q 69.776 50.96000000000001 
-             79.184 79.184
-           Q 88.592 107.40800000000002 
-             98 121.52000000000001
-           Q 107.408 107.40800000000002 
-             116.816 79.184
-           Q 126.224 50.96000000000001 
-             98 69.77600000000001 Z" 
+  <path d="M 90 64.08 
+           Q 64.08 46.8 
+             72.72 72.72
+           Q 81.36 98.64000000000001 
+             90 111.60000000000001
+           Q 98.64 98.64000000000001 
+             107.28 72.72
+           Q 115.92 46.8 
+             90 64.08 Z" 
         fill="url(#heartGradient)"/>
   
   <!-- Heart inner highlight -->
-  <path d="M 98 69.77600000000001 
-           Q 79.184 58.800000000000004 
-             85.456 82.32000000000001
-           Q 91.728 105.84 
-             98 116.816
-           Q 104.272 105.84 
-             110.544 82.32000000000001
-           Q 116.816 58.800000000000004 
-             98 69.77600000000001 Z" 
+  <path d="M 90 64.08 
+           Q 72.72 54 
+             78.48 75.6
+           Q 84.24 97.2 
+             90 107.28
+           Q 95.76 97.2 
+             101.52 75.6
+           Q 107.28 54 
+             90 64.08 Z" 
         fill="#FFFFFF" opacity="0.3"/>
 </svg>
