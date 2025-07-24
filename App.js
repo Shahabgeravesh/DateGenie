@@ -3094,7 +3094,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '100%',
     paddingHorizontal: 24,
-    paddingTop: 8,
+    paddingTop: 16,
   },
   modernTabButton: {
     flex: 1,
@@ -3105,7 +3105,7 @@ const styles = StyleSheet.create({
   modernTabButtonContent: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
+    paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 16,
     minHeight: 52,
