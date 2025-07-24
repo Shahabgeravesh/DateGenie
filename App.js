@@ -1720,13 +1720,9 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
           <View
             style={[
               {
-                ...(isActive && {
-                  shadowColor: '#FF6B8A',
-                  shadowOffset: { width: 0, height: 0 },
-                  shadowOpacity: 0.15,
-                  shadowRadius: 2,
-                  elevation: 1,
-                }),
+                backgroundColor: isActive ? 'rgba(255, 107, 138, 0.1)' : 'transparent',
+                borderRadius: 12,
+                padding: 4,
               },
             ]}
           >
