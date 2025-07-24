@@ -2086,6 +2086,14 @@ const HelpFAQScreen = ({ onClose }) => {
           />
           <StatusBar style="dark" />
           
+          {/* Help Header with Back Button */}
+          <View style={styles.helpHeader}>
+            <TouchableOpacity onPress={onClose} style={styles.backButton}>
+              <MaterialCommunityIcons name="arrow-left" size={24} color="#FF6B8A" />
+              <Text style={styles.backButtonText}>Back</Text>
+            </TouchableOpacity>
+          </View>
+          
           {/* Help Content */}
           <ScrollView style={styles.helpContent} showsVerticalScrollIndicator={false}>
             
@@ -4627,7 +4635,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F9FA',
     zIndex: 1000,
   },
-
+  helpHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0, 0, 0, 0.06)',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255, 107, 138, 0.1)',
+  },
+  backButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FF6B8A',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginLeft: 8,
+  },
   helpContent: {
     flex: 1,
     paddingHorizontal: 20,
