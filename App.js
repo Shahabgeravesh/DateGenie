@@ -1823,7 +1823,7 @@ const getLocationPreference = (revealedCards) => {
 };
 
 // Settings Screen Component
-const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount }) => {
+const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNavigateHome, onNavigateRandom, onNavigateHistory, showHistory, showSpinningWheel, expandedCard }) => {
   return (
     <View style={styles.settingsPage}>
       <View style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
@@ -1915,6 +1915,41 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount }) =>
               </TouchableOpacity>
             </View>
           </ScrollView>
+
+          {/* Modern Advanced Tab Bar - Always Visible */}
+          <View style={styles.modernTabBar}>
+            <View style={styles.modernTabBarBackground} />
+            <View style={styles.modernTabBarContent}>
+              <ModernTabButton
+                onPress={onNavigateHome}
+                icon="home"
+                label="Home"
+                isActive={!showHistory && !showSpinningWheel && !expandedCard}
+                badgeCount={0}
+              />
+              <ModernTabButton
+                onPress={onNavigateRandom}
+                icon="shuffle"
+                label="Random"
+                isActive={showSpinningWheel}
+                badgeCount={0}
+              />
+              <ModernTabButton
+                onPress={onNavigateHistory}
+                icon="heart"
+                label="History"
+                isActive={showHistory}
+                badgeCount={revealedCardsCount}
+              />
+              <ModernTabButton
+                onPress={() => {}} // Settings is already active
+                icon="settings"
+                label="Settings"
+                isActive={true}
+                badgeCount={0}
+              />
+            </View>
+          </View>
         </SafeAreaView>
       </View>
     </View>
@@ -2746,6 +2781,35 @@ export default function App() {
             onReset={handleResetWithConfirmation}
             onShowHelp={() => setShowHelp(true)}
             revealedCardsCount={revealedCards.length}
+            onNavigateHome={() => {
+              setShowSettings(false);
+              setExpandedCard(null);
+              setShowInvitationModal(false);
+              setShowReminderModal(false);
+              setShowSpinningWheel(false);
+              setShowHistory(false);
+              setSelectedCategory(null);
+            }}
+            onNavigateRandom={() => {
+              setShowSettings(false);
+              setExpandedCard(null);
+              setShowInvitationModal(false);
+              setShowReminderModal(false);
+              setShowHistory(false);
+              setShowSpinningWheel(true);
+              setSelectedCategory(null);
+            }}
+            onNavigateHistory={() => {
+              setShowSettings(false);
+              setExpandedCard(null);
+              setShowInvitationModal(false);
+              setShowReminderModal(false);
+              setShowSpinningWheel(false);
+              setShowHistory(true);
+            }}
+            showHistory={showHistory}
+            showSpinningWheel={showSpinningWheel}
+            expandedCard={expandedCard}
           />
         )}
         {showHelp && (
