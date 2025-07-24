@@ -1717,17 +1717,7 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
             },
           ]}
         >
-          <View
-            style={[
-              {
-                backgroundColor: isActive ? 'rgba(255, 107, 138, 0.1)' : 'transparent',
-                borderRadius: 12,
-                padding: 4,
-              },
-            ]}
-          >
-            {getIconComponent(icon, 26, textColor)}
-          </View>
+          {getIconComponent(icon, 26, textColor)}
           
           {/* Modern Badge */}
           {badgeCount > 0 && (
