@@ -4371,7 +4371,7 @@ const styles = StyleSheet.create({
   // Professional Tutorial Styles
   tutorialFullScreen: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -4401,10 +4401,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   genieImageContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#F8F9FA',
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#FF6B8A',
@@ -4414,8 +4414,8 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   genieImage: {
-    width: 80,
-    height: 80,
+    width: 140,
+    height: 140,
     resizeMode: 'contain',
   },
   iconContainer: {
