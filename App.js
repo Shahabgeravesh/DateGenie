@@ -328,9 +328,9 @@ const createTheme = (colorScheme) => {
   return {
     // Platform-specific base colors
     primary: Platform.select({
-      ios: isDark ? '#07F' : '#007AFF', // iOS blue
-      android: isDark ? '#BB86FC' : '#6200EE', // Material Design purple
-      default: isDark ? '#07F' : '#007AFF'
+      ios: isDark ? '#07F' : '#FF6B8A', // DateGenie pink
+      android: isDark ? '#BB86FC' : '#FF6B8A', // DateGenie pink
+      default: isDark ? '#07F' : '#FF6B8A'
     }),    
     secondary: Platform.select({
       ios: isDark ? '#5856D6' : '#5856D6', // iOS secondary blue
@@ -520,7 +520,7 @@ const Tutorial = ({ visible, onComplete }) => {
       message: "Discover 100 creative date ideas. Tap a card to reveal, filter by category, and save your favorites.",
       iconSet: 'MaterialCommunityIcons',
       icon: 'cards-heart',
-      color: "#007AFF"
+      color: "#FF6B8A"
     },
     {
       title: "Share & Save",
@@ -655,8 +655,8 @@ const SmallCard = ({ item, sequenceNumber, isRevealed, onPress }) => {
             textShadowRadius: 2,
           },
           isRevealed && { 
-            color: '#007AFF',
-            textShadowColor: 'rgba(0,122,255,0.3)',
+            color: '#FF6B8A',
+            textShadowColor: 'rgba(255,107,138,0.3)',
             textShadowOffset: { width: 0, height: 0 },
             textShadowRadius: 4,
           }
@@ -667,7 +667,7 @@ const SmallCard = ({ item, sequenceNumber, isRevealed, onPress }) => {
           <MaterialCommunityIcons 
             name="check-circle" 
             size={16} 
-            color="#007AFF" 
+            color="#FF6B8A" 
             style={{ marginTop: 4 }}
           />
         )}
@@ -1096,7 +1096,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onSetReminder }
         {/* Action Buttons */}
         <View style={[styles.expandedActionButtons, { flexDirection: 'row', gap: 12, marginTop: 16 }]}> 
           <TouchableOpacity 
-            style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 48, borderRadius: 12, backgroundColor: '#007AFF' }} 
+            style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 48, borderRadius: 12, backgroundColor: '#FF6B8A' }} 
             onPress={() => shareDateIdea(item)}
             activeOpacity={0.85}
           >
@@ -1591,7 +1591,7 @@ const AppHeader = ({ revealedCards, theme, platformStyles }) => {
           </Text>
           <View style={[styles.progressBar, { backgroundColor: '#E5E5E7' }]}> 
             <View style={[styles.progressFill, { 
-              backgroundColor: '#007AFF',
+              backgroundColor: '#FF6B8A',
               width: `${(revealedCount / totalCards) * 100}%` 
             }]} />
           </View>
@@ -1767,7 +1767,7 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
 // Helper function to get consistent tab colors
 const getTabColors = (tabName, isActive) => {
   const colors = {
-    home: '#007AFF',
+    home: '#FF6B8A',
     random: '#FF9500', 
     history: '#FF3B30',
     reset: '#34C759'
@@ -2059,7 +2059,7 @@ const HelpFAQScreen = ({ onClose }) => {
               </View>
               
               <View style={styles.tipCard}>
-                <MaterialCommunityIcons name="filter" size={24} color="#007AFF" />
+                <MaterialCommunityIcons name="filter" size={24} color="#FF6B8A" />
                 <Text style={styles.tipText}>Use category filters to find specific types of dates</Text>
               </View>
             </View>
@@ -2835,7 +2835,7 @@ const styles = StyleSheet.create({
   progressFill: {
     height: '100%',
     borderRadius: 1.5,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#FF6B8A',
   },
   categoryFilterContainer: {
     backgroundColor: '#FFFFFF',
@@ -2870,8 +2870,8 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   categoryFilterButtonActive: {
-    backgroundColor: '#07F',
-    borderColor: '#007AFF',
+    backgroundColor: '#FF6B8A',
+    borderColor: '#FF6B8A',
   },
   categoryFilterText: {
     fontSize: 13,
@@ -2952,7 +2952,7 @@ const styles = StyleSheet.create({
   },
   categoryIcon: {
     fontSize: 16,
-    color: '#007AFF',
+    color: '#FF6B8A',
   },
   actionBarButton: {
     flexDirection: 'row',
@@ -3063,7 +3063,7 @@ const styles = StyleSheet.create({
   historyNumber: {
     fontSize: 15,
     fontWeight: 60,
-    color: '#007AFF',
+    color: '#FF6B8A',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     marginRight: 12,
     minWidth: 24,
@@ -4224,11 +4224,11 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#FF6B8A',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
-    shadowColor: '#007AFF',
+    shadowColor: '#FF6B8A',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -4268,8 +4268,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#E5E5E7',
   },
   progressDotActive: {
-    backgroundColor: '#007AFF',
-    shadowColor: '#007AFF',
+    backgroundColor: '#FF6B8A',
+    shadowColor: '#FF6B8A',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
@@ -4285,6 +4285,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 16,
     borderRadius: 12,
+    backgroundColor: '#FF6B8A',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
