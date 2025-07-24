@@ -701,12 +701,7 @@ const Tutorial = ({ visible, onComplete }) => {
           </View>
         </View>
         
-        {/* Swipe hint indicator */}
-        <View style={styles.swipeHint}>
-          <Text style={styles.swipeHintText}>
-            {currentStep > 0 ? "← Swipe to navigate →" : "Swipe → to continue"}
-          </Text>
-        </View>
+
       </Animated.View>
     </View>
   );
@@ -4556,18 +4551,7 @@ const styles = StyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     letterSpacing: -0.2,
   },
-  swipeHint: {
-    marginTop: 16,
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  swipeHintText: {
-    fontSize: 14,
-    color: '#8E8E93',
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    textAlign: 'center',
-    opacity: 0.8,
-  },
+
   // Settings Styles
   settingsPage: {
     position: 'absolute',
