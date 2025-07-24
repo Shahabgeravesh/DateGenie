@@ -4408,9 +4408,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     shadowColor: '#FF6B8A',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 25,
-    elevation: 6,
+    shadowOpacity: 0.8,
+    shadowRadius: 30,
+    elevation: 12,
   },
   genieImage: {
     width: 140,
