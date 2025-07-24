@@ -4378,16 +4378,8 @@ const styles = StyleSheet.create({
   tutorialContent: {
     flex: 1,
     width: '100%',
-    maxWidth: 400,
     paddingHorizontal: 24,
     backgroundColor: '#F8F9FA',
-    borderRadius: 24,
-    margin: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 4,
   },
 
   tutorialMainContent: {
