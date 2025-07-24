@@ -267,7 +267,7 @@
   },
   {
     "id": 39,
-    "idea": "Take a dance class - Whether it's salsa, ballroom, or hip-hop, dancing together is a great way to get close and have fun.",
+    "idea": "Take a ballroom dance class - Learn the waltz, foxtrot, or tango together. It's elegant, romantic, and a great way to get close.",
     "category": "active",
     "budget": "medium",
     "location": "indoor"
@@ -281,9 +281,9 @@
   },
   {
     "id": 41,
-    "idea": "Rent bikes - Many cities have bike-sharing programs, or you can rent bikes for the day. Explore your city on two wheels.",
+    "idea": "Try paddleboarding - Many lakes and beaches offer paddleboard rentals. It's a fun way to explore the water together.",
     "category": "active",
-    "budget": "low",
+    "budget": "medium",
     "location": "outdoor"
   },
   {
@@ -561,21 +561,21 @@
   },
   {
     "id": 81,
-    "idea": "Take a dance class - Whether it's salsa, ballroom, or swing, dancing together is romantic and fun.",
+    "idea": "Learn hip-hop dancing - Take a beginner hip-hop class and practice your moves together. It's energetic, fun, and a great workout.",
     "category": "active",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 82,
-    "idea": "Go rock climbing - Many gyms offer beginner classes, and it's a great way to build trust.",
+    "idea": "Try indoor bouldering - Many gyms offer bouldering walls that don't require ropes. It's a great way to build strength and trust.",
     "category": "active",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 83,
-    "idea": "Take a yoga class together - Many studios offer couples classes or partner yoga.",
+    "idea": "Practice partner yoga - Many studios offer couples classes or partner yoga sessions.",
     "category": "active",
     "budget": "low",
     "location": "indoor"
@@ -589,7 +589,7 @@
   },
   {
     "id": 85,
-    "idea": "Go hiking - Find a trail near you and spend the day exploring nature together.",
+    "idea": "Take a nature walk - Find a scenic trail and spend the day exploring the great outdoors together.",
     "category": "active",
     "budget": "low",
     "location": "outdoor"
@@ -617,9 +617,9 @@
   },
   {
     "id": 89,
-    "idea": "Go swimming - Whether it's at a pool, lake, or beach, swimming together is refreshing and fun.",
+    "idea": "Try kayaking - Many lakes and rivers offer kayak rentals. It's a peaceful way to explore the water together.",
     "category": "active",
-    "budget": "low",
+    "budget": "medium",
     "location": "outdoor"
   },
   {
@@ -659,14 +659,14 @@
   },
   {
     "id": 95,
-    "idea": "Go to a film festival - Many cities have film festivals that showcase independent and foreign films.",
+    "idea": "Attend a film festival - Many cities have film festivals that showcase independent and foreign films.",
     "category": "cultural",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 96,
-    "idea": "Go to a cultural festival - Many cities have festivals celebrating different cultures with food, music, and dance.",
+    "idea": "Experience a cultural festival - Many cities have festivals celebrating different cultures with food, music, and dance.",
     "category": "cultural",
     "budget": "low",
     "location": "outdoor"
