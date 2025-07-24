@@ -2119,38 +2119,7 @@ const HelpFAQScreen = ({ onClose }) => {
               ))}
             </Animated.View>
 
-            {/* Quick Tips Section */}
-            <Animated.View 
-              style={[
-                styles.tipsSection,
-                {
-                  opacity: fadeAnim,
-                  transform: [{ translateY: slideAnim }],
-                }
-              ]}
-            >
-              <Text style={styles.tipsSectionTitle}>Quick Tips</Text>
-              
-              <View style={styles.tipCard}>
-                <MaterialCommunityIcons name="shuffle" size={20} color="#FF6B8A" />
-                <Text style={styles.tipText}>Use the Random feature when you're feeling indecisive</Text>
-              </View>
-              
-              <View style={styles.tipCard}>
-                <MaterialCommunityIcons name="heart" size={20} color="#FF6B8A" />
-                <Text style={styles.tipText}>Check your History to revisit your favorite ideas</Text>
-              </View>
-              
-              <View style={styles.tipCard}>
-                <MaterialCommunityIcons name="share" size={20} color="#FF6B8A" />
-                <Text style={styles.tipText}>Share ideas with your partner to plan together</Text>
-              </View>
-              
-              <View style={styles.tipCard}>
-                <MaterialCommunityIcons name="filter" size={20} color="#FF6B8A" />
-                <Text style={styles.tipText}>Use category filters to find specific types of dates</Text>
-              </View>
-            </Animated.View>
+
           </ScrollView>
         </SafeAreaView>
       </View>
@@ -4616,35 +4585,5 @@ const styles = StyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     lineHeight: 20,
   },
-  tipsSection: {
-    marginBottom: 32,
-  },
-  tipsSectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1D1D1F',
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    marginBottom: 16,
-  },
-  tipCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  tipText: {
-    fontSize: 14,
-    color: '#1D1D1F',
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    marginLeft: 12,
-    flex: 1,
-    lineHeight: 20,
-  },
+
 });
