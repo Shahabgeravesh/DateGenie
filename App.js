@@ -2194,7 +2194,7 @@ export default function App() {
   const [expandedCard, setExpandedCard] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [showTutorial, setShowTutorial] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(true); // Force tutorial to show
 
   const [showInvitationModal, setShowInvitationModal] = useState(false);
   const [showReminderModal, setShowReminderModal] = useState(false);
@@ -2230,11 +2230,11 @@ export default function App() {
     });
     
     // Check if tutorial has been shown before
-    AsyncStorage.getItem('tutorialShown').then(data => {
-      if (!data) {
-        setShowTutorial(true);
-      }
-    });
+    // AsyncStorage.getItem('tutorialShown').then(data => {
+    //   if (!data) {
+    //     setShowTutorial(true);
+    //   }
+    // });
     
     // Load wheel selected cards from AsyncStorage
     AsyncStorage.getItem('wheelSelectedCards').then(data => {
