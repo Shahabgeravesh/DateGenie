@@ -4400,9 +4400,9 @@ const styles = StyleSheet.create({
   },
 
   genieImage: {
-    width: 180,
-    height: 180,
-    resizeMode: 'cover',
+    width: 140,
+    height: 140,
+    resizeMode: 'contain',
   },
   iconContainer: {
     width: 120,
