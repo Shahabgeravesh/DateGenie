@@ -22,7 +22,7 @@
   },
   {
     "id": 4,
-    "idea": "Learn to bartend - Pick a gourmet drink and practice your mixology skills to end the night with a delicious beverage you can serve at your next gathering.",
+    "idea": "Make cocktails at home - Pick a few cocktail recipes and practice mixing drinks together. It's fun, creative, and you get to enjoy the results.",
     "category": "creative",
     "budget": "medium",
     "location": "indoor"
@@ -57,7 +57,7 @@
   },
   {
     "id": 9,
-    "idea": "Learn a new language - Learning is sexy—and so is flirting in another language. Whether you take proper lessons or fire up a free program online.",
+    "idea": "Practice a language together - Pick a language you both want to learn and spend the evening practicing basic phrases and having conversations.",
     "category": "creative",
     "budget": "low",
     "location": "indoor"
@@ -78,14 +78,14 @@
   },
   {
     "id": 12,
-    "idea": "Tour an art gallery - Get acquainted with up-and-coming artists' work, or pick an opening night of one of your favorites.",
+    "idea": "Visit a local art exhibit - Check out a temporary art exhibit or gallery opening for a cultural evening together.",
     "category": "cultural",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 13,
-    "idea": "See a play - Theatre kids will appreciate an evening or midday show whether it's on or off Broadway.",
+    "idea": "Watch a local theater production - Find a community theater or small production for an intimate cultural experience.",
     "category": "cultural",
     "budget": "medium",
     "location": "indoor"
@@ -134,7 +134,7 @@
   },
   {
     "id": 20,
-    "idea": "Go antique hunting - You'll be amazed what kinds of gems you can find at an antique store, not to mention the creepy AF tchotchkes you'll run into.",
+    "idea": "Visit an antique store - Browse a local antique store and look for interesting items.",
     "category": "adventurous",
     "budget": "low",
     "location": "indoor"
@@ -155,7 +155,7 @@
   },
   {
     "id": 23,
-    "idea": "Go to an open house or estate sale - Even if you have zero plans to buy a home, looking inside someone else's is the best (and least creepy) kind of voyeurism.",
+    "idea": "Visit an open house - Check out a local open house or estate sale.",
     "category": "adventurous",
     "budget": "low",
     "location": "indoor"
@@ -197,7 +197,7 @@
   },
   {
     "id": 29,
-    "idea": "Stay at a bed and breakfast - Whether you go old-school or rent an Airbnb for the night, bed and breakfasts feel like sneaking into someone else's house, except you're totally allowed to be there.",
+    "idea": "Have a romantic dinner at home - Cook a special meal and set up a romantic atmosphere.",
     "category": "romantic",
     "budget": "medium",
     "location": "indoor"
@@ -218,7 +218,7 @@
   },
   {
     "id": 32,
-    "idea": "Explore a museum - If you haven't been to your nearest museum since your class field trip, it's time to make a trip. Learning is sexy, don't you think?",
+    "idea": "Visit a museum exhibit - Pick a specific exhibit or section to explore together rather than the entire museum.",
     "category": "cultural",
     "budget": "low",
     "location": "indoor"
@@ -232,14 +232,14 @@
   },
   {
     "id": 34,
-    "idea": "Take a cooking class - Whether you're a kitchen newbie or a seasoned chef, there's always something new to learn. Plus, you get to eat your homework.",
+    "idea": "Cook a new recipe together - Pick a challenging recipe you've never tried and cook it together.",
     "category": "foodie",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 35,
-    "idea": "Go to a farmers market - Even if you don't cook, farmers markets are fun to explore. Pick up some fresh flowers, sample local honey, and people-watch.",
+    "idea": "Visit a local market - Browse a farmers market and pick up fresh ingredients for a meal.",
     "category": "foodie",
     "budget": "low",
     "location": "outdoor"
@@ -260,49 +260,49 @@
   },
   {
     "id": 38,
-    "idea": "Go wine tasting - Many wineries offer tastings for a reasonable price, and you can learn about different varietals while enjoying each other's company.",
+    "idea": "Have a wine tasting at home - Buy a few different wines and taste them together.",
     "category": "romantic",
     "budget": "medium",
     "location": "outdoor"
   },
   {
     "id": 39,
-    "idea": "Take a ballroom dance class - Learn the waltz, foxtrot, or tango together. It's elegant, romantic, and a great way to get close.",
+    "idea": "Dance together at home - Put on some music and practice dancing together in your living room.",
     "category": "active",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 40,
-    "idea": "Go hiking - Find a trail near you and spend the day exploring nature together. Don't forget to pack water and snacks!",
+    "idea": "Take a short nature walk - Find a local park or trail for a leisurely walk together.",
     "category": "active",
     "budget": "low",
     "location": "outdoor"
   },
   {
     "id": 41,
-    "idea": "Try paddleboarding - Many lakes and beaches offer paddleboard rentals. It's a fun way to explore the water together.",
+    "idea": "Rent paddleboards for an hour - Many lakes offer hourly paddleboard rentals.",
     "category": "active",
     "budget": "medium",
     "location": "outdoor"
   },
   {
     "id": 42,
-    "idea": "Go rock climbing - Many gyms offer beginner classes, and it's a great way to build trust and communication.",
+    "idea": "Try indoor rock climbing - Many gyms offer day passes for indoor climbing.",
     "category": "active",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 43,
-    "idea": "Take a yoga class - Many studios offer couples classes, or you can follow along with a video at home.",
+    "idea": "Do yoga together at home - Follow a yoga video or app together.",
     "category": "active",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 44,
-    "idea": "Go swimming - Whether it's at a pool, lake, or beach, swimming together is refreshing and fun.",
+    "idea": "Go for a swim - Visit a local pool or beach for a refreshing swim.",
     "category": "active",
     "budget": "low",
     "location": "outdoor"
@@ -316,7 +316,7 @@
   },
   {
     "id": 46,
-    "idea": "Go to a drive-in movie - Many drive-ins still play double features, so you get twice the films for your buck. Besides, it's delightfully retro.",
+    "idea": "Have a movie night at home - Set up a cozy movie viewing area with blankets and snacks.",
     "category": "romantic",
     "budget": "low",
     "location": "outdoor"
@@ -351,21 +351,21 @@
   },
   {
     "id": 51,
-    "idea": "Start a book club - Select a new book to read and make a habit of discussing it every week. Follow up with new books for a standing date night routine.",
+    "idea": "Read a book together - Pick a book and take turns reading chapters aloud to each other.",
     "category": "cozy",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 52,
-    "idea": "Go camping - Snuggling under the stars is a cliché for a reason. Pitch a tent in the backyard if you don't have a campground nearby.",
+    "idea": "Have a backyard campout - Set up a tent in your backyard and spend the evening outside.",
     "category": "adventurous",
     "budget": "low",
     "location": "outdoor"
   },
   {
     "id": 53,
-    "idea": "Throw a dinner party together - Invite a few other couples over and go all out making an apps-to-dessert meal. Placing cards and centerpieces are optional.",
+    "idea": "Cook a fancy dinner for two - Plan and cook a multi-course meal together.",
     "category": "foodie",
     "budget": "medium",
     "location": "indoor"
@@ -414,7 +414,7 @@
   },
   {
     "id": 60,
-    "idea": "Swap houses with a friend - Enjoy a staycation for free by exchanging houses with a nearby pal. Living in someone else's shoes for the night or weekend feels like stepping into someone else's life.",
+    "idea": "Have a staycation at home - Transform your home into a vacation destination for the evening.",
     "category": "adventurous",
     "budget": "low",
     "location": "indoor"
@@ -435,7 +435,7 @@
   },
   {
     "id": 101,
-    "idea": "Take a meditation class together - Many studios offer couples meditation sessions. It's a peaceful way to connect and relax together.",
+    "idea": "Meditate together - Find a guided meditation and practice it together.",
     "category": "chill",
     "budget": "low",
     "location": "indoor"
@@ -477,49 +477,49 @@
   },
   {
     "id": 68,
-    "idea": "Climb your family tree - Sit down with Ancestry.com and learn about your backgrounds. Or even better, interview an elderly family member to get personal stories about where you came from.",
+    "idea": "Share family stories - Spend the evening sharing stories about your families and backgrounds.",
     "category": "romantic",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 69,
-    "idea": "Cultivate a garden - Even if you live in an apartment, try your hand at growing a window garden. Plants make any dwelling feel like a home.",
+    "idea": "Plant some herbs or flowers - Buy some seeds or small plants and spend the evening potting them together. It's therapeutic and you'll have something to care for.",
     "category": "creative",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 70,
-    "idea": "Build a bucket list - Sit down together and think big: No item is too out-there or mundane to plan ahead for the rest of your life as a couple.",
+    "idea": "Make a date night bucket list - Create a list of fun date ideas you want to try together.",
     "category": "romantic",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 71,
-    "idea": "Go to a flea market - You never know what treasures you'll find, and it's a great way to spend a few hours browsing and people-watching.",
+    "idea": "Visit a flea market - Browse a local flea market for unique finds.",
     "category": "adventurous",
     "budget": "low",
     "location": "outdoor"
   },
   {
     "id": 72,
-    "idea": "Take a scenic drive - Pick a direction and just drive. Stop at interesting places along the way and see where the road takes you.",
+    "idea": "Take a short scenic drive - Find a beautiful route near your home for a short drive.",
     "category": "adventurous",
     "budget": "low",
     "location": "outdoor"
   },
   {
     "id": 73,
-    "idea": "Visit a botanical garden - Many cities have beautiful botanical gardens that are perfect for a romantic stroll.",
+    "idea": "Visit a local garden - Find a beautiful local garden for a peaceful stroll.",
     "category": "romantic",
     "budget": "low",
     "location": "outdoor"
   },
   {
     "id": 74,
-    "idea": "Go to a local festival - Check your city's events calendar for festivals, fairs, and other community events.",
+    "idea": "Visit a local event - Check for local events, fairs, or small festivals.",
     "category": "adventurous",
     "budget": "low",
     "location": "outdoor"
@@ -533,21 +533,21 @@
   },
   {
     "id": 76,
-    "idea": "Go to a local brewery or distillery - Many offer tours and tastings, and it's a fun way to learn about the brewing process.",
+    "idea": "Have a beer or wine tasting at home - Buy a variety of craft beers or wines and taste them together.",
     "category": "foodie",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 77,
-    "idea": "Take a cooking class together - Learn to make pasta, sushi, or whatever cuisine interests you both.",
+    "idea": "Cook a new recipe together - Pick a challenging recipe you've never tried and cook it together.",
     "category": "foodie",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 78,
-    "idea": "Go to a food truck festival - Sample different cuisines without committing to a full meal at each place.",
+    "idea": "Order from different food trucks - Find a food truck park and try dishes from different trucks.",
     "category": "foodie",
     "budget": "medium",
     "location": "outdoor"
@@ -561,147 +561,147 @@
   },
   {
     "id": 80,
-    "idea": "Go to a farmers market and cook together - Pick up fresh ingredients and then go home to create a meal together.",
+    "idea": "Buy ingredients and cook together - Visit a farmers market, pick fresh ingredients, then cook a meal.",
     "category": "foodie",
     "budget": "medium",
     "location": "outdoor"
   },
   {
     "id": 81,
-    "idea": "Learn hip-hop dancing - Take a beginner hip-hop class and practice your moves together. It's energetic, fun, and a great workout.",
+    "idea": "Learn a dance routine - Pick a popular dance and learn it together from YouTube.",
     "category": "active",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 82,
-    "idea": "Try indoor bouldering - Many gyms offer bouldering walls that don't require ropes. It's a great way to build strength and trust.",
+    "idea": "Try bouldering for an hour - Many gyms offer bouldering walls with day passes.",
     "category": "active",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 83,
-    "idea": "Practice partner yoga - Many studios offer couples classes or partner yoga sessions.",
+    "idea": "Do partner yoga poses - Try some simple partner yoga poses together.",
     "category": "active",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 84,
-    "idea": "Go for a bike ride - Rent bikes or use your own and explore your city on two wheels.",
+    "idea": "Rent bikes for an hour - Many cities have bike rental programs for short rides.",
     "category": "active",
     "budget": "low",
     "location": "outdoor"
   },
   {
     "id": 85,
-    "idea": "Take a nature walk - Find a scenic trail and spend the day exploring the great outdoors together.",
+    "idea": "Walk in a local park - Find a beautiful local park for a peaceful walk.",
     "category": "active",
     "budget": "low",
     "location": "outdoor"
   },
   {
     "id": 86,
-    "idea": "Go ice skating - Whether it's winter or an indoor rink, ice skating is fun and romantic.",
+    "idea": "Go ice skating - Visit a local ice rink for a fun skating session.",
     "category": "active",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 87,
-    "idea": "Go roller skating - Many cities have roller rinks that are perfect for a retro date night.",
+    "idea": "Go roller skating - Visit a roller rink for a retro skating date.",
     "category": "active",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 88,
-    "idea": "Take a martial arts class - Many studios offer couples classes in karate, tai chi, or other martial arts.",
+    "idea": "Try martial arts moves - Learn some basic martial arts moves together.",
     "category": "active",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 89,
-    "idea": "Try kayaking - Many lakes and rivers offer kayak rentals. It's a peaceful way to explore the water together.",
+    "idea": "Rent kayaks for an hour - Many lakes offer hourly kayak rentals.",
     "category": "active",
     "budget": "medium",
     "location": "outdoor"
   },
   {
     "id": 90,
-    "idea": "Take a fitness class together - Many gyms offer classes that you can do together.",
+    "idea": "Do a home workout together - Follow a fitness video or app together.",
     "category": "active",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 91,
-    "idea": "Go to a concert - Whether it's a big arena show or a small local venue, live music is always a great date.",
+    "idea": "Listen to live music at a local venue - Find a small local band or open mic night for an intimate musical experience.",
     "category": "cultural",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 92,
-    "idea": "Go to a poetry reading - Many bookstores and cafes host poetry readings that are free or low-cost.",
+    "idea": "Read poetry to each other - Pick your favorite poems and take turns reading them aloud in a cozy setting.",
     "category": "cultural",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 93,
-    "idea": "Go to a lecture - Many universities and libraries offer free lectures on interesting topics.",
+    "idea": "Watch an educational video together - Pick an interesting TED talk or documentary and discuss it afterward.",
     "category": "cultural",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 94,
-    "idea": "Go to a book signing - Meet your favorite author and get your book signed together.",
+    "idea": "Have a book discussion night - Pick a book you've both read and spend the evening discussing your favorite parts.",
     "category": "cultural",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 95,
-    "idea": "Attend a film festival - Many cities have film festivals that showcase independent and foreign films.",
+    "idea": "Have a foreign film night - Pick a foreign film you've never seen and watch it together with snacks.",
     "category": "cultural",
     "budget": "medium",
     "location": "indoor"
   },
   {
     "id": 96,
-    "idea": "Experience a cultural festival - Many cities have festivals celebrating different cultures with food, music, and dance.",
+    "idea": "Cook a cultural meal together - Pick a cuisine you've never tried and cook a traditional meal together.",
     "category": "cultural",
     "budget": "low",
     "location": "outdoor"
   },
   {
     "id": 97,
-    "idea": "Go to a historical site - Learn about your city's history while spending time together.",
+    "idea": "Take a historical walking tour - Many cities offer evening walking tours of historical areas.",
     "category": "cultural",
     "budget": "low",
     "location": "outdoor"
   },
   {
     "id": 98,
-    "idea": "Go to a science museum - Many science museums have interactive exhibits that are fun for adults too.",
+    "idea": "Do science experiments at home - Try some simple kitchen science experiments together.",
     "category": "cultural",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 99,
-    "idea": "Go to a planetarium - Many planetariums offer shows that are both educational and romantic.",
+    "idea": "Stargaze with an app - Use a stargazing app to identify constellations and planets together.",
     "category": "cultural",
     "budget": "low",
     "location": "indoor"
   },
   {
     "id": 100,
-    "idea": "Go to a zoo or aquarium - Many zoos and aquariums offer evening events that are perfect for dates.",
+    "idea": "Watch nature documentaries - Pick an interesting nature documentary and watch it together.",
     "category": "cultural",
     "budget": "medium",
     "location": "outdoor"
