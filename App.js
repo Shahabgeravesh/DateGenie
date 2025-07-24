@@ -510,7 +510,7 @@ const showConfirmation = (title, message, onConfirm, onCancel) => {
   }
 };
 
-// Tutorial Component
+// Professional Tutorial Component
 const Tutorial = ({ visible, onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -520,44 +520,43 @@ const Tutorial = ({ visible, onComplete }) => {
   const tutorialSteps = [
     {
       title: "Welcome to DateGenie",
-      message: "Discover 100 creative date ideas. Tap a card to reveal, filter by category, and save your favorites.",
-      iconSet: 'MaterialCommunityIcons',
-      icon: 'share-variant',
+      message: "Your personal genie for discovering 100 creative date ideas. Tap any card to reveal a surprise.",
+      icon: 'cards',
       color: "#FF6B8A"
+    },
+    {
+      title: "Filter & Explore",
+      message: "Use categories to find exactly what you're looking for - romantic, adventurous, cozy, and more.",
+      icon: 'filter-variant',
+      color: "#7FB069"
     },
     {
       title: "Share & Save",
-      message: "Found a great idea? Share it via email or message.",
-      iconSet: 'MaterialCommunityIcons',
+      message: "Found the perfect date? Share it with your partner via email or message instantly.",
       icon: 'share-variant',
-      color: "#FF6B8A"
-    },
-    {
-      title: "You're Ready!",
-      message: "Start exploring your 100 date ideas now.",
-      iconSet: 'MaterialCommunityIcons',
-      icon: 'share-variant',
-      color: "#FF6B8A"
+      color: "#5B9BD5"
     }
   ];
 
-  // PanResponder for swipe gestures
+  // Improved PanResponder for reliable swipe gestures
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: (evt, gestureState) => {
-        return Math.abs(gestureState.dx) > Math.abs(gestureState.dy) && Math.abs(gestureState.dx) > 10;
+        const { dx, dy } = gestureState;
+        return Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 20;
       },
       onPanResponderGrant: () => {
         swipeAnim.setValue(0);
       },
       onPanResponderMove: (evt, gestureState) => {
-        swipeAnim.setValue(gestureState.dx);
+        const { dx } = gestureState;
+        swipeAnim.setValue(dx * 0.3); // Reduced movement for subtle effect
       },
       onPanResponderRelease: (evt, gestureState) => {
         const { dx, vx } = gestureState;
-        const swipeThreshold = 50;
-        const velocityThreshold = 0.5;
+        const swipeThreshold = 80;
+        const velocityThreshold = 0.3;
 
         if (dx > swipeThreshold || vx > velocityThreshold) {
           // Swipe right - go to previous step
@@ -576,12 +575,12 @@ const Tutorial = ({ visible, onComplete }) => {
           }
         }
 
-        // Reset swipe animation
+        // Smooth reset animation
         Animated.spring(swipeAnim, {
           toValue: 0,
           useNativeDriver: true,
-          tension: 100,
-          friction: 8,
+          tension: 200,
+          friction: 10,
         }).start();
       },
     })
@@ -592,12 +591,12 @@ const Tutorial = ({ visible, onComplete }) => {
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 1,
-          duration: 500,
+          duration: 600,
           useNativeDriver: true,
         }),
         Animated.timing(slideAnim, {
           toValue: 0,
-          duration: 500,
+          duration: 600,
           useNativeDriver: true,
         })
       ]).start();
@@ -645,67 +644,74 @@ const Tutorial = ({ visible, onComplete }) => {
           }
         ]}
       >
-        <View style={styles.tutorialHeader}> 
-          <View style={styles.genieContainer}>
-            <View style={[styles.tutorialIconContainer, { backgroundColor: 'transparent' }]}> 
-              {currentStep === 0 ? (
+        {/* Header with Skip button */}
+        <View style={styles.tutorialTopBar}>
+          <View style={{ flex: 1 }} />
+          <TouchableOpacity onPress={skipTutorial} style={styles.skipButton}>
+            <Text style={styles.skipButtonText}>Skip</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Main Content */}
+        <View style={styles.tutorialMainContent}>
+          {/* Icon Section */}
+          <View style={styles.tutorialIconSection}>
+            {currentStep === 0 ? (
+              <View style={styles.genieImageContainer}>
                 <Image 
                   source={require('./assets/Genie.png')} 
-                  style={{ width: 80, height: 80, resizeMode: 'contain' }}
+                  style={styles.genieImage}
                 />
-              ) : currentTutorial.iconSet === 'MaterialCommunityIcons' ? ( 
-                <MaterialCommunityIcons name={currentTutorial.icon} size={44} color="#FFFFFF" /> 
-              ) : currentTutorial.iconSet === 'FontAwesome5' ? ( 
-                <FontAwesome5 name={currentTutorial.icon} size={40} color="#FFFFFF" /> 
-              ) : ( 
-                <Feather name={currentTutorial.icon} size={40} color="#FFFFFF" /> 
-              )} 
-            </View>
-            {currentStep === 0 && (
-              <View style={styles.genieSparkles}>
-                <MaterialCommunityIcons name="star" size={16} color="#FFD700" style={styles.sparkle1} />
-                <MaterialCommunityIcons name="star" size={12} color="#FFD700" style={styles.sparkle2} />
-                <MaterialCommunityIcons name="star" size={14} color="#FFD700" style={styles.sparkle3} />
+              </View>
+            ) : (
+              <View style={[styles.iconContainer, { backgroundColor: currentTutorial.color }]}>
+                <MaterialCommunityIcons 
+                  name={currentTutorial.icon} 
+                  size={48} 
+                  color="#FFFFFF" 
+                />
               </View>
             )}
           </View>
-          <Text style={styles.tutorialTitle}>{currentTutorial.title}</Text> 
-          <Text style={styles.tutorialSubtitle}>{currentTutorial.message}</Text>
-        </View>
-        
-        <View style={styles.tutorialProgress}>
-          {tutorialSteps.map((_, index) => (
-            <View 
-              key={index} 
-              style={[
-                styles.progressDot,
-                index === currentStep && [styles.progressDotActive, { backgroundColor: currentTutorial.color }]
-              ]} 
-            />
-          ))}
-        </View>
-        
-        <View style={styles.tutorialButtons}>
-          <TouchableOpacity onPress={skipTutorial} style={[styles.nextButton, { backgroundColor: '#F2F2F7' }]}> 
-            <Text style={[styles.nextButtonText, { color: '#1D1D1F' }]}>Skip</Text>
-          </TouchableOpacity>
-          
-          <View style={{ flex: 1, flexDirection: 'row', gap: 12 }}>
-            {currentStep > 0 && (
-              <TouchableOpacity onPress={previousStep} style={[styles.nextButton, { backgroundColor: '#F2F2F7', flex: 1 }]}> 
-                <Text style={[styles.nextButtonText, { color: '#1D1D1F' }]}>Back</Text>
-              </TouchableOpacity>
-            )}
-            
-            <TouchableOpacity onPress={nextStep} style={[styles.nextButton, { backgroundColor: currentTutorial.color, flex: currentStep > 0 ? 1 : 1 }]}> 
-              <Text style={styles.nextButtonText}>
-                {currentStep === tutorialSteps.length - 1 ? "Get Started" : "Next"}
-              </Text>
-            </TouchableOpacity>
+
+          {/* Text Section */}
+          <View style={styles.tutorialTextSection}>
+            <Text style={styles.tutorialTitle}>{currentTutorial.title}</Text>
+            <Text style={styles.tutorialMessage}>{currentTutorial.message}</Text>
+          </View>
+
+          {/* Progress Dots */}
+          <View style={styles.tutorialProgress}>
+            {tutorialSteps.map((_, index) => (
+              <View 
+                key={index} 
+                style={[
+                  styles.progressDot,
+                  index === currentStep && [styles.progressDotActive, { backgroundColor: currentTutorial.color }]
+                ]} 
+              />
+            ))}
           </View>
         </View>
-        
 
+        {/* Navigation Buttons */}
+        <View style={styles.tutorialNavigation}>
+          {currentStep > 0 && (
+            <TouchableOpacity onPress={previousStep} style={styles.navButton}>
+              <MaterialCommunityIcons name="chevron-left" size={24} color="#8E8E93" />
+              <Text style={styles.navButtonText}>Previous</Text>
+            </TouchableOpacity>
+          )}
+          
+          <View style={{ flex: 1 }} />
+          
+          <TouchableOpacity onPress={nextStep} style={[styles.primaryButton, { backgroundColor: currentTutorial.color }]}>
+            <Text style={styles.primaryButtonText}>
+              {currentStep === tutorialSteps.length - 1 ? "Get Started" : "Next"}
+            </Text>
+            <MaterialCommunityIcons name="chevron-right" size={20} color="#FFFFFF" />
+          </TouchableOpacity>
+        </View>
       </Animated.View>
     </View>
   );
@@ -4425,73 +4431,85 @@ const styles = StyleSheet.create({
     marginTop: 4,
     textAlign: 'center',
   },
+  // Professional Tutorial Styles
   tutorialFullScreen: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 24,
   },
   tutorialContent: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     width: '100%',
-    maxWidth: 360,
+    maxWidth: 400,
+    paddingHorizontal: 24,
   },
-  tutorialHeader: {
+  tutorialTopBar: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    marginBottom: 48,
-    paddingHorizontal: 20,
+    paddingTop: Platform.OS === 'ios' ? 60 : 40,
+    paddingBottom: 20,
   },
-  genieContainer: {
-    position: 'relative',
-    alignItems: 'center',
+  skipButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: '#F2F2F7',
+  },
+  skipButtonText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#8E8E93',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  tutorialMainContent: {
+    flex: 1,
     justifyContent: 'center',
-    marginBottom: 24,
+    alignItems: 'center',
+    paddingVertical: 40,
   },
-  genieSparkles: {
-    position: 'absolute',
+  tutorialIconSection: {
+    marginBottom: 40,
+    alignItems: 'center',
+  },
+  genieImageContainer: {
     width: 120,
     height: 120,
+    borderRadius: 60,
+    backgroundColor: '#FFF5F7',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  sparkle1: {
-    position: 'absolute',
-    top: -10,
-    right: -15,
-  },
-  sparkle2: {
-    position: 'absolute',
-    bottom: -5,
-    left: -20,
-  },
-  sparkle3: {
-    position: 'absolute',
-    top: 20,
-    left: -10,
-  },
-  tutorialIconContainer: {
-    width: 72,
-    height: 72,
-    borderRadius: 20,
-    backgroundColor: '#FF6B8A',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 24,
     shadowColor: '#FF6B8A',
-    shadowOffset: { width: 0, height: 6 },
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.15,
-    shadowRadius: 12,
+    shadowRadius: 16,
     elevation: 8,
   },
-  tutorialIcon: {
-    fontSize: 32,
-    color: '#FFFFFF',
+  genieImage: {
+    width: 80,
+    height: 80,
+    resizeMode: 'contain',
+  },
+  iconContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  tutorialTextSection: {
+    alignItems: 'center',
+    marginBottom: 40,
+    paddingHorizontal: 20,
   },
   tutorialTitle: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: '700',
     color: '#1D1D1F',
     marginBottom: 16,
@@ -4499,59 +4517,74 @@ const styles = StyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     letterSpacing: -0.5,
   },
-  tutorialSubtitle: {
-    fontSize: 17,
+  tutorialMessage: {
+    fontSize: 18,
     color: '#6B7280',
     textAlign: 'center',
     fontWeight: '400',
-    lineHeight: 24,
+    lineHeight: 26,
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     letterSpacing: -0.1,
   },
   tutorialProgress: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 48,
     alignItems: 'center',
+    marginBottom: 40,
   },
   progressDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginHorizontal: 8,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 6,
     backgroundColor: '#E5E5E7',
   },
   progressDotActive: {
     backgroundColor: '#FF6B8A',
     shadowColor: '#FF6B8A',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.3,
     shadowRadius: 4,
-    elevation: 2,
+    elevation: 3,
   },
-  tutorialButtons: {
+  tutorialNavigation: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 16,
-    width: '100%',
-  },
-  nextButton: {
-    flex: 1,
-    paddingVertical: 18,
-    borderRadius: 16,
-    backgroundColor: '#FF6B8A',
-    justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#FF6B8A',
+    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
+  },
+  navButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 24,
+    backgroundColor: '#F2F2F7',
+  },
+  navButtonText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#8E8E93',
+    marginLeft: 4,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  primaryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    borderRadius: 24,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
     shadowRadius: 8,
     elevation: 4,
   },
-  nextButtonText: {
+  primaryButtonText: {
     fontSize: 17,
     fontWeight: '600',
     color: '#FFFFFF',
+    marginRight: 8,
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     letterSpacing: -0.2,
   },
