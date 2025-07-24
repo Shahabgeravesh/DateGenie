@@ -519,7 +519,7 @@ const Tutorial = ({ visible, onComplete }) => {
       title: "Welcome to DateGenie",
       message: "Discover 100 creative date ideas. Tap a card to reveal, filter by category, and save your favorites.",
       iconSet: 'MaterialCommunityIcons',
-      icon: 'magic-staff',
+      icon: 'wand',
       color: "#FF6B8A"
     },
     {
@@ -533,7 +533,7 @@ const Tutorial = ({ visible, onComplete }) => {
       title: "You're Ready!",
       message: "Start exploring your 100 date ideas now.",
       iconSet: 'MaterialCommunityIcons',
-      icon: 'magic-staff',
+      icon: 'wand',
       color: "#FF6B8A"
     }
   ];
@@ -595,9 +595,9 @@ const Tutorial = ({ visible, onComplete }) => {
             </View>
             {currentStep === 0 && (
               <View style={styles.genieSparkles}>
-                <MaterialCommunityIcons name="star" size={16} color="#FFD700" style={styles.sparkle1} />
-                <MaterialCommunityIcons name="star" size={12} color="#FFD700" style={styles.sparkle2} />
-                <MaterialCommunityIcons name="star" size={14} color="#FFD700" style={styles.sparkle3} />
+                <MaterialCommunityIcons name="sparkles" size={16} color="#FFD700" style={styles.sparkle1} />
+                <MaterialCommunityIcons name="sparkles" size={12} color="#FFD700" style={styles.sparkle2} />
+                <MaterialCommunityIcons name="sparkles" size={14} color="#FFD700" style={styles.sparkle3} />
               </View>
             )}
           </View>
