@@ -1843,7 +1843,6 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
             
             {/* App Info Section */}
             <View style={styles.settingsSection}>
-              <Text style={styles.sectionTitle}>App Information</Text>
               <View style={styles.settingsItem}>
                 <View style={styles.settingsItemLeft}>
                   <MaterialCommunityIcons name="information" size={24} color="#FF6B8A" />
