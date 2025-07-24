@@ -2397,9 +2397,8 @@ export default function App() {
       setShowTutorial(false);
       setTutorialKey(prev => prev + 1);
       
-      showPlatformAlert('Success', 'App data has been reset! The tutorial will appear again the next time you open the app.', [
-        { text: 'OK', style: 'default' }
-      ], null);
+      // Reset completed successfully - no need for success alert since user already confirmed
+      console.log('App data reset successfully');
     } catch (error) {
       console.error('Reset app data error:', error);
       showPlatformAlert('Error', 'Unable to reset app data.', [
