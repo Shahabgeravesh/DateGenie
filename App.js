@@ -2337,7 +2337,6 @@ export default function App() {
                     <PlatformButton
                       onPress={() => {
                         setExpandedCard(null);
-                        setShowCalendarModal(false);
                         setShowInvitationModal(false);
                         setShowReminderModal(false);
                         setShowHistory(false);
@@ -2356,7 +2355,6 @@ export default function App() {
                     <PlatformButton
                       onPress={() => {
                         setExpandedCard(null);
-                        setShowCalendarModal(false);
                         setShowInvitationModal(false);
                         setShowReminderModal(false);
                         setShowSpinningWheel(false);
