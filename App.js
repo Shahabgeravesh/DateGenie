@@ -587,13 +587,7 @@ const Tutorial = ({ visible, onComplete }) => {
           }
         ]}
       >
-        {/* Header with Skip button */}
-        <View style={styles.tutorialTopBar}>
-          <View style={{ flex: 1 }} />
-          <TouchableOpacity onPress={skipTutorial} style={styles.skipButton}>
-            <Text style={styles.skipButtonText}>Skip</Text>
-          </TouchableOpacity>
-        </View>
+
 
         {/* Main Content */}
         <View style={styles.tutorialMainContent}>
@@ -4395,25 +4389,7 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 4,
   },
-  tutorialTopBar: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    paddingBottom: 20,
-  },
-  skipButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#F2F2F7',
-  },
-  skipButtonText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#8E8E93',
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-  },
+
   tutorialMainContent: {
     flex: 1,
     justifyContent: 'center',
