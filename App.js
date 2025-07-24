@@ -1838,11 +1838,6 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
           />
           <StatusBar style="dark" />
           
-                      {/* Settings Header - Removed close button since we have tab navigation */}
-            <View style={styles.settingsHeader}>
-              <View style={{ flex: 1 }} />
-            </View>
-
           {/* Settings Content */}
           <ScrollView style={styles.settingsContent} showsVerticalScrollIndicator={false}>
             
@@ -4507,7 +4502,7 @@ const styles = StyleSheet.create({
   settingsContent: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 24,
   },
   settingsSection: {
     marginBottom: 32,
