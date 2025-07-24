@@ -1866,8 +1866,6 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
 
             {/* Data Management Section */}
             <View style={styles.settingsSection}>
-              <Text style={styles.sectionTitle}>Data Management</Text>
-              
               <TouchableOpacity 
                 style={[styles.settingsItem, styles.dangerItem]}
                 onPress={onReset}
