@@ -519,7 +519,7 @@ const Tutorial = ({ visible, onComplete }) => {
       title: "Welcome to DateGenie",
       message: "Discover 100 creative date ideas. Tap a card to reveal, filter by category, and save your favorites.",
       iconSet: 'MaterialCommunityIcons',
-      icon: 'cards-heart',
+      icon: 'magic-staff',
       color: "#FF6B8A"
     },
     {
@@ -533,7 +533,7 @@ const Tutorial = ({ visible, onComplete }) => {
       title: "You're Ready!",
       message: "Start exploring your 100 date ideas now.",
       iconSet: 'MaterialCommunityIcons',
-      icon: 'rocket-launch',
+      icon: 'magic-staff',
       color: "#FF6B8A"
     }
   ];
@@ -583,15 +583,24 @@ const Tutorial = ({ visible, onComplete }) => {
         ]}
       >
         <View style={styles.tutorialHeader}> 
-          <View style={[styles.tutorialIconContainer, { backgroundColor: currentTutorial.color }]}> 
-            {currentTutorial.iconSet === 'MaterialCommunityIcons' ? ( 
-              <MaterialCommunityIcons name={currentTutorial.icon} size={44} color="#FFFFFF" /> 
-            ) : currentTutorial.iconSet === 'FontAwesome5' ? ( 
-              <FontAwesome5 name={currentTutorial.icon} size={40} color="#FFFFFF" /> 
-            ) : ( 
-              <Feather name={currentTutorial.icon} size={40} color="#FFFFFF" /> 
-            )} 
-          </View> 
+          <View style={styles.genieContainer}>
+            <View style={[styles.tutorialIconContainer, { backgroundColor: currentTutorial.color }]}> 
+              {currentTutorial.iconSet === 'MaterialCommunityIcons' ? ( 
+                <MaterialCommunityIcons name={currentTutorial.icon} size={44} color="#FFFFFF" /> 
+              ) : currentTutorial.iconSet === 'FontAwesome5' ? ( 
+                <FontAwesome5 name={currentTutorial.icon} size={40} color="#FFFFFF" /> 
+              ) : ( 
+                <Feather name={currentTutorial.icon} size={40} color="#FFFFFF" /> 
+              )} 
+            </View>
+            {currentStep === 0 && (
+              <View style={styles.genieSparkles}>
+                <MaterialCommunityIcons name="star" size={16} color="#FFD700" style={styles.sparkle1} />
+                <MaterialCommunityIcons name="star" size={12} color="#FFD700" style={styles.sparkle2} />
+                <MaterialCommunityIcons name="star" size={14} color="#FFD700" style={styles.sparkle3} />
+              </View>
+            )}
+          </View>
           <Text style={styles.tutorialTitle}>{currentTutorial.title}</Text> 
           <Text style={styles.tutorialSubtitle}>{currentTutorial.message}</Text>
         </View>
@@ -4355,6 +4364,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 48,
     paddingHorizontal: 20,
+  },
+  genieContainer: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+  },
+  genieSparkles: {
+    position: 'absolute',
+    width: 120,
+    height: 120,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sparkle1: {
+    position: 'absolute',
+    top: -10,
+    right: -15,
+  },
+  sparkle2: {
+    position: 'absolute',
+    bottom: -5,
+    left: -20,
+  },
+  sparkle3: {
+    position: 'absolute',
+    top: 20,
+    left: -10,
   },
   tutorialIconContainer: {
     width: 72,
