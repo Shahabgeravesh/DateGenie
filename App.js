@@ -1836,7 +1836,7 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
           
           {/* Settings Header */}
           <View style={styles.settingsHeader}>
-            <Text style={styles.settingsTitle}>Settings</Text>
+            <View style={{ flex: 1 }} />
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
               <MaterialCommunityIcons name="close" size={24} color="#86868B" />
             </TouchableOpacity>
