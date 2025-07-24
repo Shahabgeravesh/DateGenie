@@ -1822,6 +1822,105 @@ const getLocationPreference = (revealedCards) => {
   return mostPopular ? mostPopular[0].charAt(0).toUpperCase() + mostPopular[0].slice(1) : 'None';
 };
 
+// Settings Screen Component
+const SettingsScreen = ({ onClose, onReset, revealedCardsCount }) => {
+  return (
+    <View style={styles.settingsPage}>
+      <View style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
+          <RNStatusBar 
+            barStyle="dark-content" 
+            backgroundColor={'#FFFFFF'} 
+          />
+          <StatusBar style="dark" />
+          
+          {/* Settings Header */}
+          <View style={styles.settingsHeader}>
+            <Text style={styles.settingsTitle}>Settings</Text>
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+              <MaterialCommunityIcons name="close" size={24} color="#86868B" />
+            </TouchableOpacity>
+          </View>
+
+          {/* Settings Content */}
+          <ScrollView style={styles.settingsContent} showsVerticalScrollIndicator={false}>
+            
+            {/* App Info Section */}
+            <View style={styles.settingsSection}>
+              <Text style={styles.sectionTitle}>App Information</Text>
+              <View style={styles.settingsItem}>
+                <View style={styles.settingsItemLeft}>
+                  <MaterialCommunityIcons name="information" size={24} color="#FF6B8A" />
+                  <View style={styles.settingsItemText}>
+                    <Text style={styles.settingsItemTitle}>DateGenie</Text>
+                    <Text style={styles.settingsItemSubtitle}>Version 1.0.0</Text>
+                  </View>
+                </View>
+              </View>
+              
+              <View style={styles.settingsItem}>
+                <View style={styles.settingsItemLeft}>
+                  <MaterialCommunityIcons name="heart" size={24} color="#FF6B8A" />
+                  <View style={styles.settingsItemText}>
+                    <Text style={styles.settingsItemTitle}>Revealed Ideas</Text>
+                    <Text style={styles.settingsItemSubtitle}>{revealedCardsCount} date ideas discovered</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            {/* Data Management Section */}
+            <View style={styles.settingsSection}>
+              <Text style={styles.sectionTitle}>Data Management</Text>
+              
+              <TouchableOpacity 
+                style={[styles.settingsItem, styles.dangerItem]}
+                onPress={onReset}
+              >
+                <View style={styles.settingsItemLeft}>
+                  <MaterialCommunityIcons name="delete" size={24} color="#FF3B30" />
+                  <View style={styles.settingsItemText}>
+                    <Text style={[styles.settingsItemTitle, styles.dangerText]}>Reset App Data</Text>
+                    <Text style={styles.settingsItemSubtitle}>Clear all revealed ideas and start fresh</Text>
+                  </View>
+                </View>
+                <MaterialCommunityIcons name="chevron-right" size={24} color="#C7C7CC" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Support Section */}
+            <View style={styles.settingsSection}>
+              <Text style={styles.sectionTitle}>Support</Text>
+              
+              <TouchableOpacity style={styles.settingsItem}>
+                <View style={styles.settingsItemLeft}>
+                  <MaterialCommunityIcons name="help-circle" size={24} color="#FF6B8A" />
+                  <View style={styles.settingsItemText}>
+                    <Text style={styles.settingsItemTitle}>Help & FAQ</Text>
+                    <Text style={styles.settingsItemSubtitle}>Get help and answers</Text>
+                  </View>
+                </View>
+                <MaterialCommunityIcons name="chevron-right" size={24} color="#C7C7CC" />
+              </TouchableOpacity>
+              
+              <TouchableOpacity style={styles.settingsItem}>
+                <View style={styles.settingsItemLeft}>
+                  <MaterialCommunityIcons name="email" size={24} color="#FF6B8A" />
+                  <View style={styles.settingsItemText}>
+                    <Text style={styles.settingsItemTitle}>Contact Us</Text>
+                    <Text style={styles.settingsItemSubtitle}>Send feedback or report issues</Text>
+                  </View>
+                </View>
+                <MaterialCommunityIcons name="chevron-right" size={24} color="#C7C7CC" />
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      </View>
+    </View>
+  );
+};
+
 export default function App() {
   const colorScheme = useColorScheme();
   const theme = createTheme(colorScheme);
@@ -1839,6 +1938,7 @@ export default function App() {
   const [tutorialKey, setTutorialKey] = useState(0);
   const [showSpinningWheel, setShowSpinningWheel] = useState(false);
   const [wheelSelectedCards, setWheelSelectedCards] = useState([]);
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     // Load revealed cards from AsyncStorage on mount
@@ -2447,10 +2547,18 @@ export default function App() {
                       badgeCount={revealedCards.length}
                     />
                     <ModernTabButton
-                      onPress={resetAppData}
+                      onPress={() => {
+                        setExpandedCard(null);
+                        setShowInvitationModal(false);
+                        setShowReminderModal(false);
+                        setShowSpinningWheel(false);
+                        setShowHistory(false);
+                        setShowSettings(true);
+                        setSelectedCategory(null);
+                      }}
                       icon="settings"
                       label="Settings"
-                      isActive={false}
+                      isActive={showSettings}
                       badgeCount={0}
                     />
                   </View>
@@ -2459,6 +2567,13 @@ export default function App() {
               </SafeAreaView>
             </View>
           </View>
+        )}
+        {showSettings && (
+          <SettingsScreen
+            onClose={() => setShowSettings(false)}
+            onReset={resetAppData}
+            revealedCardsCount={revealedCards.length}
+          />
         )}
 
         <InvitationModal
@@ -4005,5 +4120,89 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#FFFFFF',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  // Settings Styles
+  settingsPage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#F8F9FA',
+    zIndex: 1000,
+  },
+  settingsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E5E7',
+  },
+  settingsTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  settingsContent: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  settingsSection: {
+    marginBottom: 32,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 16,
+  },
+  settingsItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    marginBottom: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  settingsItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  settingsItemText: {
+    marginLeft: 12,
+    flex: 1,
+  },
+  settingsItemTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 2,
+  },
+  settingsItemSubtitle: {
+    fontSize: 14,
+    color: '#86868B',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  dangerItem: {
+    borderWidth: 1,
+    borderColor: 'rgba(255, 59, 48, 0.2)',
+  },
+  dangerText: {
+    color: '#FF3B30',
   },
 });
