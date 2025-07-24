@@ -653,8 +653,6 @@ const Tutorial = ({ visible, onComplete }) => {
             <Text style={styles.navButtonText}>Previous</Text>
           </TouchableOpacity>
           
-          <View style={{ flex: 1 }} />
-          
           <TouchableOpacity onPress={nextStep} style={[styles.primaryButton, { backgroundColor: currentTutorial.color }]}>
             <Text style={styles.primaryButtonText}>
               {currentStep === tutorialSteps.length - 1 ? "Get Started" : "Next"}
@@ -4512,17 +4510,20 @@ const styles = StyleSheet.create({
   },
   tutorialNavigation: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: Platform.OS === 'ios' ? 40 : 20,
+    gap: 20,
   },
   navButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 24,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderRadius: 28,
     backgroundColor: '#F2F2F7',
+    minWidth: 100,
+    justifyContent: 'center',
   },
   navButtonText: {
     fontSize: 16,
@@ -4534,14 +4535,16 @@ const styles = StyleSheet.create({
   primaryButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: 28,
     paddingVertical: 16,
-    borderRadius: 24,
+    borderRadius: 28,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
     shadowRadius: 8,
     elevation: 4,
+    minWidth: 120,
+    justifyContent: 'center',
   },
   primaryButtonText: {
     fontSize: 17,
