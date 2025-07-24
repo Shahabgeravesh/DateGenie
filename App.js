@@ -19,7 +19,8 @@ import {
   TouchableHighlight,
   ActionSheetIOS,
   Appearance,
-  Share
+  Share,
+  Image
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -648,7 +649,10 @@ const Tutorial = ({ visible, onComplete }) => {
           <View style={styles.genieContainer}>
             <View style={[styles.tutorialIconContainer, { backgroundColor: 'transparent' }]}> 
               {currentStep === 0 ? (
-                <GenieIcon size={80} color={currentTutorial.color} />
+                <Image 
+                  source={require('./assets/Genie.png')} 
+                  style={{ width: 80, height: 80, resizeMode: 'contain' }}
+                />
               ) : currentTutorial.iconSet === 'MaterialCommunityIcons' ? ( 
                 <MaterialCommunityIcons name={currentTutorial.icon} size={44} color="#FFFFFF" /> 
               ) : currentTutorial.iconSet === 'FontAwesome5' ? ( 
