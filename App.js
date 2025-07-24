@@ -1958,8 +1958,8 @@ const HelpFAQScreen = ({ onClose }) => {
     },
     {
       id: 7,
-      question: "How do I set reminders for dates?",
-      answer: "When viewing a date idea, tap the reminder icon to set a notification. You can choose the date and time, and DateGenie will remind you about your planned date."
+      question: "How do I filter by categories?",
+      answer: "Use the category filter at the top of the main screen to browse specific types of dates like Romantic, Adventure, or Food & Dining. This helps you find exactly what you're looking for."
     },
     {
       id: 8,
@@ -2059,8 +2059,8 @@ const HelpFAQScreen = ({ onClose }) => {
               </View>
               
               <View style={styles.tipCard}>
-                <MaterialCommunityIcons name="bell" size={24} color="#007AFF" />
-                <Text style={styles.tipText}>Set reminders to never forget your planned dates</Text>
+                <MaterialCommunityIcons name="filter" size={24} color="#007AFF" />
+                <Text style={styles.tipText}>Use category filters to find specific types of dates</Text>
               </View>
             </View>
           </ScrollView>
