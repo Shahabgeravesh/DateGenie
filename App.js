@@ -2428,10 +2428,18 @@ export default function App() {
               badgeCount={revealedCards.length}
             />
             <ModernTabButton
-              onPress={resetAppData}
+              onPress={() => {
+                setExpandedCard(null);
+                setShowInvitationModal(false);
+                setShowReminderModal(false);
+                setShowSpinningWheel(false);
+                setShowHistory(false);
+                setShowSettings(true);
+                setSelectedCategory(null);
+              }}
               icon="settings"
               label="Settings"
-              isActive={false}
+              isActive={showSettings}
               badgeCount={0}
             />
           </View>
