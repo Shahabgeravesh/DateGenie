@@ -1717,7 +1717,21 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
             },
           ]}
         >
-          {getIconComponent(icon, 26, textColor)}
+          <View
+            style={[
+              {
+                ...(isActive && {
+                  shadowColor: '#FF6B8A',
+                  shadowOffset: { width: 0, height: 0 },
+                  shadowOpacity: 0.4,
+                  shadowRadius: 8,
+                  elevation: 6,
+                }),
+              },
+            ]}
+          >
+            {getIconComponent(icon, 26, textColor)}
+          </View>
           
           {/* Modern Badge */}
           {badgeCount > 0 && (
@@ -3073,7 +3087,6 @@ const styles = StyleSheet.create({
     height: Platform.OS === 'ios' ? 92 : 68,
     paddingBottom: Platform.OS === 'ios' ? 34 : 0,
     zIndex: 1000,
-    overflow: 'hidden',
   },
   modernTabBarBackground: {
     position: 'absolute',
@@ -3089,7 +3102,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 10,
     elevation: 8,
-    overflow: 'hidden',
   },
   modernTabBarContent: {
     flexDirection: 'row',
