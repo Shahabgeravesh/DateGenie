@@ -4404,15 +4404,13 @@ const styles = StyleSheet.create({
   genieGlowContainer: {
     width: 160,
     height: 160,
-    borderRadius: 80,
-    backgroundColor: '#FFD700',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#FFD700',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.6,
-    shadowRadius: 20,
-    elevation: 10,
+    shadowOpacity: 0.4,
+    shadowRadius: 15,
+    elevation: 8,
   },
   genieImage: {
     width: 140,
