@@ -519,12 +519,12 @@ const Tutorial = ({ visible, onComplete }) => {
   const tutorialSteps = [
     {
       title: "Welcome to DateGenie",
-      message: "Your personal genie for discovering 100 creative date ideas. Tap any card to reveal a surprise.",
+      message: "Your personal genie for discovering creative date ideas. Tap any card to reveal a surprise.",
       icon: 'cards',
       color: "#FF6B8A"
     },
     {
-      title: "Filter & Explore",
+      title: "Explore",
       message: "Use categories to find exactly what you're looking for - romantic, adventurous, cozy, and more.",
       icon: 'filter-variant',
       color: "#FF6B8A"
@@ -2013,7 +2013,7 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
               <ModernTabButton
                 onPress={onNavigateRandom}
                 icon="shuffle"
-                label="GeniePick"
+                label="Genie Pick"
                 isActive={showSpinningWheel}
                 badgeCount={0}
               />
@@ -2722,7 +2722,7 @@ export default function App() {
                 setSelectedCategory(null);
               }}
               icon="shuffle"
-              label="GeniePick"
+              label="Genie Pick"
               isActive={showSpinningWheel}
               badgeCount={0}
             />
@@ -2849,7 +2849,7 @@ export default function App() {
                         setSelectedCategory(null);
                       }}
                       icon="shuffle"
-                      label="GeniePick"
+                      label="Genie Pick"
                       isActive={showSpinningWheel}
                       badgeCount={0}
                     />
@@ -3605,7 +3605,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   modernTabLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '600',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     textAlign: 'center',
@@ -4405,14 +4405,14 @@ const styles = StyleSheet.create({
   },
 
   genieGlowContainer: {
-    width: 160,
-    height: 160,
+    width: 280,
+    height: 280,
     justifyContent: 'center',
     alignItems: 'center',
   },
   genieImage: {
-    width: 140,
-    height: 140,
+    width: 260,
+    height: 260,
     resizeMode: 'contain',
   },
   glitterContainer: {
