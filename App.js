@@ -55,7 +55,7 @@ const categories = {
   spontaneous: { iconSet: 'MaterialCommunityIcons', icon: 'dice-multiple', color: '#F7931E', name: 'Spontaneous', description: 'Impulsive & Exciting' },
   budget: { iconSet: 'FontAwesome5', icon: 'dollar-sign', color: '#6A994E', name: 'Budget-Friendly', description: 'Affordable & Smart' },
   luxury: { iconSet: 'MaterialCommunityIcons', icon: 'diamond-stone', color: '#C9A87D', name: 'Luxury', description: 'Premium & Exclusive' },
-  random: { iconSet: 'MaterialCommunityIcons', icon: 'slot-machine', color: '#D4A5A5', name: 'Random', description: 'Spin & Discover' },
+  random: { iconSet: 'MaterialCommunityIcons', icon: 'slot-machine', color: '#D4A5A5', name: 'GeniePick', description: 'Spin & Discover' },
 };
 
 // Platform-specific icon mapping
@@ -909,7 +909,7 @@ const SpinningWheel = ({ visible, onClose, onSelectCard, onSpinStart, excludedCa
         <View style={styles.wheelContainer}>
           <View style={styles.wheelHeader}>
             <View style={styles.wheelHeaderContent}>
-              <Text style={styles.wheelTitle}>Random Date</Text>
+                              <Text style={styles.wheelTitle}>GeniePick Date</Text>
               <Text style={styles.wheelSubtitle}>Discover something new</Text>
             </View>
             <TouchableOpacity onPress={onClose} style={styles.wheelCloseButton}>
@@ -974,7 +974,7 @@ const SpinningWheel = ({ visible, onClose, onSelectCard, onSpinStart, excludedCa
           </TouchableOpacity>
           
           <View style={styles.wheelInstructions}>
-            <Text style={styles.wheelInstructionText}>Tap to generate a random date idea</Text>
+                            <Text style={styles.wheelInstructionText}>Tap to generate a GeniePick date idea</Text>
           </View>
         </View>
       </View>
@@ -1056,7 +1056,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onSetReminder }
     spontaneous: { name: 'Spontaneous', icon: '', color: '#F7931E', description: '' },
     budget: { name: 'Budget-Friendly', icon: '', color: '#6A994E', description: '' },
     luxury: { name: 'Luxury', icon: '', color: '#C9A87D', description: '' },
-    random: { name: 'Random', icon: '', color: '#D4A5A5', description: '' },
+    random: { name: 'GeniePick', icon: '', color: '#D4A5A5', description: '' },
   };
   const categoryInfo = categories[item.category] || categories.random;
 
@@ -2013,7 +2013,7 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
               <ModernTabButton
                 onPress={onNavigateRandom}
                 icon="shuffle"
-                label="Random"
+                label="GeniePick"
                 isActive={showSpinningWheel}
                 badgeCount={0}
               />
@@ -2065,7 +2065,7 @@ const HelpFAQScreen = ({ onClose }) => {
     {
       id: 1,
       question: "How do I discover date ideas?",
-      answer: "Tap on any card in the main grid to reveal a date idea. You can also use the Random button to get surprise suggestions, or filter by categories like Romantic, Adventure, or Food & Dining."
+      answer: "Tap on any card in the main grid to reveal a date idea. You can also use the GeniePick button to get surprise suggestions, or filter by categories like Romantic, Adventure, or Food & Dining."
     },
     {
       id: 2,
@@ -2074,8 +2074,8 @@ const HelpFAQScreen = ({ onClose }) => {
     },
     {
       id: 3,
-      question: "How does the Random feature work?",
-      answer: "The Random button spins a wheel with all 100 date ideas. It excludes ideas you've already discovered to ensure you always get something new. Perfect for when you can't decide!"
+      question: "How does the GeniePick feature work?",
+      answer: "The GeniePick button spins a wheel with all 100 date ideas. It excludes ideas you've already discovered to ensure you always get something new. Perfect for when you can't decide!"
     },
     {
       id: 4,
@@ -2722,7 +2722,7 @@ export default function App() {
                 setSelectedCategory(null);
               }}
               icon="shuffle"
-              label="Random"
+              label="GeniePick"
               isActive={showSpinningWheel}
               badgeCount={0}
             />
@@ -2786,7 +2786,7 @@ export default function App() {
                     </View>
                     <Text style={styles.emptyHistoryTitle}>No Date Ideas Yet</Text>
                     <Text style={styles.emptyHistoryText}>
-                      Start discovering date ideas by using the Random button or exploring categories.
+                      Start discovering date ideas by using the GeniePick button or exploring categories.
                     </Text>
                     <View style={styles.emptyHistoryActionContainer}>
                       <TouchableOpacity 
@@ -2797,7 +2797,7 @@ export default function App() {
                         }}
                       >
                         <MaterialCommunityIcons name="dice-multiple" size={20} color="#FF6B8A" />
-                        <Text style={styles.emptyHistoryActionText}>Try Random</Text>
+                        <Text style={styles.emptyHistoryActionText}>Try GeniePick</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -2849,7 +2849,7 @@ export default function App() {
                         setSelectedCategory(null);
                       }}
                       icon="shuffle"
-                      label="Random"
+                      label="GeniePick"
                       isActive={showSpinningWheel}
                       badgeCount={0}
                     />
