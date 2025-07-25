@@ -3855,19 +3855,19 @@ const styles = StyleSheet.create({
   },
   wheelGenieSection: {
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: 12,
     paddingHorizontal: 28,
     backgroundColor: '#FFFFFF',
   },
   wheelGenieGlowContainer: {
-    width: 120,
-    height: 120,
+    width: 110,
+    height: 110,
     justifyContent: 'center',
     alignItems: 'center',
   },
   wheelGenieImage: {
-    width: 100,
-    height: 100,
+    width: 90,
+    height: 90,
     resizeMode: 'contain',
   },
   wheelGlitterContainer: {
@@ -3910,7 +3910,7 @@ const styles = StyleSheet.create({
   wheelContent: {
     alignItems: 'center',
     paddingHorizontal: 28,
-    paddingVertical: 24,
+    paddingVertical: 16,
     backgroundColor: '#FFFFFF',
   },
   wheelStats: {
@@ -3928,10 +3928,10 @@ const styles = StyleSheet.create({
   },
   wheelWrapper: {
     width: '100%',
-    height: 280,
+    height: 260,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   wheel: {
     width: 260,
@@ -3973,7 +3973,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   resultContainer: {
-    marginBottom: 20,
+    marginBottom: 16,
     padding: 16,
     backgroundColor: '#F2F2F7',
     borderRadius: 12,
