@@ -677,7 +677,7 @@ const SmallCard = ({ item, sequenceNumber, isRevealed, onPress }) => {
         isRevealed && {
           backgroundColor: '#F0F0F0',
           opacity: 0.8,
-          borderColor: '#7FB069',
+          borderColor: '#5B21B6',
           borderWidth: 2
         }
       ]}
@@ -909,12 +909,30 @@ const SpinningWheel = ({ visible, onClose, onSelectCard, onSpinStart, excludedCa
         <View style={styles.wheelContainer}>
           <View style={styles.wheelHeader}>
             <View style={styles.wheelHeaderContent}>
-                              <Text style={styles.wheelTitle}>GeniePick Date</Text>
-              <Text style={styles.wheelSubtitle}>Discover something new</Text>
+                              <Text style={styles.wheelTitle}>Genie Pick</Text>
             </View>
             <TouchableOpacity onPress={onClose} style={styles.wheelCloseButton}>
               <MaterialCommunityIcons name="close" size={20} color="#8E8E93" />
             </TouchableOpacity>
+          </View>
+          
+          {/* Genie Image with Glitters */}
+          <View style={styles.wheelGenieSection}>
+            <View style={styles.wheelGenieGlowContainer}>
+              <Image 
+                source={require('./assets/Genie 2.jpeg')} 
+                style={styles.wheelGenieImage}
+              />
+              {/* Yellow Glitters */}
+              <View style={styles.wheelGlitterContainer}>
+                <MaterialCommunityIcons name="star" size={8} color="#FFD700" style={styles.wheelGlitter1} />
+                <MaterialCommunityIcons name="star" size={6} color="#FFD700" style={styles.wheelGlitter2} />
+                <MaterialCommunityIcons name="star" size={7} color="#FFD700" style={styles.wheelGlitter3} />
+                <MaterialCommunityIcons name="star" size={9} color="#FFD700" style={styles.wheelGlitter4} />
+                <MaterialCommunityIcons name="star" size={6} color="#FFD700" style={styles.wheelGlitter5} />
+                <MaterialCommunityIcons name="star" size={8} color="#FFD700" style={styles.wheelGlitter6} />
+              </View>
+            </View>
           </View>
         
         <View style={styles.wheelContent}>
@@ -969,13 +987,11 @@ const SpinningWheel = ({ visible, onClose, onSelectCard, onSpinStart, excludedCa
             activeOpacity={0.8}
           >
             <Text style={styles.spinButtonText}>
-              {isSpinning ? 'Finding your date idea...' : 'Find a Date Idea'}
+              {isSpinning ? 'Finding your date idea...' : 'Let Genie Pick your Date'}
             </Text>
           </TouchableOpacity>
           
-          <View style={styles.wheelInstructions}>
-                            <Text style={styles.wheelInstructionText}>Tap to generate a GeniePick date idea</Text>
-          </View>
+
         </View>
       </View>
     </View>
@@ -1714,16 +1730,27 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
       shuffle: { component: Ionicons, name: isActive ? 'shuffle' : 'shuffle-outline' },
       heart: { component: Ionicons, name: isActive ? 'heart' : 'heart-outline' },
       settings: { component: Ionicons, name: isActive ? 'settings' : 'settings-outline' },
+      genie: { component: 'image', source: require('./assets/GenieTabIcon.png') },
     };
 
     const iconConfig = iconMap[iconName] || iconMap.home;
-    const IconComponent = iconConfig.component;
     
+    if (iconConfig.component === 'image') {
+      return (
+        <Image 
+          source={iconConfig.source} 
+          style={{ width: size, height: size }}
+          resizeMode="contain"
+        />
+      );
+    }
+    
+    const IconComponent = iconConfig.component;
     return <IconComponent name={iconConfig.name} size={size} color={color} />;
   };
 
   const activeColor = '#FF6B8A';
-  const inactiveColor = '#8E8E93';
+  const inactiveColor = '#5B21B6';
   const textColor = isActive ? activeColor : inactiveColor;
   const backgroundColor = isActive ? 'rgba(255, 107, 138, 0.08)' : 'transparent';
   const borderColor = isActive ? 'rgba(255, 107, 138, 0.2)' : 'transparent';
@@ -1869,7 +1896,7 @@ const getLocationPreference = (revealedCards) => {
 };
 
 // Settings Screen Component
-const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNavigateHome, onNavigateRandom, onNavigateHistory, showHistory, showSpinningWheel, expandedCard, showSettings }) => {
+const SettingsScreen = ({ onClose, onReset, revealedCardsCount, onNavigateHome, onNavigateRandom, onNavigateHistory, showHistory, showSpinningWheel, expandedCard, showSettings }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
 
@@ -1914,8 +1941,12 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
             >
               <View style={styles.appInfoCard}>
                 <View style={styles.appInfoHeader}>
-                  <View style={styles.appIconContainer}>
-                    <MaterialCommunityIcons name="heart" size={32} color="#FF6B8A" />
+                  <View style={[styles.appIconContainer, { backgroundColor: 'transparent', borderRadius: 0 }]}>
+                    <Image 
+                      source={require('./assets/Genie 2.jpeg')} 
+                      style={{ width: 48, height: 48 }}
+                      resizeMode="contain"
+                    />
                   </View>
                   <View style={styles.appInfoText}>
                     <Text style={styles.appName}>DateGenie</Text>
@@ -1963,7 +1994,7 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
               </TouchableOpacity>
             </Animated.View>
 
-            {/* Support Section */}
+            {/* Newsletter Section */}
             <Animated.View 
               style={[
                 styles.settingsSection,
@@ -1973,29 +2004,19 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
                 }
               ]}
             >
-              <Text style={styles.sectionTitle}>Support</Text>
-              
-              <TouchableOpacity style={styles.supportCard} onPress={onShowHelp} activeOpacity={0.8}>
-                <View style={styles.supportIconContainer}>
-                  <MaterialCommunityIcons name="help-circle" size={24} color="#FF6B8A" />
+              <View style={styles.newsletterCard}>
+                <View style={styles.newsletterIconContainer}>
+                  <MaterialCommunityIcons name="email-outline" size={28} color="#8B5CF6" />
                 </View>
-                <View style={styles.supportContent}>
-                  <Text style={styles.supportTitle}>Help & FAQ</Text>
-                  <Text style={styles.supportSubtitle}>Get help and answers</Text>
+                <View style={styles.newsletterContent}>
+                  <Text style={styles.newsletterTitle}>Stay Inspired</Text>
+                  <Text style={styles.newsletterSubtitle}>Get weekly date ideas and relationship tips delivered to your inbox</Text>
                 </View>
-                <MaterialCommunityIcons name="chevron-right" size={20} color="#C7C7CC" />
-              </TouchableOpacity>
-              
-              <TouchableOpacity style={styles.supportCard} activeOpacity={0.8}>
-                <View style={styles.supportIconContainer}>
-                  <MaterialCommunityIcons name="email" size={24} color="#FF6B8A" />
-                </View>
-                <View style={styles.supportContent}>
-                  <Text style={styles.supportTitle}>Contact Us</Text>
-                  <Text style={styles.supportSubtitle}>Send feedback or report issues</Text>
-                </View>
-                <MaterialCommunityIcons name="chevron-right" size={20} color="#C7C7CC" />
-              </TouchableOpacity>
+                <TouchableOpacity style={styles.newsletterButton} activeOpacity={0.8}>
+                  <Text style={styles.newsletterButtonText}>Subscribe</Text>
+                  <MaterialCommunityIcons name="arrow-right" size={18} color="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
             </Animated.View>
           </ScrollView>
 
@@ -2012,7 +2033,7 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
               />
               <ModernTabButton
                 onPress={onNavigateRandom}
-                icon="shuffle"
+                icon="genie"
                 label="Genie Pick"
                 isActive={showSpinningWheel}
                 badgeCount={0}
@@ -2022,7 +2043,7 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
                 icon="heart"
                 label="History"
                 isActive={showHistory}
-                badgeCount={revealedCardsCount}
+                badgeCount={0}
               />
               <ModernTabButton
                 onPress={() => {}} // Settings is already active
@@ -2039,184 +2060,7 @@ const SettingsScreen = ({ onClose, onReset, onShowHelp, revealedCardsCount, onNa
   );
 };
 
-// Help & FAQ Screen Component
-const HelpFAQScreen = ({ onClose }) => {
-  const [expandedFAQ, setExpandedFAQ] = useState(null);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(50)).current;
 
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 600,
-        useNativeDriver: true,
-      }),
-      Animated.spring(slideAnim, {
-        toValue: 0,
-        tension: 100,
-        friction: 8,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
-
-  const faqData = [
-    {
-      id: 1,
-      question: "How do I discover date ideas?",
-      answer: "Tap on any card in the main grid to reveal a date idea. You can also use the GeniePick button to get surprise suggestions, or filter by categories like Romantic, Adventure, or Food & Dining."
-    },
-    {
-      id: 2,
-      question: "What are the different categories?",
-      answer: "DateGenie offers 8 categories: Romantic, Adventure, Food & Dining, Creative, Outdoors, Indoor, Budget-Friendly, and Luxury. Each category contains unique date ideas tailored to different preferences and situations."
-    },
-    {
-      id: 3,
-      question: "How does the GeniePick feature work?",
-      answer: "The GeniePick button spins a wheel with all 100 date ideas. It excludes ideas you've already discovered to ensure you always get something new. Perfect for when you can't decide!"
-    },
-    {
-      id: 4,
-      question: "Can I save my favorite ideas?",
-      answer: "Yes! All revealed ideas are automatically saved to your History tab. You can view all your discovered ideas there, and they're organized by when you found them."
-    },
-    {
-      id: 5,
-      question: "How do I share date ideas?",
-      answer: "When you tap on a revealed idea, you'll see share options. You can share via email, SMS, or use your device's native sharing. Perfect for planning dates with your partner!"
-    },
-    {
-      id: 6,
-      question: "What do the budget indicators mean?",
-      answer: "$ = Low budget (under $25), $$ = Medium budget ($25-$75), $$$ = Higher budget (over $75). This helps you plan according to your budget."
-    },
-    {
-      id: 7,
-      question: "How do I filter by categories?",
-      answer: "Use the category filter at the top of the main screen to browse specific types of dates like Romantic, Adventure, or Food & Dining. This helps you find exactly what you're looking for."
-    },
-    {
-      id: 8,
-      question: "Can I reset the app and start over?",
-      answer: "Yes! Go to Settings > Data Management > Reset App Data. This will clear all your revealed ideas and reset the app to its initial state. Use with caution as this action cannot be undone."
-    },
-    {
-      id: 9,
-      question: "How many date ideas are in the app?",
-      answer: "DateGenie contains 100 carefully curated date ideas across 8 different categories. Each idea includes details about the activity, budget, and location."
-    },
-    {
-      id: 10,
-      question: "What if I want to suggest new ideas?",
-      answer: "We'd love to hear your suggestions! Use the Contact Us option in Settings to send us your ideas. We regularly update the app with new date suggestions."
-    }
-  ];
-
-  const toggleFAQ = (id) => {
-    setExpandedFAQ(expandedFAQ === id ? null : id);
-  };
-
-  return (
-    <View style={styles.helpPage}>
-      <View style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
-          <RNStatusBar 
-            barStyle="dark-content" 
-            backgroundColor={'#FFFFFF'} 
-          />
-          <StatusBar style="dark" />
-          
-          {/* Help Header with Close Button */}
-          <View style={styles.helpHeader}>
-            <View style={{ flex: 1 }} />
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <MaterialCommunityIcons name="close" size={24} color="#86868B" />
-            </TouchableOpacity>
-          </View>
-          
-          {/* Help Content */}
-          <ScrollView style={styles.helpContent} showsVerticalScrollIndicator={false}>
-            
-            {/* Welcome Section */}
-            <Animated.View 
-              style={[
-                styles.helpWelcomeSection,
-                {
-                  opacity: fadeAnim,
-                  transform: [{ translateY: slideAnim }],
-                }
-              ]}
-            >
-              <Text style={styles.helpWelcomeText}>
-                Find answers to common questions about using DateGenie.
-              </Text>
-            </Animated.View>
-
-                                   {/* FAQ Section */}
-                       <Animated.View 
-                         style={[
-                           styles.faqSection,
-                           {
-                             opacity: fadeAnim,
-                             transform: [{ translateY: slideAnim }],
-                           }
-                         ]}
-                       >
-                         <Text style={styles.faqSectionTitle}>Frequently Asked Questions</Text>
-                         
-                         {faqData.map((faq, index) => (
-                           <Animated.View
-                             key={faq.id}
-                             style={[
-                               styles.faqItem,
-                               expandedFAQ === faq.id && styles.faqItemExpanded,
-                               {
-                                 opacity: fadeAnim,
-                                 transform: [{ translateY: slideAnim }],
-                               }
-                             ]}
-                           >
-                             <TouchableOpacity
-                               style={styles.faqTouchable}
-                               onPress={() => toggleFAQ(faq.id)}
-                               activeOpacity={0.8}
-                             >
-                               <View style={styles.faqQuestionRow}>
-                                 <Text style={styles.faqQuestion}>{faq.question}</Text>
-                                 <View style={styles.faqChevronContainer}>
-                                   <MaterialCommunityIcons 
-                                     name={expandedFAQ === faq.id ? "chevron-up" : "chevron-down"} 
-                                     size={18} 
-                                     color={expandedFAQ === faq.id ? "#FF6B8A" : "#C7C7CC"} 
-                                   />
-                                 </View>
-                               </View>
-                               {expandedFAQ === faq.id && (
-                                 <Animated.View
-                                   style={[
-                                     styles.faqAnswerContainer,
-                                     {
-                                       opacity: fadeAnim,
-                                     }
-                                   ]}
-                                 >
-                                   <Text style={styles.faqAnswer}>{faq.answer}</Text>
-                                 </Animated.View>
-                               )}
-                             </TouchableOpacity>
-                           </Animated.View>
-                         ))}
-                       </Animated.View>
-
-
-          </ScrollView>
-        </SafeAreaView>
-      </View>
-    </View>
-  );
-};
 
 export default function App() {
   const colorScheme = useColorScheme();
@@ -2236,7 +2080,7 @@ export default function App() {
   const [showSpinningWheel, setShowSpinningWheel] = useState(false);
   const [wheelSelectedCards, setWheelSelectedCards] = useState([]);
   const [showSettings, setShowSettings] = useState(false);
-  const [showHelp, setShowHelp] = useState(false);
+
 
   useEffect(() => {
     // Load revealed cards from AsyncStorage on mount
@@ -2721,7 +2565,7 @@ export default function App() {
                 setShowSpinningWheel(true);
                 setSelectedCategory(null);
               }}
-              icon="shuffle"
+              icon="genie"
               label="Genie Pick"
               isActive={showSpinningWheel}
               badgeCount={0}
@@ -2737,7 +2581,7 @@ export default function App() {
               icon="heart"
               label="History"
               isActive={showHistory}
-              badgeCount={revealedCards.length}
+              badgeCount={0}
             />
             <ModernTabButton
               onPress={() => {
@@ -2848,7 +2692,7 @@ export default function App() {
                         setShowSpinningWheel(true);
                         setSelectedCategory(null);
                       }}
-                      icon="shuffle"
+                      icon="genie"
                       label="Genie Pick"
                       isActive={showSpinningWheel}
                       badgeCount={0}
@@ -2864,7 +2708,7 @@ export default function App() {
                       icon="heart"
                       label="History"
                       isActive={showHistory}
-                      badgeCount={revealedCards.length}
+                      badgeCount={0}
                     />
                     <ModernTabButton
                       onPress={() => {
@@ -2892,7 +2736,7 @@ export default function App() {
           <SettingsScreen
             onClose={() => setShowSettings(false)}
             onReset={handleResetWithConfirmation}
-            onShowHelp={() => setShowHelp(true)}
+
             revealedCardsCount={revealedCards.length}
             onNavigateHome={() => {
               setShowSettings(false);
@@ -2926,11 +2770,7 @@ export default function App() {
             showSettings={showSettings}
           />
         )}
-        {showHelp && (
-          <HelpFAQScreen
-            onClose={() => setShowHelp(false)}
-          />
-        )}
+
 
         <InvitationModal
           visible={showInvitationModal}
@@ -3963,51 +3803,115 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   wheelContainer: {
-    width: '90%',
-    maxWidth: 380,
+    width: '92%',
+    maxWidth: 400,
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    elevation: 10,
-    maxHeight: height * 0.8,
+    shadowOffset: { width: 0, height: 20 },
+    shadowOpacity: 0.2,
+    shadowRadius: 30,
+    elevation: 20,
+    maxHeight: height * 0.85,
+    overflow: 'hidden',
   },
   wheelHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 24,
-    paddingBottom: 16,
+    paddingHorizontal: 28,
+    paddingTop: 28,
+    paddingBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#F2F2F7',
+    borderBottomColor: '#F0F0F0',
+    backgroundColor: '#FAFAFA',
   },
   wheelHeaderContent: {
     flex: 1,
   },
   wheelTitle: {
-    fontSize: 20,
-    fontWeight: '600',
+    fontSize: 22,
+    fontWeight: '700',
     color: '#1C1C1E',
     fontFamily: 'System',
-    marginBottom: 2,
+    marginBottom: 4,
+    letterSpacing: -0.5,
   },
   wheelSubtitle: {
-    fontSize: 14,
-    color: '#8E8E93',
+    fontSize: 15,
+    color: '#6B7280',
     fontFamily: 'System',
+    fontWeight: '500',
   },
   wheelCloseButton: {
-    padding: 8,
-    borderRadius: 20,
-    backgroundColor: '#F2F2F7',
+    padding: 10,
+    borderRadius: 22,
+    backgroundColor: '#F0F0F0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  wheelGenieSection: {
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 28,
+    backgroundColor: '#FFFFFF',
+  },
+  wheelGenieGlowContainer: {
+    width: 120,
+    height: 120,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  wheelGenieImage: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+  },
+  wheelGlitterContainer: {
+    position: 'absolute',
+    width: 140,
+    height: 140,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  wheelGlitter1: {
+    position: 'absolute',
+    top: -10,
+    right: -15,
+  },
+  wheelGlitter2: {
+    position: 'absolute',
+    bottom: -8,
+    left: -12,
+  },
+  wheelGlitter3: {
+    position: 'absolute',
+    top: 15,
+    left: -10,
+  },
+  wheelGlitter4: {
+    position: 'absolute',
+    bottom: 10,
+    right: -8,
+  },
+  wheelGlitter5: {
+    position: 'absolute',
+    top: -5,
+    left: -5,
+  },
+  wheelGlitter6: {
+    position: 'absolute',
+    bottom: -12,
+    right: -3,
   },
   wheelContent: {
     alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 20,
+    paddingHorizontal: 28,
+    paddingVertical: 24,
+    backgroundColor: '#FFFFFF',
   },
   wheelStats: {
     marginBottom: 20,
@@ -4024,15 +3928,15 @@ const styles = StyleSheet.create({
   },
   wheelWrapper: {
     width: '100%',
-    height: 300,
+    height: 280,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
   },
   wheel: {
-    width: 240,
-    height: 240,
-    borderRadius: 120,
+    width: 260,
+    height: 260,
+    borderRadius: 130,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#667eea',
@@ -4160,38 +4064,40 @@ const styles = StyleSheet.create({
   },
   spinButton: {
     backgroundColor: '#667eea',
-    paddingVertical: 16,
-    paddingHorizontal: 40,
-    borderRadius: 16,
-    marginBottom: 16,
+    paddingVertical: 18,
+    paddingHorizontal: 44,
+    borderRadius: 20,
+    marginBottom: 20,
     shadowColor: '#667eea',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 6,
+    minWidth: 200,
   },
   spinButtonDisabled: {
     backgroundColor: '#A0A0A0',
     shadowOpacity: 0.1,
   },
   spinButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 17,
+    fontWeight: '700',
     color: '#FFFFFF',
     fontFamily: 'System',
     textAlign: 'center',
+    letterSpacing: 0.5,
   },
   wheelInstructions: {
-    marginBottom: 16,
+    marginBottom: 20,
+    paddingHorizontal: 20,
   },
   wheelInstructionText: {
-    fontSize: 13,
-    color: '#8E8E93',
+    fontSize: 14,
+    color: '#6B7280',
     fontFamily: 'System',
     textAlign: 'center',
-    textShadowColor: '#FFD700',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+    fontWeight: '500',
+    lineHeight: 20,
   },
   categoryBadge: {
     paddingHorizontal: 8,
@@ -4601,13 +4507,15 @@ const styles = StyleSheet.create({
   // App Info Card Styles
   appInfoCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
+    borderRadius: 20,
+    padding: 24,
+    shadowColor: '#5B21B6',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 16,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(91, 33, 182, 0.1)',
   },
   appInfoHeader: {
     flexDirection: 'row',
@@ -4627,86 +4535,149 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   appName: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#1D1D1F',
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#5B21B6',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    marginBottom: 2,
+    marginBottom: 4,
+    letterSpacing: -0.5,
   },
   appVersion: {
-    fontSize: 14,
-    color: '#86868B',
+    fontSize: 15,
+    color: '#8B5CF6',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    fontWeight: '500',
   },
   statsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 107, 138, 0.05)',
-    borderRadius: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
+    backgroundColor: 'rgba(91, 33, 182, 0.08)',
+    borderRadius: 16,
+    paddingVertical: 20,
+    paddingHorizontal: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(91, 33, 182, 0.15)',
   },
   statItem: {
     alignItems: 'center',
     flex: 1,
   },
   statNumber: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#FF6B8A',
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#5B21B6',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
   statLabel: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#86868B',
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#8B5CF6',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    marginTop: 4,
+    marginTop: 6,
   },
   statDivider: {
     width: 1,
-    height: 40,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    marginHorizontal: 20,
+    height: 50,
+    backgroundColor: 'rgba(91, 33, 182, 0.2)',
+    marginHorizontal: 24,
   },
   // Reset Card Styles
   resetCard: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
+    borderRadius: 18,
+    padding: 22,
+    shadowColor: '#FF3B30',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 6,
     borderWidth: 1,
-    borderColor: 'rgba(255, 59, 48, 0.1)',
+    borderColor: 'rgba(255, 59, 48, 0.15)',
   },
   resetIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: 'rgba(255, 59, 48, 0.1)',
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: 'rgba(255, 59, 48, 0.12)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: 18,
   },
   resetContent: {
     flex: 1,
   },
   resetTitle: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 17,
+    fontWeight: '700',
     color: '#FF3B30',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    marginBottom: 2,
+    marginBottom: 3,
   },
   resetSubtitle: {
     fontSize: 14,
     color: '#86868B',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  // Newsletter Card Styles
+  newsletterCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 24,
+    shadowColor: '#8B5CF6',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(139, 92, 246, 0.15)',
+  },
+  newsletterIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  newsletterContent: {
+    marginBottom: 20,
+  },
+  newsletterTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#5B21B6',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 6,
+  },
+  newsletterSubtitle: {
+    fontSize: 15,
+    color: '#6B7280',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    lineHeight: 22,
+  },
+  newsletterButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#8B5CF6',
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    shadowColor: '#8B5CF6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  newsletterButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginRight: 8,
   },
   // Support Card Styles
   supportCard: {
