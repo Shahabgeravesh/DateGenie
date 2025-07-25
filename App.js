@@ -1118,7 +1118,13 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onSetReminder }
           alwaysBounceVertical={false}
         >
           {/* Date Idea Title */}
-          <Text style={styles.dateIdeaText}>
+          <Text style={[
+            styles.dateIdeaText,
+            {
+              fontFamily: getFunFont(item.sequenceNumber),
+              color: getFunColor(item.sequenceNumber),
+            }
+          ]}>
             {item.placeholder ? 'Date idea coming soon!' : (item.idea || 'No idea found')}
           </Text>
 
@@ -1129,40 +1135,69 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onSetReminder }
           {/* Quick Info */}
           <View style={styles.quickInfoContainer}>
             <View style={styles.infoItem}>
-              <Text style={styles.infoLabel}>Budget</Text>
-              <Text style={styles.infoValue}>
+              <Text style={[
+                styles.infoLabel,
+                { fontFamily: getFunFont(item.sequenceNumber) }
+              ]}>Budget</Text>
+              <Text style={[
+                styles.infoValue,
+                { fontFamily: getFunFont(item.sequenceNumber) }
+              ]}>
                 {item.budget === 'low' ? '$' : item.budget === 'medium' ? '$$' : '$$$'}
               </Text>
             </View>
             <View style={styles.infoItem}>
-              <Text style={styles.infoLabel}>Location</Text>
-              <Text style={styles.infoValue}>
+              <Text style={[
+                styles.infoLabel,
+                { fontFamily: getFunFont(item.sequenceNumber) }
+              ]}>Location</Text>
+              <Text style={[
+                styles.infoValue,
+                { fontFamily: getFunFont(item.sequenceNumber) }
+              ]}>
                 {item.location === 'indoor' ? 'Indoor' : 'Outdoor'}
               </Text>
             </View>
             <View style={styles.infoItem}>
-              <Text style={styles.infoLabel}>Category</Text>
-              <Text style={[styles.infoValue, { color: categoryInfo.color }]}>
+              <Text style={[
+                styles.infoLabel,
+                { fontFamily: getFunFont(item.sequenceNumber) }
+              ]}>Category</Text>
+              <Text style={[
+                styles.infoValue,
+                { color: categoryInfo.color, fontFamily: getFunFont(item.sequenceNumber) }
+              ]}>
                 {categoryInfo.name}
               </Text>
             </View>
           </View>
 
+          {/* Share Button - Centered */}
+          <View style={{ alignItems: 'center', marginTop: 20, marginBottom: 10 }}>
+            <TouchableOpacity 
+              style={{ 
+                flexDirection: 'row', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                height: 40, 
+                paddingHorizontal: 24,
+                borderRadius: 20, 
+                backgroundColor: '#FF6B8A',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 3,
+              }} 
+              onPress={() => shareDateIdea(item)}
+              activeOpacity={0.85}
+            >
+              <MaterialCommunityIcons name="share-variant" size={18} color="#FFFFFF" style={{ marginRight: 8 }} />
+              <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600', fontFamily: 'System' }}>Share</Text>
+            </TouchableOpacity>
+          </View>
 
         </ScrollView>
-
-        {/* Action Buttons */}
-        <View style={[styles.expandedActionButtons, { flexDirection: 'row', gap: 12, marginTop: 16 }]}> 
-          <TouchableOpacity 
-            style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 48, borderRadius: 12, backgroundColor: '#FF6B8A' }} 
-            onPress={() => shareDateIdea(item)}
-            activeOpacity={0.85}
-          >
-            <MaterialCommunityIcons name="share-variant" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
-            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', fontFamily: 'System' }}>Share</Text>
-          </TouchableOpacity>
-
-        </View>
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -4136,7 +4171,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   expandedCardNumber: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 600,
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
@@ -4157,11 +4192,11 @@ const styles = StyleSheet.create({
     minHeight: 0,
   },
   dateIdeaText: {
-    fontSize: 21,
+    fontSize: 18,
     fontWeight: 600,
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    lineHeight: 27,
+    lineHeight: 24,
     marginBottom: 19,
     textAlign: 'left',
     flexWrap: 'wrap',
@@ -4244,17 +4279,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   infoLabel: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 500,
     color: '#86868B',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     marginBottom: 8,
   },
   infoValue: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 600,
     color: '#1D1D1F',
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    fontFamily: Platform.OS === 'ios' ? 'Roboto' : 'System',
   },
   expandedActionButtons: {
     flexDirection: 'row',
