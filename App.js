@@ -1985,7 +1985,6 @@ const SettingsScreen = ({ onClose, onReset, revealedCardsCount, onNavigateHome, 
                   </View>
                   <View style={styles.appInfoText}>
                     <Text style={styles.appName}>DateGenie</Text>
-                    <Text style={styles.appVersion}>Version 1.0.0</Text>
                   </View>
                 </View>
                 
@@ -2045,7 +2044,7 @@ const SettingsScreen = ({ onClose, onReset, revealedCardsCount, onNavigateHome, 
                 </View>
                 <View style={styles.newsletterContent}>
                   <Text style={styles.newsletterTitle}>Stay Inspired</Text>
-                  <Text style={styles.newsletterSubtitle}>Get weekly date ideas and relationship tips delivered to your inbox</Text>
+                  <Text style={styles.newsletterSubtitle}>Keep the magic alive with fresh date ideas</Text>
                 </View>
                 <TouchableOpacity style={styles.newsletterButton} activeOpacity={0.8}>
                   <Text style={styles.newsletterButtonText}>Subscribe</Text>
@@ -2053,6 +2052,7 @@ const SettingsScreen = ({ onClose, onReset, revealedCardsCount, onNavigateHome, 
                 </TouchableOpacity>
               </View>
             </Animated.View>
+
           </ScrollView>
 
           {/* Modern Advanced Tab Bar - Always Visible */}
