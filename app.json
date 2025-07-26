@@ -4,7 +4,7 @@
     "slug": "DateGenie",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/Genie.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -15,13 +15,15 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.dategenie.app",
+      "icon": "./assets/Genie.png",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
+      "icon": "./assets/Genie.png",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/Genie.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
