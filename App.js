@@ -2106,9 +2106,9 @@ const AppHeader = ({ revealedCards, theme, platformStyles }) => {
           <Text style={[styles.progressText, { color: '#8B5CF6', fontFamily: 'System' }]}> 
             {revealedCount} / {totalCards} Revealed
           </Text>
-          <View style={[styles.progressBar, { backgroundColor: '#E5E5E7' }]}> 
+          <View style={[styles.progressBar, { backgroundColor: '#D1D5DB' }]}> 
             <View style={[styles.progressFill, { 
-              backgroundColor: '#FF6B8A',
+              backgroundColor: '#8B5CF6',
               width: `${(revealedCount / totalCards) * 100}%` 
             }]} />
           </View>
@@ -3363,13 +3363,13 @@ const styles = StyleSheet.create({
     width: 120,
     height: 3,
     borderRadius: 1.5,
-    backgroundColor: '#E5E5E7',
+    backgroundColor: '#D1D5DB',
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
     borderRadius: 1.5,
-    backgroundColor: '#FF6B8A',
+    backgroundColor: '#8B5CF6',
   },
   categoryFilterContainer: {
     backgroundColor: '#FFFFFF',
