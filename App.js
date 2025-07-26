@@ -2103,7 +2103,7 @@ const AppHeader = ({ revealedCards, theme, platformStyles }) => {
       <View style={styles.headerContent}>
         {/* Removed app name and subtitle for a clean header */}
         <View style={styles.progressContainer}>
-          <Text style={[styles.progressText, { color: '#1D1D1F', fontFamily: 'System' }]}> 
+          <Text style={[styles.progressText, { color: '#8B5CF6', fontFamily: 'System' }]}> 
             {revealedCount} / {totalCards} Revealed
           </Text>
           <View style={[styles.progressBar, { backgroundColor: '#E5E5E7' }]}> 
