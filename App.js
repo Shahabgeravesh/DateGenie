@@ -2601,14 +2601,11 @@ export default function App() {
     const isAlreadyRevealed = revealedCards.some(card => card.id === item.id);
     
     if (!isAlreadyRevealed) {
-      // New card - show scratch card and add to revealed cards
-      const newRevealed = [...revealedCards, { ...item, sequenceNumber }];
-      setRevealedCards(newRevealed);
-      AsyncStorage.setItem('revealedCards', JSON.stringify(newRevealed));
+      // New card - show scratch card (don't add to revealed cards yet)
       setScratchCard({ ...item, sequenceNumber });
     } else {
       // Already revealed card - show expanded card directly
-    setExpandedCard({ ...item, sequenceNumber });
+      setExpandedCard({ ...item, sequenceNumber });
     }
   };
 
@@ -2624,6 +2621,11 @@ export default function App() {
     // The scratch card will automatically close after reveal
     // and show the expanded card with full details
     if (scratchCard) {
+      // Add the card to revealed cards only after successful scratch
+      const newRevealed = [...revealedCards, { ...scratchCard }];
+      setRevealedCards(newRevealed);
+      AsyncStorage.setItem('revealedCards', JSON.stringify(newRevealed));
+      
       setExpandedCard(scratchCard);
       setScratchCard(null);
     }
