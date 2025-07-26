@@ -1352,7 +1352,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onSetReminder }
         <ScrollView 
           style={styles.expandedCardBody} 
           showsVerticalScrollIndicator={true}
-          contentContainerStyle={{ paddingBottom: 24 }}
+          contentContainerStyle={{ paddingBottom: 20 }}
           scrollEnabled={true}
           nestedScrollEnabled={true}
           alwaysBounceVertical={false}
@@ -1413,7 +1413,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onSetReminder }
           </View>
 
           {/* Share Button - Centered */}
-          <View style={{ alignItems: 'center', marginTop: 20, marginBottom: 10 }}>
+          <View style={{ alignItems: 'center', marginTop: 16, marginBottom: 8 }}>
           <TouchableOpacity 
               style={{ 
                 flexDirection: 'row', 
@@ -4697,7 +4697,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 12,
+    padding: 10,
     borderBottomWidth: 0.5,
     borderBottomColor: '#E5E5E7',
   },
@@ -4722,17 +4722,17 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   expandedCardBody: {
-    padding: 19,
+    padding: 16,
     flex: 1,
     minHeight: 0,
   },
   dateIdeaText: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: 600,
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    lineHeight: 24,
-    marginBottom: 19,
+    lineHeight: 22,
+    marginBottom: 16,
     textAlign: 'left',
     flexWrap: 'wrap',
     flexShrink: 1,
@@ -4805,8 +4805,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginBottom: 18,
-    paddingVertical: 15,
+    marginBottom: 16,
+    paddingVertical: 12,
     backgroundColor: '#F8F9FA',
     borderRadius: 12,
   },
@@ -4814,14 +4814,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   infoLabel: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 500,
     color: '#86868B',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   infoValue: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 600,
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'Roboto' : 'System',
