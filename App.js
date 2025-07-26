@@ -758,6 +758,19 @@ const ScratchCard = ({ item, sequenceNumber, onReveal, onClose }) => {
             <MaterialCommunityIcons name="close" size={24} color="#666" />
           </TouchableOpacity>
 
+          {/* Progress indicator at top */}
+          <View style={styles.scratchProgressContainer}>
+            <View style={styles.scratchProgressBar}>
+              <View 
+                style={[
+                  styles.scratchProgressFill,
+                  { width: `${scratchProgress}%` }
+                ]}
+              />
+            </View>
+            <Text style={styles.scratchProgressText}>{Math.round(scratchProgress)}% scratched</Text>
+          </View>
+
           {/* Scratch Card */}
           <View 
             ref={cardRef}
@@ -877,21 +890,6 @@ const ScratchCard = ({ item, sequenceNumber, onReveal, onClose }) => {
                 </View>
               </View>
             </View>
-
-
-          </View>
-
-          {/* Progress indicator */}
-          <View style={styles.scratchProgressContainer}>
-            <View style={styles.scratchProgressBar}>
-              <View 
-                style={[
-                  styles.scratchProgressFill,
-                  { width: `${scratchProgress}%` }
-                ]}
-              />
-            </View>
-            <Text style={styles.scratchProgressText}>{Math.round(scratchProgress)}% scratched</Text>
           </View>
         </View>
       </View>
@@ -2400,13 +2398,18 @@ export default function App() {
 
   const handleCardPress = (item, sequenceNumber) => {
     // Check if card is already revealed by id
-    if (!revealedCards.some(card => card.id === item.id)) {
+    const isAlreadyRevealed = revealedCards.some(card => card.id === item.id);
+    
+    if (!isAlreadyRevealed) {
+      // New card - show scratch card and add to revealed cards
       const newRevealed = [...revealedCards, { ...item, sequenceNumber }];
       setRevealedCards(newRevealed);
       AsyncStorage.setItem('revealedCards', JSON.stringify(newRevealed));
+      setScratchCard({ ...item, sequenceNumber });
+    } else {
+      // Already revealed card - show expanded card directly
+      setExpandedCard({ ...item, sequenceNumber });
     }
-    // Show scratch card instead of expanded card
-    setScratchCard({ ...item, sequenceNumber });
   };
 
   const closeExpandedCard = () => {
