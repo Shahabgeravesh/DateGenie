@@ -1352,7 +1352,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onSetReminder }
         <ScrollView 
           style={styles.expandedCardBody} 
           showsVerticalScrollIndicator={true}
-          contentContainerStyle={{ paddingBottom: 12 }}
+          contentContainerStyle={{ paddingBottom: 6 }}
           scrollEnabled={true}
           nestedScrollEnabled={true}
           alwaysBounceVertical={false}
@@ -1413,7 +1413,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onSetReminder }
           </View>
 
           {/* Share Button - Centered */}
-          <View style={{ alignItems: 'center', marginTop: 8, marginBottom: 4 }}>
+          <View style={{ alignItems: 'center', marginTop: 6, marginBottom: 2 }}>
           <TouchableOpacity 
               style={{ 
                 flexDirection: 'row', 
@@ -4723,6 +4723,7 @@ const styles = StyleSheet.create({
   },
   expandedCardBody: {
     padding: 8,
+    paddingBottom: 4,
     flex: 1,
     minHeight: 0,
   },
