@@ -1352,7 +1352,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onSetReminder }
         <ScrollView 
           style={styles.expandedCardBody} 
           showsVerticalScrollIndicator={true}
-          contentContainerStyle={{ paddingBottom: 16 }}
+          contentContainerStyle={{ paddingBottom: 12 }}
           scrollEnabled={true}
           nestedScrollEnabled={true}
           alwaysBounceVertical={false}
@@ -1413,7 +1413,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onSetReminder }
           </View>
 
           {/* Share Button - Centered */}
-          <View style={{ alignItems: 'center', marginTop: 12, marginBottom: 6 }}>
+          <View style={{ alignItems: 'center', marginTop: 8, marginBottom: 4 }}>
           <TouchableOpacity 
               style={{ 
                 flexDirection: 'row', 
@@ -4697,7 +4697,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
+    padding: 8,
     borderBottomWidth: 0.5,
     borderBottomColor: '#E5E5E7',
   },
@@ -4722,7 +4722,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   expandedCardBody: {
-    padding: 12,
+    padding: 8,
     flex: 1,
     minHeight: 0,
   },
@@ -4732,7 +4732,7 @@ const styles = StyleSheet.create({
     color: '#1D1D1F',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
     lineHeight: 22,
-    marginBottom: 12,
+    marginBottom: 8,
     textAlign: 'left',
     flexWrap: 'wrap',
     flexShrink: 1,
@@ -4805,8 +4805,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginBottom: 12,
-    paddingVertical: 10,
+    marginBottom: 8,
+    paddingVertical: 8,
     backgroundColor: '#F8F9FA',
     borderRadius: 12,
   },
