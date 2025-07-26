@@ -1626,6 +1626,190 @@ Sent via DateUnveil`;
 };
 
 // Advanced Reminder Modal Component
+const SubscriptionModal = ({ visible, onClose, onSubscribe, email, name, setName, setEmail }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const handleSubscribe = async () => {
+    if (!email.trim() || !name.trim()) {
+      showPlatformAlert('Missing Information', 'Please enter both your name and email address.', [
+        { text: 'OK', style: 'default' }
+      ]);
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      showPlatformAlert('Invalid Email', 'Please enter a valid email address (e.g., user@example.com).', [
+        { text: 'OK', style: 'default' }
+      ]);
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      // Store locally first (always works)
+      const subscriptions = await AsyncStorage.getItem('subscriptions') || '[]';
+      const subscriptionList = JSON.parse(subscriptions);
+      const newSubscription = {
+        name: name.trim(),
+        email: email.trim(),
+        timestamp: new Date().toISOString(),
+        source: 'DateGenie App'
+      };
+      subscriptionList.push(newSubscription);
+      await AsyncStorage.setItem('subscriptions', JSON.stringify(subscriptionList));
+      
+      // Send to Google Sheets via GET request (non-blocking)
+      const params = new URLSearchParams({
+        name: newSubscription.name,
+        email: newSubscription.email,
+        timestamp: newSubscription.timestamp,
+        source: newSubscription.source
+      });
+      
+      // Make the request non-blocking so it doesn't freeze the app
+      console.log('Sending to Google Sheets:', params.toString());
+      fetch(`https://script.google.com/macros/s/AKfycbwg4qYCvv9FSifjpBpk9AgnEGeuVgzYSvJ03wAE2NaQpcuQkkwIiUbYov4Vs3grA4DQ/exec?${params}`, {
+        method: 'GET'
+      })
+      .then(response => {
+        console.log('Google Sheets response status:', response.status);
+        console.log('Google Sheets response ok:', response.ok);
+        if (response.ok) {
+          return response.text();
+        } else {
+          throw new Error(`HTTP ${response.status}`);
+        }
+      })
+      .then(responseText => {
+        console.log('Google Sheets response text:', responseText);
+        console.log('Successfully sent to Google Sheets');
+      })
+      .catch(error => {
+        console.log('Google Sheets submission failed, but data is saved locally:', error.message);
+      });
+      
+      setIsSubmitting(false);
+      setShowSuccess(true);
+      
+      // Show success message and close after 2 seconds
+      setTimeout(() => {
+        setShowSuccess(false);
+        onClose();
+        setEmail('');
+        setName('');
+        // Call onSubscribe after modal is closed to avoid conflicts
+        setTimeout(() => {
+          onSubscribe();
+        }, 100);
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Subscription error:', error);
+      setIsSubmitting(false);
+      
+      // Even if everything fails, show success to user
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        onClose();
+        setEmail('');
+        setName('');
+        // Call onSubscribe after modal is closed to avoid conflicts
+        setTimeout(() => {
+          onSubscribe();
+        }, 100);
+      }, 2000);
+    }
+  };
+
+  return (
+    <Modal
+      visible={visible}
+      transparent={true}
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.subscriptionModal}>
+          {!showSuccess ? (
+            <>
+              <View style={styles.subscriptionHeader}>
+                <MaterialCommunityIcons name="email-outline" size={32} color="#8B5CF6" />
+                <Text style={styles.subscriptionTitle}>Stay in Contact with Genie</Text>
+                <Text style={styles.subscriptionSubtitle}>Get magical date ideas delivered to your inbox</Text>
+              </View>
+
+              <View style={styles.subscriptionForm}>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.inputLabel}>Your Name</Text>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="Enter your name"
+                    value={name}
+                    onChangeText={setName}
+                    placeholderTextColor="#999"
+                  />
+                </View>
+
+                <View style={styles.inputContainer}>
+                  <Text style={styles.inputLabel}>Email Address</Text>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="Enter your email"
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    placeholderTextColor="#999"
+                  />
+                </View>
+              </View>
+
+              <View style={styles.subscriptionActions}>
+                <TouchableOpacity 
+                  style={styles.cancelButton} 
+                  onPress={onClose}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.cancelButtonText}>Cancel</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity 
+                  style={[
+                    styles.subscribeButton,
+                    isSubmitting && styles.subscribeButtonDisabled
+                  ]} 
+                  onPress={handleSubscribe}
+                  activeOpacity={0.7}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <Text style={styles.subscribeButtonText}>Connecting...</Text>
+                  ) : (
+                    <Text style={styles.subscribeButtonText}>Connect with Genie</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+            </>
+          ) : (
+            <View style={styles.successContainer}>
+              <MaterialCommunityIcons name="check-circle" size={64} color="#10B981" />
+              <Text style={styles.successTitle}>Connected with Genie!</Text>
+              <Text style={styles.successMessage}>
+                You'll receive magical date ideas and updates from your Genie friend.
+              </Text>
+            </View>
+          )}
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
 const ReminderModal = ({ visible, onClose, onSchedule, dateIdea }) => {
   const [selectedReminderType, setSelectedReminderType] = useState('quick');
   const [quickMinutes, setQuickMinutes] = useState(30);
@@ -2162,7 +2346,7 @@ const getLocationPreference = (revealedCards) => {
 };
 
 // Settings Screen Component
-const SettingsScreen = ({ onClose, onReset, revealedCardsCount, onNavigateHome, onNavigateRandom, onNavigateHistory, showHistory, showSpinningWheel, expandedCard, showSettings }) => {
+const SettingsScreen = ({ onClose, onReset, revealedCardsCount, onNavigateHome, onNavigateRandom, onNavigateHistory, showHistory, showSpinningWheel, expandedCard, showSettings, onSubscribeNewsletter }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
 
@@ -2274,10 +2458,14 @@ const SettingsScreen = ({ onClose, onReset, revealedCardsCount, onNavigateHome, 
                   <MaterialCommunityIcons name="email-outline" size={28} color="#8B5CF6" />
                 </View>
                 <View style={styles.newsletterContent}>
-                  <Text style={styles.newsletterTitle}>Stay Inspired</Text>
+                  <Text style={styles.newsletterTitle}>Stay in Contact with Genie</Text>
                   <Text style={styles.newsletterSubtitle}>Keep the magic alive with fresh date ideas</Text>
                 </View>
-                <TouchableOpacity style={styles.newsletterButton} activeOpacity={0.8}>
+                <TouchableOpacity 
+                  style={styles.newsletterButton} 
+                  activeOpacity={0.8}
+                  onPress={onSubscribeNewsletter}
+                >
                   <Text style={styles.newsletterButtonText}>Subscribe</Text>
                   <MaterialCommunityIcons name="arrow-right" size={18} color="#FFFFFF" />
                 </TouchableOpacity>
@@ -2347,6 +2535,9 @@ export default function App() {
   const [showSpinningWheel, setShowSpinningWheel] = useState(false);
   const [wheelSelectedCards, setWheelSelectedCards] = useState([]);
   const [showSettings, setShowSettings] = useState(false);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const [subscriptionEmail, setSubscriptionEmail] = useState('');
+  const [subscriptionName, setSubscriptionName] = useState('');
 
 
   useEffect(() => {
@@ -2427,6 +2618,15 @@ export default function App() {
       setExpandedCard(scratchCard);
       setScratchCard(null);
     }
+  };
+
+  const handleSubscribeNewsletter = () => {
+    setShowSubscriptionModal(true);
+  };
+
+  const onSubscriptionComplete = () => {
+    // Success is already shown in the modal, no need for additional alert
+    console.log('Subscription completed successfully');
   };
 
   const completeTutorial = () => {
@@ -2904,6 +3104,17 @@ export default function App() {
             onClose={closeScratchCard}
           />
         )}
+
+        {/* Subscription Modal */}
+        <SubscriptionModal
+          visible={showSubscriptionModal}
+          onClose={() => setShowSubscriptionModal(false)}
+          onSubscribe={onSubscriptionComplete}
+          email={subscriptionEmail}
+          name={subscriptionName}
+          setEmail={setSubscriptionEmail}
+          setName={setSubscriptionName}
+        />
         {showHistory && (
           <View style={styles.historyPage}>
             <View style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
@@ -3030,7 +3241,7 @@ export default function App() {
           <SettingsScreen
             onClose={() => setShowSettings(false)}
             onReset={handleResetWithConfirmation}
-
+            onSubscribeNewsletter={handleSubscribeNewsletter}
             revealedCardsCount={revealedCards.length}
             onNavigateHome={() => {
               setShowSettings(false);
@@ -5330,6 +5541,123 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#666',
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+
+  // Subscription Modal Styles
+  subscriptionModal: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 24,
+    margin: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 20,
+    elevation: 10,
+    maxWidth: 400,
+    alignSelf: 'center',
+  },
+  subscriptionHeader: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  subscriptionTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1F2937',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginTop: 12,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  subscriptionSubtitle: {
+    fontSize: 16,
+    color: '#6B7280',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    textAlign: 'center',
+    lineHeight: 22,
+  },
+  subscriptionForm: {
+    marginBottom: 24,
+  },
+  inputContainer: {
+    marginBottom: 16,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#374151',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 8,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 16,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    backgroundColor: '#F9FAFB',
+  },
+  subscriptionActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  cancelButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+  },
+  cancelButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#6B7280',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  subscribeButton: {
+    flex: 2,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    backgroundColor: '#8B5CF6',
+    alignItems: 'center',
+  },
+  subscribeButtonDisabled: {
+    backgroundColor: '#A78BFA',
+    opacity: 0.7,
+  },
+  subscribeButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  successContainer: {
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  successTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#10B981',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginTop: 16,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  successMessage: {
+    fontSize: 16,
+    color: '#6B7280',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    textAlign: 'center',
+    lineHeight: 22,
   },
 
 

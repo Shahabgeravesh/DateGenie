@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Sheets Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px 20px; margin: 5px; background: #8B5CF6; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #7C3AED; }
+        .result { margin-top: 10px; padding: 10px; background: #f5f5f5; border-radius: 3px; white-space: pre-wrap; }
+        input { padding: 8px; margin: 5px; width: 200px; }
+    </style>
+</head>
+<body>
+    <h1>Google Sheets Integration Test</h1>
+    
+    <div class="test-section">
+        <h3>Test 1: Direct URL Test</h3>
+        <p>Click to test the current Google Apps Script URL:</p>
+        <button onclick="testDirectURL()">Test Direct URL</button>
+        <div id="directResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 2: Manual Data Submission</h3>
+        <p>Enter test data and submit:</p>
+        <input type="text" id="testName" placeholder="Name" value="Test User">
+        <input type="email" id="testEmail" placeholder="Email" value="test@example.com">
+        <button onclick="testManualSubmission()">Submit Test Data</button>
+        <div id="manualResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 3: Check Response Details</h3>
+        <button onclick="testResponseDetails()">Check Response Details</button>
+        <div id="responseResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Current Script URL</h3>
+        <p><strong>URL:</strong> https://script.google.com/macros/s/AKfycbwg4qYCvv9FSifjpBpk9AgnEGeuVgzYSvJ03wAE2NaQpcuQkkwIiUbYov4Vs3grA4DQ/exec</p>
+        <p><strong>Status:</strong> <span id="urlStatus">Unknown</span></p>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwg4qYCvv9FSifjpBpk9AgnEGeuVgzYSvJ03wAE2NaQpcuQkkwIiUbYov4Vs3grA4DQ/exec';
+
+        async function testDirectURL() {
+            const resultDiv = document.getElementById('directResult');
+            resultDiv.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch(scriptURL);
+                resultDiv.textContent = `Status: ${response.status}\nOK: ${response.ok}\nHeaders: ${JSON.stringify([...response.headers.entries()], null, 2)}`;
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function testManualSubmission() {
+            const resultDiv = document.getElementById('manualResult');
+            const name = document.getElementById('testName').value;
+            const email = document.getElementById('testEmail').value;
+            
+            resultDiv.textContent = 'Submitting...';
+            
+            try {
+                const params = new URLSearchParams({
+                    name: name,
+                    email: email,
+                    timestamp: new Date().toISOString(),
+                    source: 'DateGenie App Test'
+                });
+                
+                const response = await fetch(`${scriptURL}?${params}`);
+                const responseText = await response.text();
+                
+                resultDiv.textContent = `Status: ${response.status}\nOK: ${response.ok}\nResponse: ${responseText}`;
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function testResponseDetails() {
+            const resultDiv = document.getElementById('responseResult');
+            resultDiv.textContent = 'Checking...';
+            
+            try {
+                const response = await fetch(scriptURL);
+                const responseText = await response.text();
+                
+                resultDiv.textContent = `Status: ${response.status}\nOK: ${response.ok}\nContent-Type: ${response.headers.get('content-type')}\nResponse Length: ${responseText.length}\nFirst 500 chars: ${responseText.substring(0, 500)}`;
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        // Check URL status on page load
+        window.onload = async function() {
+            const statusSpan = document.getElementById('urlStatus');
+            try {
+                const response = await fetch(scriptURL);
+                if (response.ok) {
+                    statusSpan.textContent = '✅ Working';
+                    statusSpan.style.color = 'green';
+                } else {
+                    statusSpan.textContent = `❌ Error (${response.status})`;
+                    statusSpan.style.color = 'red';
+                }
+            } catch (error) {
+                statusSpan.textContent = '❌ Failed to connect';
+                statusSpan.style.color = 'red';
+            }
+        };
+    </script>
+</body>
+</html> 
