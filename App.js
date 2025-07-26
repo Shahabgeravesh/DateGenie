@@ -188,18 +188,8 @@ const getBudgetIcon = (budget, size = 20) => {
 
 // Fun font system for card numbers
 const getFunFont = (number) => {
-  // Group numbers into different fun font categories
-  if (number <= 20) {
-    return Platform.OS === 'ios' ? 'Marker Felt' : 'cursive'; // Playful marker font
-  } else if (number <= 40) {
-    return Platform.OS === 'ios' ? 'Chalkboard SE' : 'monospace'; // Chalk-like font
-  } else if (number <= 60) {
-    return Platform.OS === 'ios' ? 'Bradley Hand' : 'serif'; // Handwritten style
-  } else if (number <= 80) {
-    return Platform.OS === 'ios' ? 'Avenir Next' : 'sans-serif'; // Modern clean
-  } else {
-    return Platform.OS === 'ios' ? 'Futura' : 'fantasy'; // Futuristic
-  }
+  // All numbers 1-100 use the same font as number 4 (Marker Felt/cursive)
+  return Platform.OS === 'ios' ? 'Marker Felt' : 'cursive'; // Playful marker font
 };
 
 // Fun color system for card numbers
