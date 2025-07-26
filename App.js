@@ -3384,11 +3384,11 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   categoryFilterContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(139, 92, 246, 0.08)',
     paddingHorizontal: 8,
     paddingVertical: 12,
     borderBottomWidth: 0.5,
-    borderBottomColor: '#E5E5E7',
+    borderBottomColor: 'rgba(139, 92, 246, 0.15)',
   },
   categoryFilter: {
     flexGrow: 1,
