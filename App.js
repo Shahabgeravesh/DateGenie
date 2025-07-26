@@ -2916,7 +2916,7 @@ export default function App() {
       console.log('Wheel selected card:', cardNumber);
       const selectedCard = dateIdeasData.find(item => item.id === cardNumber);
       if (selectedCard) {
-        setExpandedCard(selectedCard);
+        setExpandedCard({ ...selectedCard, sequenceNumber: cardNumber });
         
         // Add to wheel selected cards to prevent re-selection
         setWheelSelectedCards(prev => {
