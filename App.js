@@ -2123,12 +2123,12 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const iconScaleAnim = useRef(new Animated.Value(1)).current;
   const badgeScaleAnim = useRef(new Animated.Value(badgeCount > 0 ? 1 : 0)).current;
-  const opacityAnim = useRef(new Animated.Value(isActive ? 1 : 0.6)).current;
+  const opacityAnim = useRef(new Animated.Value(isActive ? 1 : 0.8)).current;
 
   useEffect(() => {
     Animated.parallel([
       Animated.spring(opacityAnim, {
-        toValue: isActive ? 1 : 0.7,
+        toValue: isActive ? 1 : 0.85,
         useNativeDriver: true,
         tension: 120,
         friction: 10,
@@ -2209,7 +2209,7 @@ const ModernTabButton = ({ onPress, icon, label, isActive, badgeCount }) => {
   };
 
   const activeColor = '#FF6B8A';
-  const inactiveColor = '#5B21B6';
+  const inactiveColor = '#4C1D95';
   const textColor = isActive ? activeColor : inactiveColor;
   const backgroundColor = isActive ? 'rgba(255, 107, 138, 0.08)' : 'transparent';
   const borderColor = isActive ? 'rgba(255, 107, 138, 0.2)' : 'transparent';
