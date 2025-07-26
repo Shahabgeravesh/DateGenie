@@ -1140,7 +1140,26 @@ const SpinningWheel = ({ visible, onClose, onSelectCard, onSpinStart, excludedCa
         <View style={styles.wheelContainer}>
           <View style={styles.wheelHeader}>
             <View style={styles.wheelHeaderContent}>
-                              <Text style={styles.wheelTitle}>Genie Pick</Text>
+              <View style={styles.wheelTitleSparkles}>
+                <MaterialCommunityIcons name="star" size={12} color="rgba(233, 30, 99, 0.7)" style={styles.wheelTitleSparkle1} />
+                <MaterialCommunityIcons name="star" size={10} color="rgba(156, 39, 176, 0.6)" style={styles.wheelTitleSparkle2} />
+              </View>
+              <View style={styles.wheelTitleContainer}>
+                <Text style={[styles.wheelTitle, { color: '#E91E63' }]}>G</Text>
+                <Text style={[styles.wheelTitle, { color: '#8B5CF6' }]}>e</Text>
+                <Text style={[styles.wheelTitle, { color: '#E91E63' }]}>n</Text>
+                <Text style={[styles.wheelTitle, { color: '#8B5CF6' }]}>i</Text>
+                <Text style={[styles.wheelTitle, { color: '#E91E63' }]}>e</Text>
+                <Text style={[styles.wheelTitle, { color: '#8B5CF6' }]}> </Text>
+                <Text style={[styles.wheelTitle, { color: '#E91E63' }]}>P</Text>
+                <Text style={[styles.wheelTitle, { color: '#8B5CF6' }]}>i</Text>
+                <Text style={[styles.wheelTitle, { color: '#E91E63' }]}>c</Text>
+                <Text style={[styles.wheelTitle, { color: '#8B5CF6' }]}>k</Text>
+              </View>
+              <View style={styles.wheelTitleSparkles}>
+                <MaterialCommunityIcons name="star" size={10} color="rgba(156, 39, 176, 0.6)" style={styles.wheelTitleSparkle3} />
+                <MaterialCommunityIcons name="star" size={12} color="rgba(233, 30, 99, 0.7)" style={styles.wheelTitleSparkle4} />
+              </View>
             </View>
             <TouchableOpacity onPress={onClose} style={styles.wheelCloseButton}>
               <MaterialCommunityIcons name="close" size={20} color="#8E8E93" />
@@ -4322,7 +4341,7 @@ const styles = StyleSheet.create({
   },
   wheelHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 28,
     paddingTop: 28,
@@ -4330,17 +4349,67 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#F0F0F0',
     backgroundColor: '#FAFAFA',
+    position: 'relative',
   },
   wheelHeaderContent: {
     flex: 1,
   },
+  wheelTitleContainer: {
+    backgroundColor: 'rgba(139, 92, 246, 0.12)',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: 'rgba(139, 92, 246, 0.3)',
+    shadowColor: '#8B5CF6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 5,
+    marginBottom: 8,
+  },
+  wheelTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   wheelTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#1C1C1E',
+    fontSize: 26,
+    fontWeight: '900',
     fontFamily: 'System',
-    marginBottom: 4,
-    letterSpacing: -0.5,
+    fontStyle: 'italic',
+    marginBottom: 0,
+    letterSpacing: -0.2,
+    textShadowColor: 'rgba(233, 30, 99, 0.4)',
+    textShadowOffset: { width: 0, height: 3 },
+    textShadowRadius: 6,
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+  },
+  wheelTitleSparkles: {
+    position: 'absolute',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  wheelTitleSparkle1: {
+    position: 'absolute',
+    top: -5,
+    left: -20,
+  },
+  wheelTitleSparkle2: {
+    position: 'absolute',
+    top: 5,
+    left: -15,
+  },
+  wheelTitleSparkle3: {
+    position: 'absolute',
+    top: -5,
+    right: -20,
+  },
+  wheelTitleSparkle4: {
+    position: 'absolute',
+    top: 5,
+    right: -15,
   },
   wheelSubtitle: {
     fontSize: 15,
@@ -4357,6 +4426,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    zIndex: 10,
   },
   wheelGenieSection: {
     alignItems: 'center',
