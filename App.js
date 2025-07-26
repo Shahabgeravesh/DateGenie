@@ -128,7 +128,7 @@ const getCategoryIcon = (category, size = 32, color = null) => {
   };
 
   const iconConfig = iconMap[category] || iconMap.romantic;
-  
+
   if (Platform.OS === 'ios') {
     return <Ionicons name={iconConfig.ios} size={size} color={color || '#000'} />;
   } else if (Platform.OS === 'android') {
@@ -1424,7 +1424,7 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onSetReminder }
 
           {/* Share Button - Centered */}
           <View style={{ alignItems: 'center', marginTop: 20, marginBottom: 10 }}>
-            <TouchableOpacity 
+          <TouchableOpacity 
               style={{ 
                 flexDirection: 'row', 
                 alignItems: 'center', 
@@ -1439,13 +1439,13 @@ const ExpandedCard = ({ item, onClose, onShareEmail, onShareSMS, onSetReminder }
                 shadowRadius: 4,
                 elevation: 3,
               }} 
-              onPress={() => shareDateIdea(item)}
-              activeOpacity={0.85}
-            >
+            onPress={() => shareDateIdea(item)}
+            activeOpacity={0.85}
+          >
               <MaterialCommunityIcons name="share-variant" size={18} color="#FFFFFF" style={{ marginRight: 8 }} />
               <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600', fontFamily: 'System' }}>Share</Text>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
+        </View>
 
         </ScrollView>
       </TouchableOpacity>
@@ -2487,8 +2487,8 @@ const SettingsScreen = ({ onClose, onReset, revealedCardsCount, onNavigateHome, 
                 >
                   <Text style={styles.newsletterButtonText}>Subscribe</Text>
                   <MaterialCommunityIcons name="arrow-right" size={18} color="#FFFFFF" />
-                </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
+                </View>
             </Animated.View>
 
           </ScrollView>
@@ -2618,7 +2618,7 @@ export default function App() {
       setScratchCard({ ...item, sequenceNumber });
     } else {
       // Already revealed card - show expanded card directly
-      setExpandedCard({ ...item, sequenceNumber });
+    setExpandedCard({ ...item, sequenceNumber });
     }
   };
 
