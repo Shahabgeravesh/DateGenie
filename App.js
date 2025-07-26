@@ -1797,10 +1797,10 @@ const SubscriptionModal = ({ visible, onClose, onSubscribe, email, name, setName
             </>
           ) : (
             <View style={styles.successContainer}>
-              <MaterialCommunityIcons name="check-circle" size={64} color="#10B981" />
+              <MaterialCommunityIcons name="check-circle" size={64} color="#8B5CF6" />
               <Text style={styles.successTitle}>Connected with Genie!</Text>
               <Text style={styles.successMessage}>
-                You'll receive magical date ideas and updates from your Genie friend.
+                You're now connected with your magical Genie friend.
               </Text>
             </View>
           )}
