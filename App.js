@@ -2106,12 +2106,12 @@ const AppHeader = ({ revealedCards, theme, platformStyles }) => {
           <Text style={[styles.progressText, { color: '#8B5CF6', fontFamily: 'System' }]}> 
             {revealedCount} / {totalCards} Revealed
           </Text>
-          <View style={[styles.progressBar, { backgroundColor: '#D1D5DB' }]}> 
-            <View style={[styles.progressFill, { 
-              backgroundColor: '#8B5CF6',
-              width: `${(revealedCount / totalCards) * 100}%` 
-            }]} />
-          </View>
+                        <View style={[styles.progressBar, { backgroundColor: '#E5E7EB' }]}>
+                <View style={[styles.progressFill, {
+                  backgroundColor: '#8B5CF6',
+                  width: `${(revealedCount / totalCards) * 100}%` 
+                }]} />
+              </View>
         </View>
       </View>
     </View>
@@ -3361,15 +3361,27 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     width: 120,
-    height: 3,
-    borderRadius: 1.5,
-    backgroundColor: '#D1D5DB',
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#E5E7EB',
     overflow: 'hidden',
+    shadowColor: '#5B21B6',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(91, 33, 182, 0.1)',
   },
   progressFill: {
     height: '100%',
-    borderRadius: 1.5,
+    borderRadius: 3,
     backgroundColor: '#8B5CF6',
+    shadowColor: '#8B5CF6',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 2,
   },
   categoryFilterContainer: {
     backgroundColor: '#FFFFFF',
