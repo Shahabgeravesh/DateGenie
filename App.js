@@ -106,13 +106,13 @@ const getCategoryIcon = (category, size = 32, color = null) => {
       fallback: 'coffee'
     },
     spontaneous: {
-      ios: 'dice',
-      android: 'casino',
+      ios: 'shuffle',
+      android: 'shuffle',
       fallback: 'dice-multiple'
     },
     budget: {
-      ios: 'wallet-outline',
-      android: 'account-balance-wallet',
+      ios: 'card',
+      android: 'credit-card',
       fallback: 'dollar-sign'
     },
     luxury: {
@@ -127,18 +127,15 @@ const getCategoryIcon = (category, size = 32, color = null) => {
     }
   };
 
-  const iconConfig = iconMap[category] || iconMap.random;
-  const defaultColor = color || categories[category]?.color || '#FF6B8A';
-
+  const iconConfig = iconMap[category] || iconMap.romantic;
+  
   if (Platform.OS === 'ios') {
-    return <Ionicons name={iconConfig.ios} size={size} color={defaultColor} />;
+    return <Ionicons name={iconConfig.ios} size={size} color={color || '#000'} />;
   } else if (Platform.OS === 'android') {
-    return <MaterialIcons name={iconConfig.android} size={size} color={defaultColor} />;
+    return <MaterialIcons name={iconConfig.android} size={size} color={color || '#000'} />;
   } else {
-    // Fallback to original icon system
-    const IconComponent = iconConfig.fallback.includes('FontAwesome5') ? FontAwesome5 : 
-                         iconConfig.fallback.includes('Feather') ? Feather : MaterialCommunityIcons;
-    return <IconComponent name={iconConfig.fallback} size={size} color={defaultColor} />;
+    // Fallback to MaterialCommunityIcons for web or other platforms
+    return <MaterialCommunityIcons name={iconConfig.fallback} size={size} color={color || '#000'} />;
   }
 };
 
@@ -666,6 +663,242 @@ const Tutorial = ({ visible, onComplete }) => {
 };
 
 // Enhanced Small Card Component
+// Scratch Card Component - Creates realistic scratch-off experience
+const ScratchCard = ({ item, sequenceNumber, onReveal, onClose }) => {
+  const [isScratched, setIsScratched] = useState(false);
+  const [scratchProgress, setScratchProgress] = useState(0);
+  const [scratchPoints, setScratchPoints] = useState([]);
+  const [isScratching, setIsScratching] = useState(false);
+  const [scratchedAreas, setScratchedAreas] = useState([]);
+  const cardRef = useRef(null);
+
+  // Create pan responder for scratch detection
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: (evt) => {
+        const { locationX, locationY } = evt.nativeEvent;
+        setScratchPoints([{ x: locationX, y: locationY }]);
+        setIsScratching(true);
+      },
+      onPanResponderMove: (evt) => {
+        const { locationX, locationY } = evt.nativeEvent;
+        setScratchPoints(prev => [...prev, { x: locationX, y: locationY }]);
+        
+        // Add multiple scratched areas for precision
+        setScratchedAreas(prev => {
+          // Create multiple small areas around the touch point for precision
+          const newAreas = [];
+          for (let i = 0; i < 2; i++) {
+            const offsetX = (Math.random() - 0.5) * 4;
+            const offsetY = (Math.random() - 0.5) * 4;
+            newAreas.push({ 
+              x: locationX + offsetX, 
+              y: locationY + offsetY, 
+              radius: 2 + Math.random() * 2 
+            });
+          }
+          
+          const updatedAreas = [...prev, ...newAreas];
+          
+          // Trigger haptic feedback less frequently for precision
+          if (updatedAreas.length % 10 === 0) {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          }
+          
+          return updatedAreas;
+        });
+      },
+      onPanResponderRelease: () => {
+        setIsScratching(false);
+      }
+    })
+  ).current;
+
+  // Update progress and check for reveal when scratched areas change
+  useEffect(() => {
+    const totalScratched = scratchedAreas.length;
+    const newProgress = Math.min((totalScratched / 200) * 100, 100);
+    setScratchProgress(newProgress);
+    
+    // Reveal when enough is scratched
+    if (newProgress >= 85 && !isScratched) {
+      setIsScratched(true);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      onReveal();
+    }
+  }, [scratchedAreas, isScratched, onReveal]);
+
+  // Get the date idea text
+  const getDateIdeaText = (item) => {
+    if (item.idea) return item.idea;
+    const found = dateIdeasData.find(g => g.id === item.id);
+    return found && found.idea ? found.idea : `Date idea #${item.id}`;
+  };
+
+  const dateIdeaText = getDateIdeaText(item);
+  const categoryInfo = categories[item.category] || categories.romantic;
+
+  return (
+    <Modal
+      visible={true}
+      transparent={true}
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <View style={styles.scratchModalOverlay}>
+        <View style={styles.scratchCardContainer}>
+          {/* Close button */}
+          <TouchableOpacity 
+            style={styles.scratchCloseButton} 
+            onPress={onClose}
+            activeOpacity={0.7}
+          >
+            <MaterialCommunityIcons name="close" size={24} color="#666" />
+          </TouchableOpacity>
+
+          {/* Scratch Card */}
+          <View 
+            ref={cardRef}
+            style={styles.scratchCard}
+          >
+            {/* Date Idea Content */}
+            <View style={styles.scratchCardContent}>
+              <View style={styles.scratchCardHeader}>
+                <View style={styles.scratchCardNumber}>
+                  <Text style={styles.scratchCardNumberText}>#{sequenceNumber}</Text>
+                </View>
+                <View style={styles.scratchCardCategory}>
+                  {getCategoryIcon(item.category, 24, categoryInfo.color)}
+                  <Text style={styles.scratchCardCategoryText}>{categoryInfo.name}</Text>
+                </View>
+              </View>
+              
+              {/* Date Idea Text with Scratch Layer */}
+              <View style={styles.scratchIdeaContainer}>
+                {/* Text that shows through scratched areas */}
+                <Text style={styles.scratchCardIdeaText}>{dateIdeaText}</Text>
+                
+                {/* Scratch Layer - completely covers the text */}
+                <View 
+                  style={[
+                    styles.scratchLayer,
+                    {
+                      transform: [{ scale: isScratching ? 1.02 : 1 }]
+                    }
+                  ]}
+                  {...panResponder.panHandlers}
+                >
+                  {/* Solid gray background that completely covers text */}
+                  <View style={styles.scratchBackground} />
+                  
+                  {/* Scratch pattern overlay - more precise */}
+                  <View style={styles.scratchPattern}>
+                    {Array.from({ length: 80 }).map((_, i) => (
+                      <View 
+                        key={i}
+                        style={[
+                          styles.scratchLine,
+                          {
+                            top: Math.random() * 100 + '%',
+                            left: Math.random() * 100 + '%',
+                            transform: [{ rotate: `${Math.random() * 360}deg` }],
+                            opacity: Math.random() * 0.3 + 0.05,
+                            width: Math.random() * 1 + 0.3,
+                            height: Math.random() * 15 + 6
+                          }
+                        ]}
+                      />
+                    ))}
+                  </View>
+                  
+                  {/* Scratch instruction */}
+                  <View style={styles.scratchInstruction}>
+                    <MaterialCommunityIcons name="hand-pointing-up" size={32} color="#999" />
+                    <Text style={styles.scratchInstructionText}>Scratch to reveal</Text>
+                  </View>
+                  
+                  {/* Scratched areas - create holes by covering with transparent circles */}
+                  {scratchedAreas.slice(-100).map((area, index) => (
+                    <View
+                      key={index}
+                      style={[
+                        styles.scratchHole,
+                        {
+                          left: area.x - area.radius,
+                          top: area.y - area.radius,
+                          width: area.radius * 2,
+                          height: area.radius * 2,
+                          borderRadius: area.radius,
+                          backgroundColor: 'transparent',
+                          borderWidth: 0,
+                          // Use a very subtle shadow to create a hole effect
+                          shadowColor: 'transparent',
+                          shadowOffset: { width: 0, height: 0 },
+                          shadowOpacity: 0,
+                          shadowRadius: 0,
+                          elevation: 0,
+                        }
+                      ]}
+                    />
+                  ))}
+                </View>
+
+                {/* Scratch trail visualization - more precise */}
+                {scratchPoints.slice(-30).map((point, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.scratchPoint,
+                      {
+                        left: point.x - 1,
+                        top: point.y - 1,
+                        opacity: Math.max(0, 1 - (index / 30)),
+                        width: Math.random() * 2 + 1,
+                        height: Math.random() * 2 + 1,
+                        borderRadius: Math.random() * 1 + 0.5
+                      }
+                    ]}
+                  />
+                ))}
+              </View>
+              
+              <View style={styles.scratchCardFooter}>
+                <View style={styles.scratchCardInfo}>
+                  <MaterialCommunityIcons name="currency-usd" size={16} color="#666" />
+                  <Text style={styles.scratchCardInfoText}>
+                    {item.budget === 'low' ? '$' : item.budget === 'medium' ? '$$' : '$$$'}
+                  </Text>
+                </View>
+                <View style={styles.scratchCardInfo}>
+                  <MaterialCommunityIcons name="map-marker" size={16} color="#666" />
+                  <Text style={styles.scratchCardInfoText}>{item.location}</Text>
+                </View>
+              </View>
+            </View>
+
+
+          </View>
+
+          {/* Progress indicator */}
+          <View style={styles.scratchProgressContainer}>
+            <View style={styles.scratchProgressBar}>
+              <View 
+                style={[
+                  styles.scratchProgressFill,
+                  { width: `${scratchProgress}%` }
+                ]}
+              />
+            </View>
+            <Text style={styles.scratchProgressText}>{Math.round(scratchProgress)}% scratched</Text>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
 const SmallCard = ({ item, sequenceNumber, isRevealed, onPress }) => {
   const CardTouchable = Platform.OS === 'ios' ? TouchableHighlight : TouchableOpacity;
   return (
@@ -2104,6 +2337,7 @@ export default function App() {
   // Replace revealedCards state with an array to preserve order
   const [revealedCards, setRevealedCards] = useState([]);
   const [expandedCard, setExpandedCard] = useState(null);
+  const [scratchCard, setScratchCard] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showTutorial, setShowTutorial] = useState(true); // Force tutorial to show
@@ -2171,11 +2405,25 @@ export default function App() {
       setRevealedCards(newRevealed);
       AsyncStorage.setItem('revealedCards', JSON.stringify(newRevealed));
     }
-    setExpandedCard({ ...item, sequenceNumber });
+    // Show scratch card instead of expanded card
+    setScratchCard({ ...item, sequenceNumber });
   };
 
   const closeExpandedCard = () => {
     setExpandedCard(null);
+  };
+
+  const closeScratchCard = () => {
+    setScratchCard(null);
+  };
+
+  const handleScratchReveal = () => {
+    // The scratch card will automatically close after reveal
+    // and show the expanded card with full details
+    if (scratchCard) {
+      setExpandedCard(scratchCard);
+      setScratchCard(null);
+    }
   };
 
   const completeTutorial = () => {
@@ -2643,6 +2891,14 @@ export default function App() {
             onShareSMS={shareBySMS}
 
             onSetReminder={setReminder}
+          />
+        )}
+        {scratchCard && (
+          <ScratchCard
+            item={scratchCard}
+            sequenceNumber={scratchCard.sequenceNumber}
+            onReveal={handleScratchReveal}
+            onClose={closeScratchCard}
           />
         )}
         {showHistory && (
@@ -4878,5 +5134,200 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     letterSpacing: -0.1,
   },
+
+  // Scratch Card Styles
+  scratchModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  scratchCardContainer: {
+    width: '100%',
+    maxWidth: 350,
+    alignItems: 'center',
+  },
+  scratchCloseButton: {
+    position: 'absolute',
+    top: -50,
+    right: 0,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+    zIndex: 10,
+  },
+  scratchCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+    elevation: 8,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  scratchCardContent: {
+    position: 'relative',
+    zIndex: 1,
+  },
+  scratchIdeaContainer: {
+    position: 'relative',
+    marginBottom: 20,
+    minHeight: 80,
+    overflow: 'hidden',
+  },
+  scratchCardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  scratchCardNumber: {
+    backgroundColor: '#FF6B8A',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  scratchCardNumberText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  scratchCardCategory: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  scratchCardCategoryText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#5B21B6',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginLeft: 6,
+  },
+  scratchCardIdeaText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1D1D1F',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    lineHeight: 26,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  scratchCardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  scratchCardInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  scratchCardInfoText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#666',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginLeft: 4,
+  },
+  scratchLayer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2,
+  },
+  scratchBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(80, 80, 80, 1)',
+    borderRadius: 12,
+  },
+  scratchPattern: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  scratchLine: {
+    position: 'absolute',
+    width: 2,
+    height: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  scratchInstruction: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  scratchInstructionText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#999',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  scratchPoint: {
+    position: 'absolute',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    zIndex: 3,
+  },
+  scratchHole: {
+    position: 'absolute',
+    zIndex: 3,
+    // This creates a hole in the scratch layer to reveal text underneath
+  },
+  scratchProgressContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  scratchProgressBar: {
+    width: '100%',
+    height: 6,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    borderRadius: 3,
+    overflow: 'hidden',
+    marginBottom: 8,
+  },
+  scratchProgressFill: {
+    height: '100%',
+    backgroundColor: '#FF6B8A',
+    borderRadius: 3,
+  },
+  scratchProgressText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#666',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+
 
 });
